@@ -21,8 +21,7 @@ volumes:
 
 services:
     aberdock:
-        build:
-            dockerfile: ./Dockerfile
+        build: ./AberDock_Docker
         container_name: "aberdock"
         restart: "no"
         networks:
