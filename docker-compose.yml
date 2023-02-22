@@ -1,0 +1,42 @@
+version: "3.9"
+
+name: aberdock-mp-jrd15
+
+networks:
+    aberdock_vlan:
+        name: "aberdock_vlan"
+        driver: bridge
+        driver_opts:
+            com.docker.network.enable_ipv4: "true"
+        external: false
+        ipam:
+            driver: default
+            config:
+                - subnet: 11.0.0.0/16
+                  gateway: 11.0.0.1
+
+volumes:
+    aberdock_mariadb:
+        name: "aberdock_mariadb"
+
+services:
+    aberdock:
+        build:
+            dockerfile: ./Dockerfile
+        container_name: "aberdock"
+        restart: "no"
+        networks:
+            aberdock_vlan:
+                ipv4_address: 11.0.0.2
+
+    aberdock_mariadb:
+        image: mariadb:latest
+        container_name: "aberdock_mariadb"
+        environment:
+            - MYSQL_ROOT_PASSWORD=AVerySecurePassword12345678
+        volumes:
+            - aberdock_mariadb:/var/lib/mysql
+        restart: unless-stopped
+        networks:
+            aberdock_vlan:
+                ipv4_address: 11.0.0.3
