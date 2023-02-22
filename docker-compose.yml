@@ -23,7 +23,13 @@ services:
     aberdock:
         build: ./AberDock_Docker
         container_name: "aberdock"
-        restart: "no"
+        environment:
+            - MYSQL_SERVER=11.0.0.3
+            - MYSQL_PORT=3306
+            - MYSQL_DATABASE=aberdock
+            - MYSQL_USER=aberdock
+            - MYSQL_PASSWORD=ASecurePasswordForTheAberDockAccount
+        restart: unless-stopped
         networks:
             aberdock_vlan:
                 ipv4_address: 11.0.0.2
@@ -33,6 +39,9 @@ services:
         container_name: "aberdock_mariadb"
         environment:
             - MYSQL_ROOT_PASSWORD=AVerySecurePassword12345678
+            - MYSQL_DATABASE=aberdock
+            - MYSQL_USER=aberdock
+            - MYSQL_PASSWORD=ASecurePasswordForTheAberDockAccount
         volumes:
             - aberdock_mariadb:/var/lib/mysql
         restart: unless-stopped
