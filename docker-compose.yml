@@ -21,7 +21,9 @@ volumes:
 
 services:
     aberdock:
-        build: ./AberDock_Docker
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
         container_name: "aberdock"
         environment:
             - MYSQL_SERVER=11.0.0.3
