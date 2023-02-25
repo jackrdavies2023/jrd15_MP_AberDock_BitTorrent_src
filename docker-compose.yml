@@ -31,6 +31,8 @@ services:
             - MYSQL_DATABASE=aberdock
             - MYSQL_USER=aberdock
             - MYSQL_PASSWORD=ASecurePasswordForTheAberDockAccount
+        volumes:
+            - ./www:/var/www/html/
         restart: unless-stopped
         networks:
             aberdock_vlan:
