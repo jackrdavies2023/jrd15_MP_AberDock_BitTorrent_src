@@ -1,14 +1,27 @@
 <?php
+	ini_set('display_errors', '1');
+	ini_set('display_startup_errors', '1');
+	error_reporting(E_ALL);
+	
+
 	// Global configuration.
 	require_once(__DIR__."/include/config.php");
 
 	// Require the Smarty template class, to make theme development easier.
+	// Smarty template acquired from: https://www.smarty.net/
 	require_once(__DIR__."/include/class/Smarty/Smarty.class.php");
+
+	// Some default variables.
+	$theme  = "default";
 
 
 	// Initialise constructs.
 	$smarty  = new Smarty(); // Used for loading themes/templates.
 
+	// Smarty template settings.
+	$smarty->debugging = false; // Used for debugging templates.
+	$smarty->setTemplateDir(__DIR__."/include/themes/$theme/"); // Template directory.
+	$smarty->setCompileDir("/tmp"); // Smarty compiled template directory.
 
     // Navigation handler.
 	if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
