@@ -7,6 +7,33 @@
 # Written by Jack Ryan Davies (jrd15)                                   #
 #########################################################################
 
+
+if [[ "${MYSQL_DATABASE}" == "" ]]; then
+    echo "'MYSQL_DATABASE' not defined!"
+    exit 1
+fi
+
+if [[ "${MYSQL_USER}" == "" ]]; then
+    echo "'MYSQL_DATABASE' not defined!"
+    exit 1
+fi
+
+if [[ "${MYSQL_PASSWORD}" == "" ]]; then
+    echo "'MYSQL_PASSWORD' not defined!"
+    exit 1
+fi
+
+if [[ "${MYSQL_PORT}" == "" ]]; then
+    echo "'MYSQL_PORT' not defined!"
+    exit 1
+fi
+
+if [[ "${MYSQL_SERVER}" == "" ]]; then
+    echo "'MYSQL_DATABASE' not defined!"
+    exit 1
+fi
+
+
 # Start NGINX
 nginx -g 'daemon off;' &
 
