@@ -22,6 +22,8 @@
 	$smarty->debugging = false; // Used for debugging templates.
 	$smarty->setTemplateDir(__DIR__."/include/themes/$theme/"); // Template directory.
 	$smarty->setCompileDir("/tmp"); // Smarty compiled template directory.
+	$smarty->assign('siteName', 'AberDock'); // Assign the variable "siteName" for use inside of template files.
+	$smarty->assign('assetDir', "/include/themes/$theme/assets"); // Set the asset directory, for storing CSS, JS and other assets.
 
     // Navigation handler.
 	if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
