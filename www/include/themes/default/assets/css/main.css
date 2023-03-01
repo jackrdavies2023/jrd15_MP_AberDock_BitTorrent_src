@@ -50,7 +50,7 @@ card {
     padding: 10mm;
 }
 
-searchEngine #searchQuery {
+searchEngine #search-query {
     width: 100%;
     max-width: 128mm;
 }
@@ -96,3 +96,26 @@ mainContainer main {
     padding: 5mm;
 }
 
+bottomUserOptions {
+    position: absolute;
+    bottom: 0;
+    padding: 3mm;
+    width: -moz-available;
+    width: -webkit-fill-available;
+}
+
+bottomUserOptions userName {
+    display: flex;
+    align-items: center;
+}
+
+bottomUserOptions userName span {
+    margin-left: 3mm;
+}
+
+.navbar-profile-img {
+    width: 10mm;
+    height: 10mm;
+    background-color: var(--main-background-color);
+    border-radius: 10mm;
+}

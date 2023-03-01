@@ -10,6 +10,13 @@
                 <a href="/?p=upload">Upload</a>
                 <a href="/?p=statistics">Statistics</a>
             </mainLinks>
+
+            <bottomUserOptions>
+                <userName>
+                    <img class="navbar-profile-img" src="{$assetDir}/img/profile.png">
+                    <span>Guest account</span>
+                </userName>
+            </bottomUserOptions>
         </navigationBar>
 
         <!-- Contains the main page contents as well as navigation bar. -->
@@ -25,7 +32,7 @@
                     <card>
                         <form>
                             <center>
-                                <input type="text" name="searchQuery" id="searchQuery" placeholder="Search for something...">
+                                <input type="text" name="query" id="search-query" placeholder="Search for something...">
                                 <input type="submit" value="Search!">
                             </center>
                         </form>
