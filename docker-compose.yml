@@ -45,3 +45,15 @@ services:
         networks:
             aberdock_vlan:
                 ipv4_address: 11.0.0.3
+
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: phpmyadmin
+        environment:
+            - UPLOAD_LIMIT=500M
+        restart: unless-stopped
+        networks:
+            aberdock_vlan:
+                ipv4_address: 11.0.0.4
+        links:
+            - "aberdock_mariadb:db"

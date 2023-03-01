@@ -1,0 +1,98 @@
+
+/* The fonts we want to use **/
+@font-face {
+    font-family: "Sen";
+    src: url("../font/Sen-Bold.woff2") format('woff2'),
+         url("../font/Sen-Bold.woff") format('woff'),
+         url("../font/Sen-Bold.ttf") format('truetype');
+    font-weight: normal;
+  }  
+
+
+/* Set some variables to make development easier. */
+:root {
+    --main-background-color: rgb(216, 215, 215);
+    --secondary-background-color: #ccccccff;
+    --text-color: rgb(0, 0, 0);
+
+    --main-fonts: "Sen", "Gilroy", "Circular Std", "TT Commons", "Futura", "Alata", sans-serif;
+}
+
+/** Dark mode theme. Auto-applied based on OS/browser settings. **/
+@media (prefers-color-scheme: dark) {
+    :root {
+        --main-background-color: rgb(54, 54, 54);
+        --secondary-background-color: #242323;
+        --text-color: rgb(209, 208, 208);
+    }
+}
+
+
+body {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    width:100vw;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    font-size: 14pt;
+
+    background-color: var(--main-background-color);
+    color: var(--text-color);
+    font-family: var(--main-fonts);
+}
+
+card {
+    background-color: var(--secondary-background-color);
+    height: 500px;
+    display: block;
+    border-radius: 2mm;
+    padding: 10mm;
+}
+
+searchEngine #searchQuery {
+    width: 100%;
+    max-width: 128mm;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+main {
+    display: block;
+}
+
+navigationBar {
+    background-color: var(--secondary-background-color);
+    position: absolute;
+    left: 0;
+    width: 80mm;
+    height: 100vh;
+    border-radius: 0;
+}
+
+navigationBar #aberdock_logo {
+    width: 100%;
+    margin-bottom: 5mm;
+}
+
+navigationBar mainLinks a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 3mm;
+    background-color: var(--main-background-color);
+}
+
+mainContainer {
+    position: absolute;
+    left: 80mm;
+    width: -moz-available;
+    width: -webkit-fill-available;
+}
+
+mainContainer main {
+    padding: 5mm;
+}
+

@@ -1,13 +1,37 @@
 <html lang="en">
     {include file='header.tpl'}
     <body>
-        <div id="pageMain">
+        <!-- Contains the left navigation bar -->
+        <navigationBar>
+            <img id="aberdock_logo" src="{$assetDir}/img/logo.jpg">
+
+            <mainLinks>
+                <a href="/?p=browse">Browse</a>
+                <a href="/?p=upload">Upload</a>
+                <a href="/?p=statistics">Statistics</a>
+            </mainLinks>
+        </navigationBar>
+
+        <!-- Contains the main page contents as well as navigation bar. -->
+        <mainContainer>
+            <!-- Contains main page content. -->
             <main>
-                <div id="navTitleBar">
-                    <img src="{$assetDir}/img/menuIcon.png" id="hamburgerMenu" />
-                    <h1 class="pageTitle">{$pageName}</h1>
-                </div>
+                <titleBar>
+                    <h1>Browse</h1>
+                </titleBar>
+
+                <!-- Container for the search feature -->
+                <searchEngine>
+                    <card>
+                        <form>
+                            <center>
+                                <input type="text" name="searchQuery" id="searchQuery" placeholder="Search for something...">
+                                <input type="submit" value="Search!">
+                            </center>
+                        </form>
+                    </card>
+                </searchEngine>
             </main>
-        </div>
+        </mainContainer>
     </body>
 </html>
