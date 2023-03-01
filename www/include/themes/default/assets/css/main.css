@@ -50,13 +50,30 @@ card {
     padding: 10mm;
 }
 
+card.no-background {
+    background: none;
+}
+
 searchEngine #search-query {
     width: 100%;
     max-width: 128mm;
+    outline-color: white;
+}
+
+searchEngine #search-query, searchEngine input[type="submit"] {
+    padding: 3mm;
+    border-radius: 2mm;
+    border: none;
+    outline-style: none;
+    box-shadow: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
+}
+
+center {
+    text-align: center;
 }
 
 main {
@@ -118,4 +135,19 @@ bottomUserOptions userName span {
     height: 10mm;
     background-color: var(--main-background-color);
     border-radius: 10mm;
+}
+
+searchCategoriesContainer {
+    width: 100%;
+    display: table;
+    padding: 30pt 0 0 0;
+}
+
+searchCategoryParent {
+    display: table-cell;
+}
+
+searchCategoryChild {
+    display: block;
+    padding: 3mm 8mm;
 }
