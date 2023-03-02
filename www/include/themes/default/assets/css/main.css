@@ -14,6 +14,7 @@
     --main-background-color: rgb(216, 215, 215);
     --secondary-background-color: #ccccccff;
     --text-color: rgb(0, 0, 0);
+    --card-icon-color: #000000;
 
     --main-fonts: "Sen", "Gilroy", "Circular Std", "TT Commons", "Futura", "Alata", sans-serif;
 }
@@ -24,6 +25,7 @@
         --main-background-color: rgb(54, 54, 54);
         --secondary-background-color: #242323;
         --text-color: rgb(209, 208, 208);
+        --card-icon-color: #FFFFFF;
     }
 }
 
@@ -46,7 +48,7 @@ card {
     background-color: var(--secondary-background-color);
     display: block;
     border-radius: 2mm;
-    padding: 10mm;
+    padding: 4mm;
 }
 
 card.no-background {
@@ -150,3 +152,49 @@ searchCategoryChild {
     display: block;
     padding: 3mm 8mm;
 }
+
+torrentBrowser card {
+    margin: 1mm;
+}
+
+torrentBrowser card p {
+    margin: 0;
+    font-size: 12pt;
+}
+
+torrentBrowser i {
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    background-color: var(--card-icon-color);
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+}
+
+torrentBrowser card options {
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+    width: 100;
+}
+
+i.download {
+    -webkit-mask-image: url(../img/file_download_white_24dp.svg);
+    mask-image: url(../img/file_download_white_24dp.svg);
+}
+
+i.bookmark {
+    -webkit-mask-image: url(../img/bookmark_border_white_24dp.svg);
+    mask-image: url(../img/bookmark_border_white_24dp.svg);
+}
+
+i.like {
+    -webkit-mask-image: url(../img/favorite_border_white_24dp.svg);
+    mask-image: url(../img/favorite_border_white_24dp.svg);
+}
+
+i.info {
+    -webkit-mask-image: url(../img/info_white_24dp.svg);
+    mask-image: url(../img/info_white_24dp.svg);
+}
+
