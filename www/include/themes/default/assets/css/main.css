@@ -73,6 +73,10 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
+titlebar h1 {
+    margin-bottom: 8mm;
+}
+
 center {
     text-align: center;
 }
@@ -198,3 +202,10 @@ i.info {
     mask-image: url(../img/info_white_24dp.svg);
 }
 
+.tiny-spacer {
+    height: 1mm;
+    width: 100mm;
+    box-sizing: border-box;
+    padding: 0;
+    position: relative;   
+}
