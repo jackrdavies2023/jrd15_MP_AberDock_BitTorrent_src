@@ -44,7 +44,6 @@ body {
 
 card {
     background-color: var(--secondary-background-color);
-    height: 500px;
     display: block;
     border-radius: 2mm;
     padding: 10mm;
