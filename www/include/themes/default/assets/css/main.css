@@ -51,6 +51,14 @@ card {
     padding: 4mm;
 }
 
+card.rounded-top-corners {
+    border-radius: 2mm 2mm 0mm 0mm;
+}
+
+card.no-rounded-corners {
+    border-radius: 0;
+}
+
 card.no-background {
     background: none;
 }
@@ -211,7 +219,53 @@ i.info {
 }
 
 statisticsSummaryBox {
-    background-color: red;
-    border:solid;
-    border-color: white;;
+    width: 200px;
+    display: inline-flex;
+}
+
+statisticsSummaryBoxContainer {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+statisticsSummaryBoxContainer statisticsSummaryBox card {
+    margin: 10px 0;
+}
+
+statisticsSummaryBox span {
+    height: 50px;
+    display: block;
+}
+
+statisticsSummaryBox div {
+    width: 100%;
+}
+
+statisticsTableHeader {
+    display: flow-root;
+}
+
+statisticsTableHeader span {
+    display: inline-block;
+    float: right;
+    margin: 0 0 0 30px;
+    width: 80px;
+    text-align: center;
+}
+
+statisticsTableHeader span.username {
+    width: 40%;
+    float: left;
+    margin: 0;
+    text-align: left;
+}
+
+.margin-top-2mm {
+    margin-top: 2mm;
+}
+
+smallSeperator {
+    display: block;
+    margin-top: 4mm;
 }
