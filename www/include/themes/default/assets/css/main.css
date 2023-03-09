@@ -183,23 +183,23 @@ torrentBrowser card options {
 }
 
 i.download {
-    -webkit-mask-image: url(../img/file_download_white_24dp.svg);
-    mask-image: url(../img/file_download_white_24dp.svg);
+    -webkit-mask-image: url(../img/download.svg);
+    mask-image: url(../img/download.svg);
 }
 
 i.bookmark {
-    -webkit-mask-image: url(../img/bookmark_border_white_24dp.svg);
-    mask-image: url(../img/bookmark_border_white_24dp.svg);
+    -webkit-mask-image: url(../img/bookmark.svg);
+    mask-image: url(../img/bookmark.svg);
 }
 
 i.like {
-    -webkit-mask-image: url(../img/favorite_border_white_24dp.svg);
-    mask-image: url(../img/favorite_border_white_24dp.svg);
+    -webkit-mask-image: url(../img/favorite.svg);
+    mask-image: url(../img/favorite.svg);
 }
 
 i.info {
-    -webkit-mask-image: url(../img/info_white_24dp.svg);
-    mask-image: url(../img/info_white_24dp.svg);
+    -webkit-mask-image: url(../img/info.svg);
+    mask-image: url(../img/info.svg);
 }
 
 .tiny-spacer {
@@ -208,4 +208,10 @@ i.info {
     box-sizing: border-box;
     padding: 0;
     position: relative;   
+}
+
+statisticsSummaryBox {
+    background-color: red;
+    border:solid;
+    border-color: white;;
 }

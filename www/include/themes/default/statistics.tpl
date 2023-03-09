@@ -10,6 +10,24 @@
                 <titleBar>
                     <h1>Statistics</h1>
                 </titleBar>
+
+                <statisticsSummary>
+                    <card>
+                        One day I'll be bothered to sort this.<br><br>
+                        <statisticsSummaryBox>
+                            A box
+                        </statisticsSummaryBox>
+                        <statisticsSummaryBox>
+                            A box
+                        </statisticsSummaryBox>
+                        <statisticsSummaryBox>
+                            A box
+                        </statisticsSummaryBox>
+                        <statisticsSummaryBox>
+                            A box
+                        </statisticsSummaryBox>
+                    </card>
+                </statisticsSummary>
             </main>
         </mainContainer>
     </body>

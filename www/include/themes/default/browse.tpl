@@ -26,19 +26,22 @@
 
                             <!-- Category selection area -->
                             <searchCategoriesContainer>
+                                <!-- Parent container. The top-level checkbox, when checked,
+                                     will check all child categories.
+                                -->
                                 <searchCategoryParent>
-                                    <input type="checkbox" name="1" value="1"> Meow
+                                    <input type="checkbox" name="1" value="1"> Meow parent
 
                                     <searchCategoryChild>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        <input type="checkbox" name="1" value="1"> Meow child<br>
                                     </searchCategoryChild>
                                 </searchCategoryParent>
                                 <searchCategoryParent>
