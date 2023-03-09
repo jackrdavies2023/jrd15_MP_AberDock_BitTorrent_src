@@ -115,6 +115,16 @@ navigationBar mainLinks a {
     background-color: var(--main-background-color);
 }
 
+navigationBar i {
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    background-color: var(--card-icon-color);
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    vertical-align: text-bottom;
+}
+
 mainContainer {
     position: absolute;
     left: 80mm;
@@ -208,6 +218,21 @@ i.like {
 i.info {
     -webkit-mask-image: url(../img/info.svg);
     mask-image: url(../img/info.svg);
+}
+
+i.search {
+    -webkit-mask-image: url(../img/search.svg);
+    mask-image: url(../img/search.svg);
+}
+
+i.upload {
+    -webkit-mask-image: url(../img/upload.svg);
+    mask-image: url(../img/upload.svg);
+}
+
+i.statistics {
+    -webkit-mask-image: url(../img/statistics.svg);
+    mask-image: url(../img/statistics.svg);
 }
 
 .tiny-spacer {

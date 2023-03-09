@@ -107,7 +107,7 @@
                         <statisticsTableHeader>
                             <span class="username">A bad human</span>
                             <span>0</span>
-                            <span>1Gib</span>
+                            <span>1GiB</span>
                             <span>600GiB</span>
                         </statisticsTableHeader>
                     </card>

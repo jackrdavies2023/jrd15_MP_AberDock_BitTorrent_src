@@ -3,9 +3,9 @@
     <img id="aberdock_logo" src="{$assetDir}/img/logo.jpg">
 
     <mainLinks>
-        <a href="/?p=browse">Browse</a>
-        <a href="/?p=upload">Upload</a>
-        <a href="/?p=statistics">Statistics</a>
+        <a href="/?p=browse"><i class="search"></i> Browse</a>
+        <a href="/?p=upload"><i class="upload"></i> Upload</a>
+        <a href="/?p=statistics"><i class="statistics"></i> Statistics</a>
     </mainLinks>
 
     <bottomUserOptions>
