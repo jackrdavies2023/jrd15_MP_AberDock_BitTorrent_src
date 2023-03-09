@@ -107,16 +107,16 @@
                         <statisticsTableHeader>
                             <span class="username">A bad human</span>
                             <span>0</span>
+                            <span>1Gib</span>
                             <span>600GiB</span>
-                            <span>1GiB</span>
                         </statisticsTableHeader>
                     </card>
                     <card class="no-rounded-corners">
                         <statisticsTableHeader>
                             <span class="username">Another very bad human</span>
                             <span>0</span>
-                            <span>500GiB</span>
                             <span>1GiB</span>
+                            <span>500GiB</span>
                         </statisticsTableHeader>
                     </card>
                 </topTenSeeders>
