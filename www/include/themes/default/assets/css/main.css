@@ -16,6 +16,12 @@
     --text-color: rgb(0, 0, 0);
     --card-icon-color: #000000;
 
+    --standard-border-radius: 2mm;
+
+    --input-padding-horizontal: 3.5mm;
+    --input-padding-vertical: 2.3mm;
+    --input-preferred-width: 128mm;
+
     --main-fonts: "Sen", "Gilroy", "Circular Std", "TT Commons", "Futura", "Alata", sans-serif;
 }
 
@@ -71,10 +77,11 @@ searchEngine #search-query {
 
 searchEngine #search-query, searchEngine input[type="submit"] {
     padding: 3mm;
-    border-radius: 2mm;
+    border-radius: var(--standard-border-radius);
     border: none;
     outline-style: none;
     box-shadow: none;
+    background-color: var(--secondary-background-color);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -235,14 +242,6 @@ i.statistics {
     mask-image: url(../img/statistics.svg);
 }
 
-.tiny-spacer {
-    height: 1mm;
-    width: 100mm;
-    box-sizing: border-box;
-    padding: 0;
-    position: relative;   
-}
-
 statisticsSummaryBox {
     width: 200px;
     display: inline-flex;
@@ -293,4 +292,64 @@ statisticsTableHeader span.username {
 smallSeperator {
     display: block;
     margin-top: 4mm;
+}
+
+tinySeperator {
+    height: 1mm;
+    width: 100mm;
+    box-sizing: border-box;
+    padding: 0;
+    position: relative;
+    display: block;
+}
+
+uploadArea textarea {
+    width: 100%;
+    max-width: 100%;
+    min-height: 300px;
+}
+
+input[type=text], input[type=password], input[type=number], select, textarea {
+    border-radius: var(--standard-border-radius);
+    padding: var(--input-padding-vertical) var(--input-padding-horizontal) var(--input-padding-vertical) var(--input-padding-horizontal);
+    box-sizing: border-box;
+    border: none;
+    width: 100%;
+    max-width: var(--input-preferred-width);
+    outline-style: none;
+    outline-color: white;
+    background-color: var(--main-background-color);
+    color: var(--text-color)
+}
+
+input[type=submit], input[type=file] {
+    border-radius: var(--standard-border-radius);
+    padding: var(--input-padding-vertical) var(--input-padding-horizontal) var(--input-padding-vertical) var(--input-padding-horizontal);
+    text-decoration: none;
+    box-sizing: border-box;
+    border: none;
+    outline-style: none;
+    box-shadow: none;
+    position: relative;
+    bottom: 0;
+    background-color: var(--main-background-color);
+    color: var(--text-color)
+}
+
+input[type="file"] {
+    width: 100%;
+    max-width: var(--input-preferred-width);
+    background-color: var(--main-background-color);
+}
+
+input[type="file"]:hover, input[type="submit"]:hover, input[type="checkbox"]:hover, select {
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+    position: absolute;
+    height: 0;
+    width: 0;
+    opacity: 0;
+    padding: 0;
 }
