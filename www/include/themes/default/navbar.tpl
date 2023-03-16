@@ -6,6 +6,7 @@
         <a href="/?p=browse"><i class="search"></i> Browse</a>
         <a href="/?p=upload"><i class="upload"></i> Upload</a>
         <a href="/?p=statistics"><i class="statistics"></i> Statistics</a>
+        <a href="/?p=login"><i class="login"></i> Login</a>
     </mainLinks>
 
     <bottomUserOptions>
