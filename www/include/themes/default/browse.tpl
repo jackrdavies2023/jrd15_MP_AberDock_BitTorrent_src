@@ -100,7 +100,7 @@
                     <card>
                         <h3>Torrent title</h3>
                         <p>
-                        Posted in ISO -> Linux 2 days ago by human<br>
+                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
                         2.3 GiB - 10 seeders, 5 leechers
                         </p>
                         <options>
@@ -114,7 +114,7 @@
                     <card>
                         <h3>Torrent title</h3>
                         <p>
-                        Posted in ISO -> Linux 2 days ago by human<br>
+                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
                         2.3 GiB - 10 seeders, 5 leechers
                         </p>
                         <options>
@@ -128,7 +128,7 @@
                     <card>
                         <h3>Torrent title</h3>
                         <p>
-                        Posted in ISO -> Linux 2 days ago by human<br>
+                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
                         2.3 GiB - 10 seeders, 5 leechers
                         </p>
                         <options>
@@ -142,7 +142,7 @@
                     <card>
                         <h3>Torrent title</h3>
                         <p>
-                        Posted in ISO -> Linux 2 days ago by human<br>
+                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
                         2.3 GiB - 10 seeders, 5 leechers
                         </p>
                         <options>

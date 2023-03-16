@@ -2,14 +2,22 @@
 	ini_set('display_errors', '1');
 	ini_set('display_startup_errors', '1');
 	error_reporting(E_ALL);
-	
 
-	// Global configuration.
-	require_once(__DIR__."/include/config.php");
+	// Append our class directory to the include path.
+	set_include_path(get_include_path().PATH_SEPARATOR.__DIR__."/include/class");
 
 	// Require the Smarty template class, to make theme development easier.
 	// Smarty template acquired from: https://www.smarty.net/
 	require_once(__DIR__."/include/class/Smarty/Smarty.class.php");
+
+	// Require Medoo Database Framework.
+	require_once("class_medoo.php");
+
+	// Require the login class.
+	require_once("class_login.php");
+
+	// Global configuration.
+	require_once(__DIR__."/include/config.php");
 
 	// Some default variables.
 	$theme  = "default";

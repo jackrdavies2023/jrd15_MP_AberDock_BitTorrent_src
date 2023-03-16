@@ -212,6 +212,10 @@ torrentBrowser card options {
     width: 100;
 }
 
+a.profile-link {
+    text-decoration: underline;
+}
+
 i.download {
     -webkit-mask-image: url(../img/download.svg);
     mask-image: url(../img/download.svg);
@@ -410,4 +414,19 @@ body.login-background {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+profileContainer .profile-img {
+    width: 70mm;
+    height: 70mm;
+    background-color: var(--main-background-color);
+    border-radius: 35mm;
+}
+
+profileContainer card {
+    display: flex;
+}
+
+profileContainer stats {
+    margin: 0 0 0 10mm;
 }
