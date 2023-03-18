@@ -13,6 +13,9 @@
 	// Require Medoo Database Framework.
 	require_once("class_medoo.php");
 
+	// Require the account class.
+	require_once("class_account.php");
+
 	// Require the login class.
 	require_once("class_login.php");
 
@@ -22,9 +25,23 @@
 	// Some default variables.
 	$theme  = "default";
 
+	// Set the required namespaces.
+	use Login\Login;
+	use Account\Account;
 
 	// Initialise constructs.
-	$smarty  = new Smarty(); // Used for loading themes/templates.
+	$smarty  = new Smarty();        // Used for loading themes/templates.
+	$login   = new Login(db: $db);  // Used for checking if the user is authenticated
+								    // and for performing various account tasks.
+
+	if (!$login->isLoggedIn()) {
+		echo("Not logged in. Creating...");
+		$account = new Account(db: $db);
+		$account -> createAccount(
+			username: "testAccount",
+			password: "testPassword"
+		);
+	}
 
 	// Smarty template settings.
 	$smarty->debugging = false; // Used for debugging templates.

@@ -15,19 +15,37 @@ namespace Login;
 
 use Exception;
 use Medoo\Medoo;
+use Account\Account;
 
-class Login 
+class Login
 {
     protected $db, 
               $accountDetails,
               $cache;
 
-    function __construct(Medoo $db) {
+    function __construct(Medoo &$db) {
         $this->db = $db;
     }
 
+    /**
+     * Checks if the user has a valid session token.
+     * @return bool True if logged in, false if not.
+     */
     function isLoggedIn() {
+        if (isset($_COOKIE['session_token'])) {
+            if (!empty($sessionToken = trim($_COOKIE['session_token']))) {
+                // Session token is not empty. Let's check if it's in the DB
+                // and fetch the account information.
+                
+                $account = new Account(db: $this->db, sessionToken: $sessionToken);
+                if ($account->getAccount()) {
+                    // We have account info. So that means we're logged in.
+                    return true;
+                }
+            }
+        }
 
+        return false;
     }
 }
 ?>
