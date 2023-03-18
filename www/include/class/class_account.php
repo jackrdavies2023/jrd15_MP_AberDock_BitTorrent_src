@@ -72,8 +72,40 @@ use Medoo\Medoo;
         }
 
         if ($sessionToken) {
-            return "meow";
+            // We're fetching account information based on a session token.
+            // We'll lookup the token and use a left join to link the user ID with
+            // the details in the "users" table. We'll also grab the group info
+            // by joining that based on the gid (group id).
+
+            if ($query = $this->db->get("sessions",
+                [
+                    "[>]users"  => "uid", // We're joining the tables based on the uid.
+                    "[<]groups" => "gid"  // We're joining the groups table based on the gid.
+                ],
+                [   // Data we want to fetch from the DB.
+                    "sessions.session_token",
+                    "sessions.remember",
+                    "sessions.expiration",
+                    "sessions.agent",
+                    "sessions.uid",
+                    "sessions.sid",
+                    "sessions.ip_address",
+                    "users.gid",
+                    "users.username",
+                    "users.password",
+                    "groups.group_name"
+                ],
+                [   // WHERE.
+                    "session_token" => trim($sessionToken)
+                ]
+            )) {
+                // We have account info.
+                return $this->account = $query;
+            }
+            
         }
+
+        return array();
     }
 
     /**
@@ -82,6 +114,7 @@ use Medoo\Medoo;
      * Exception codes:
      *     100 - Username too short (4 characters minimum)
      *     101 - Password too short (8 characters minimum)
+     *     102 - Failed to create account (DB error?)
      * 
      * @param string $username The new account username (4 characters minimum).
      * @param string $password The new account password (8 characters minimum).
@@ -94,7 +127,7 @@ use Medoo\Medoo;
         string $username,
         string $password,
         int $language = 1,
-        int $groupID = 0,
+        int $groupID = 1,
         int $invitedBy = 0
     ) {
         $username = trim($username);
@@ -108,14 +141,19 @@ use Medoo\Medoo;
             throw new Exception("Password too short!", 101);
         }
 
-        $this->db->insert("users", 
+        if ($this->db->insert("users", 
             [
-                "username" => "$username",
-                "password" => password_hash(trim($password), PASSWORD_BCRYPT, array('cost' => 12)),
-                "gid"      => 0,
+                "username"   => "$username",
+                "password"   => password_hash(trim($password), PASSWORD_BCRYPT, array('cost' => 12)),
+                "gid"        => $groupID,
                 "invited_by" => $invitedBy
             ]
-        );
+        )) {
+            // Account created!
+            return true;
+        }
+
+        throw new Exception("Failed to create account!", 102);
     }
  }
 

@@ -38,7 +38,7 @@ class Login
                 // and fetch the account information.
                 
                 $account = new Account(db: $this->db, sessionToken: $sessionToken);
-                if ($account->getAccount()) {
+                if (count($account->getAccount()) > 0) {
                     // We have account info. So that means we're logged in.
                     return true;
                 }

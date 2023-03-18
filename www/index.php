@@ -34,14 +34,18 @@
 	$login   = new Login(db: $db);  // Used for checking if the user is authenticated
 								    // and for performing various account tasks.
 
-	if (!$login->isLoggedIn()) {
+	/*if (!$login->isLoggedIn()) {
 		echo("Not logged in. Creating...");
 		$account = new Account(db: $db);
-		$account -> createAccount(
-			username: "testAccount",
-			password: "testPassword"
-		);
-	}
+		try {
+			$account -> createAccount(
+				username: "testAccount",
+				password: "testPassword"
+			);
+		} catch (Exception $e) {
+			exit("Error! ".$e->getMessage());
+		}
+	}*/
 
 	// Smarty template settings.
 	$smarty->debugging = false; // Used for debugging templates.
