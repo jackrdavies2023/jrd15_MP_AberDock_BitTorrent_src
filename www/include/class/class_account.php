@@ -27,12 +27,14 @@ use Medoo\Medoo;
      * @param string $sessionToken The login session token to retrieve the account info for.
      * @param int $userId The ID of the account to retrieve.
      * @param string $userIdLong The long ID of the account to retrieve.
+     * @param string $username The username of the account to retrieve.
      */
     function __construct(
         Medoo &$db, 
         string $sessionToken = null,
         int $userId = null, 
-        string $userIdLong = null
+        string $userIdLong = null,
+        string $username = null
     ) {
         $this->db = $db;
 
@@ -50,26 +52,52 @@ use Medoo\Medoo;
             $this->account = $this->getAccount(userIdLong: $userIdLong);
             return;
         }
+
+        if ($username) {
+            $this->account = $this->getAccount(username: $username);
+            return;
+        }
     }
 
     /**
      * Fetches information regarding an account.
      * 
+     *  Exception codes:
+     *     103 - Account search parameters not specified (not enough arguments)
+     * 
      * @param int $userId The ID of the account to retrieve.
      * @param string $userIdLong The long ID of the account to retrieve.
      * @param string $sessionToken The login session token to retrieve the account info for.
+     * @param string $username The username of the account to retrieve.
      * @return array An array of the account details.
      */
     function getAccount(
         int $userId = null, 
         string $userIdLong = null,
-        string $sessionToken = null
+        string $sessionToken = null,
+        string $username = null
     ) {
-        if ($this->account) {
+        if (is_array($this->account)) {
             // We've already retrieved the account info. Return that instead
             // of making another query to the database.
             return $this->account;
         }
+
+        // These are the things we always want to retrieve, regardless of how
+        // we're looking up an account.
+        $what = array(
+            "users.uid",
+            "users.gid",
+            "users.username",
+            "users.password",
+            "groups.group_name"
+        );
+
+        $where = array();
+        $table = "users";
+        $join  = array(
+            "[<]groups" => "gid"  // We're joining the groups table based on the gid.
+        );
 
         if ($sessionToken) {
             // We're fetching account information based on a session token.
@@ -77,35 +105,60 @@ use Medoo\Medoo;
             // the details in the "users" table. We'll also grab the group info
             // by joining that based on the gid (group id).
 
-            if ($query = $this->db->get("sessions",
-                [
-                    "[>]users"  => "uid", // We're joining the tables based on the uid.
-                    "[<]groups" => "gid"  // We're joining the groups table based on the gid.
-                ],
-                [   // Data we want to fetch from the DB.
-                    "sessions.session_token",
-                    "sessions.remember",
-                    "sessions.expiration",
-                    "sessions.agent",
-                    "sessions.uid",
-                    "sessions.sid",
-                    "sessions.ip_address",
-                    "users.gid",
-                    "users.username",
-                    "users.password",
-                    "groups.group_name"
-                ],
-                [   // WHERE.
-                    "session_token" => trim($sessionToken)
-                ]
-            )) {
-                // We have account info.
-                return $this->account = $query;
-            }
-            
+            // Add additional items to select from the database.
+            array_push($what, 
+                "sessions.session_token",
+                "sessions.remember",
+                "sessions.expiration",
+                "sessions.agent",
+                "sessions.uid",
+                "sessions.sid",
+                "sessions.ip_address"
+            );
+
+            $where = array(
+                "session_token" => trim($sessionToken)
+            );
+
+            $table = "sessions";
+            $join["[>]users"] = "uid"; // We're joining the users table based on the uid.
         }
 
-        return array();
+        if ($userId) {
+            $where = array(
+                "uid" => $userId
+            );
+        }
+
+        if ($userIdLong) {
+            $where = array(
+                "uid_long" => $userIdLong
+            );
+        }
+
+        if ($username) {
+            $where = array(
+                "username" => $username
+            );
+        }
+
+        if (count($where) == 0) {
+            // No search-by parameters were passed to this method.
+            // Nothing to search for.
+            throw new Exception("No account identifier was specified!", 103);
+        }
+        
+        if ($query = $this->db->get($table,
+            $join, // Tables to join.
+            $what, // Data we want to fetch from the DB.
+            $where // Where statement.
+        )) {
+            return $this->account = $query;
+        }
+
+        // Even if there is no account data, we'll cache it
+        // So we don't make the same request twice.
+        return $this->account = array();
     }
 
     /**

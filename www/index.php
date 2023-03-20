@@ -47,6 +47,12 @@
 		}
 	}*/
 
+	$account = new Account(db: $db, userId: 2);
+	print_r($account->getAccount());
+	print_r($account->getAccount());
+	exit();
+
+
 	// Smarty template settings.
 	$smarty->debugging = false; // Used for debugging templates.
 	$smarty->setTemplateDir(__DIR__."/include/themes/$theme/"); // Template directory.
