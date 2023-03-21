@@ -80,13 +80,22 @@ searchEngine #search-query {
     outline-color: white;
 }
 
-searchEngine #search-query, searchEngine input[type="submit"] {
+searchEngine #search-query,
+searchEngine input[type="submit"],
+torrentContainer button
+{
     padding: 3mm;
     border-radius: var(--standard-border-radius);
     border: none;
     outline-style: none;
     box-shadow: none;
     background-color: var(--secondary-background-color);
+}
+
+torrentContainer button {
+    background-color: var(--main-background-color);
+    color: var(--text-color);
+    cursor: pointer;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -423,10 +432,25 @@ profileContainer .profile-img {
     border-radius: 35mm;
 }
 
-profileContainer card {
+profileContainer card, torrentContainer card.torrent-stats {
     display: flex;
 }
 
-profileContainer stats {
+torrentContainer card.torrent-stats {
+    padding: 0;
+}
+
+profileContainer stats, torrentContainer stats {
     margin: 0 0 0 10mm;
+}
+
+torrentContainer .torrent-cover-img {
+    width: 70mm;
+}
+
+torrentContainer pre {
+    background-color: var(--main-background-color);
+    border-radius: var(--standard-border-radius);
+    margin: 0;
+    padding: 3mm;
 }
