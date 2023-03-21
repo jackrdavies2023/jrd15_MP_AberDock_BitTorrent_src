@@ -1,0 +1,30 @@
+Array
+(
+    [username] => testAccount
+    [password] => $2y$12$OyQ5l6We54nWsKnPCbFll.namniojNKD14EZAF4Pagu1YOyCZaNUO
+    [group_name] => Administrator
+    [group_color] => ffffff
+    [is_admin] => 1
+    [is_guest] => 0
+    [is_new] => 0
+    [is_disabled] => 0
+    [can_upload] => 1
+    [can_download] => 1
+    [can_delete] => 1
+    [can_modify] => 1
+    [can_viewprofile] => 1
+    [can_viewstats] => 1
+    [can_comment] => 1
+    [can_invite] => 1
+    [language_id] => 1
+    [language_short] => eng
+    [language_long] => English
+    [session_token] => c804da664669104c1889f31509c3148bc0b645d042cb050d9877bfe49478e411
+    [remember] => 0
+    [expiration] => 1679363420
+    [agent] => Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0
+    [uid] => 1
+    [sid] => 2
+    [uid_long] => pisadpoaisdugfoisadoasud
+    [ip_address] => 11.0.0.1
+)

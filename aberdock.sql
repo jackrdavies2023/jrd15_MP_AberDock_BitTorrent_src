@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 21, 2023 at 12:20 AM
+-- Generation Time: Mar 21, 2023 at 08:51 AM
 -- Server version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP Version: 8.1.16
 
@@ -93,7 +93,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`sid`, `session_token`, `uid`, `last_seen`, `expiration`, `remember`, `agent`, `ip_address`) VALUES
-(4, 'f0bd2e977e1e4b9790d03cf18a373746e2ea9e0fba464c787c9ffeb900322bb0', 1, 1679357898, 1679365098, 0, 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0', '11.0.0.1');
+(5, 'e49af1fdf67b017e4048f0df7fc6d5d861dd8bd5b6b8f17dbe8b92de25c93287', 1, 1679388432, 1679395632, 0, 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0', '11.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -116,7 +116,7 @@ CREATE TABLE `users` (
   `uploaded` bigint(20) NOT NULL,
   `downloaded` bigint(20) NOT NULL,
   `picture` text NOT NULL,
-  `uid_long` int(11) NOT NULL,
+  `uid_long` text NOT NULL,
   `join_date` bigint(20) NOT NULL,
   `banned_reason` text NOT NULL,
   `invited_by` int(11) NOT NULL
@@ -127,7 +127,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`uid`, `gid`, `pid`, `username`, `password`, `recovery_key`, `last_seen`, `lid`, `private`, `show_downloads`, `show_uploads`, `uploaded`, `downloaded`, `picture`, `uid_long`, `join_date`, `banned_reason`, `invited_by`) VALUES
-(1, 1, '', 'testAccount', '$2y$12$OyQ5l6We54nWsKnPCbFll.namniojNKD14EZAF4Pagu1YOyCZaNUO', '', 0, 1, 0, 0, 0, 0, 0, '', 0, 0, '', 0);
+(1, 1, '', 'testAccount', '$2y$12$OyQ5l6We54nWsKnPCbFll.namniojNKD14EZAF4Pagu1YOyCZaNUO', '', 0, 1, 0, 0, 0, 0, 0, '', 'asdjasoiyysaoiudoisaudouoisaudasd', 0, '', 0);
 
 --
 -- Indexes for dumped tables
@@ -177,7 +177,7 @@ ALTER TABLE `languages`
 -- AUTO_INCREMENT for table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`

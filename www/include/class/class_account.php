@@ -95,6 +95,7 @@ use Medoo\Medoo;
         $what = array(
             "users.username",
             "users.password",
+            "users.uid_long",
             "groups.group_name",
             "groups.group_color",
             "groups.is_admin",

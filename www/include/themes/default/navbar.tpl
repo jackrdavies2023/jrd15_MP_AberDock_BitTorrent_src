@@ -17,7 +17,7 @@
     <bottomUserOptions>
         <userName>
             <img class="navbar-profile-img" src="{$assetDir}/img/profile.png">
-            <span>{$accountInfo['username']}</span>
+            <span><a href="/?p=profile&user={$accountInfo['uid_long']}">{$accountInfo['username']}</a></span>
         </userName>
     </bottomUserOptions>
 </navigationBar>
