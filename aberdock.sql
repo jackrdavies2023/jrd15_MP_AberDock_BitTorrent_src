@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 18, 2023 at 08:47 PM
+-- Generation Time: Mar 21, 2023 at 12:20 AM
 -- Server version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP Version: 8.1.16
 
@@ -88,6 +88,13 @@ CREATE TABLE `sessions` (
   `ip_address` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`sid`, `session_token`, `uid`, `last_seen`, `expiration`, `remember`, `agent`, `ip_address`) VALUES
+(4, 'f0bd2e977e1e4b9790d03cf18a373746e2ea9e0fba464c787c9ffeb900322bb0', 1, 1679357898, 1679365098, 0, 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0', '11.0.0.1');
+
 -- --------------------------------------------------------
 
 --
@@ -102,7 +109,7 @@ CREATE TABLE `users` (
   `password` text NOT NULL,
   `recovery_key` text NOT NULL,
   `last_seen` bigint(20) NOT NULL,
-  `language` int(11) NOT NULL,
+  `lid` int(11) NOT NULL,
   `private` int(11) NOT NULL,
   `show_downloads` int(11) NOT NULL,
   `show_uploads` int(11) NOT NULL,
@@ -119,8 +126,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`uid`, `gid`, `pid`, `username`, `password`, `recovery_key`, `last_seen`, `language`, `private`, `show_downloads`, `show_uploads`, `uploaded`, `downloaded`, `picture`, `uid_long`, `join_date`, `banned_reason`, `invited_by`) VALUES
-(4, 1, '', 'testAccount', '$2y$12$OyQ5l6We54nWsKnPCbFll.namniojNKD14EZAF4Pagu1YOyCZaNUO', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', 0);
+INSERT INTO `users` (`uid`, `gid`, `pid`, `username`, `password`, `recovery_key`, `last_seen`, `lid`, `private`, `show_downloads`, `show_uploads`, `uploaded`, `downloaded`, `picture`, `uid_long`, `join_date`, `banned_reason`, `invited_by`) VALUES
+(1, 1, '', 'testAccount', '$2y$12$OyQ5l6We54nWsKnPCbFll.namniojNKD14EZAF4Pagu1YOyCZaNUO', '', 0, 1, 0, 0, 0, 0, 0, '', 0, 0, '', 0);
 
 --
 -- Indexes for dumped tables
@@ -170,7 +177,7 @@ ALTER TABLE `languages`
 -- AUTO_INCREMENT for table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
