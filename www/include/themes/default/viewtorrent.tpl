@@ -17,7 +17,7 @@
                         <card class="torrent-stats no-background">
                             <img class="torrent-cover-img" src="{$assetDir}/img/torrent-cover.png">
                             <stats>
-                                Uploaded by: someone<br>
+                                Uploaded by: <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
                                 Size: 2.3GiB<br>
                                 Category: ISO -> Linux<br>
                                 Date: 01/01/2023<br>
