@@ -15,6 +15,8 @@
                         <smallSeperator></smallSeperator>
                         <input type="password" id="password" name="password" placeholder="Password">
                         <smallSeperator></smallSeperator>
+                        <label for="remember">Remember session</label>
+                        <input type="checkbox" name="remember" id="remember">
                         <input type="submit" value="Login">
                         <smallSeperator></smallSeperator>
                     </form>

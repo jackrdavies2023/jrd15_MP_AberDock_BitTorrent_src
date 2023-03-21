@@ -18,7 +18,9 @@ use Medoo\Medoo;
  class Account
  {
     protected $db,
-              $account;
+              $account,
+              $defaultExpirationTime    = (60 * 60) * 2,   // Expires in 2 hours.
+              $defaultMaxExpirationTime = (60 * 60) * 744; // Expires in 1 month.
 
     /**
      * Account class construct.
@@ -75,8 +77,13 @@ use Medoo\Medoo;
         int $userId = null, 
         string $userIdLong = null,
         string $sessionToken = null,
-        string $username = null
+        string $username = null,
+        bool $clearCache = false
     ) {
+        if ($clearCache) {
+            $this->account = null;
+        }
+
         if (is_array($this->account)) {
             // We've already retrieved the account info. Return that instead
             // of making another query to the database.
@@ -86,17 +93,32 @@ use Medoo\Medoo;
         // These are the things we always want to retrieve, regardless of how
         // we're looking up an account.
         $what = array(
-            "users.uid",
-            "users.gid",
             "users.username",
             "users.password",
-            "groups.group_name"
+            "groups.group_name",
+            "groups.group_color",
+            "groups.is_admin",
+            "groups.is_guest ",
+            "groups.is_new",
+            "groups.is_disabled",
+            "groups.can_upload",
+            "groups.can_download",
+            "groups.can_delete",
+            "groups.can_modify",
+            "groups.can_viewprofile",
+            "groups.can_viewstats",
+            "groups.can_comment",
+            "groups.can_invite",
+            "languages.lid(language_id)", // Rename "lid" to "language_id" in the response.
+            "languages.language_short",
+            "languages.language_long"
         );
 
         $where = array();
         $table = "users";
         $join  = array(
-            "[<]groups" => "gid"  // We're joining the groups table based on the gid.
+            "[<]groups"    => "gid",  // We're joining the groups table based on the gid.
+            "[<]languages" => "lid"   // We're joining the languages table based on the lid.
         );
 
         if ($sessionToken) {
@@ -121,7 +143,26 @@ use Medoo\Medoo;
             );
 
             $table = "sessions";
-            $join["[>]users"] = "uid"; // We're joining the users table based on the uid.
+            // Prepend the linking of the users table to the join variable.
+            /*$join = array_merge($join, array(
+                "[>]users" => "uid"
+            ));*/
+
+            // Tried prepending to the original "join" variable, but I kept getting
+            // errors, so I say just overwrite the variable entirely.
+
+            $join = array(
+                "[>]users"     => "uid",
+                "[<]groups"    => "gid",
+                "[<]languages" => "lid"
+            );
+        } else {
+            // These SELECT options don't work when selecting directly from the
+            // sessions table. So we only use them when selecting based on username or ID.
+            array_push($what,
+                "users.uid",
+                "users.gid"
+            );
         }
 
         if ($userId) {
@@ -159,6 +200,65 @@ use Medoo\Medoo;
         // Even if there is no account data, we'll cache it
         // So we don't make the same request twice.
         return $this->account = array();
+    }
+
+    /**
+     * Generates and assigns a session token to an account.
+     * 
+     * Exception codes:
+     *     104 - No account to bind the session token to.
+     *     105 - Failed to insert session token into database.
+     * 
+     * @param bool $remember true will result in the session lasting for a month rather than 2 hours.
+     * @return array An array of the account details on success, which will contain the session token.
+     */
+    function assignSessionKey(
+        bool $remember = false,
+    ) {
+        if (!$remember) {
+            $expiration = time() + $this->defaultExpirationTime;
+            $remember = 0;
+        } else {
+            // "Remember me" extends the lifespan of a session token.
+            $expiration = time() + $this->defaultMaxExpirationTime;
+            $remember = 1;
+        }
+
+        if (count($this->getAccount()) > 0) {
+            // We have an account to bind the session key to. Generate random key.
+            $token = hash('sha256', $this->getAccount()['username'] . time() . rand(32, 32));
+
+            if ($this->db->insert("sessions",
+                [
+                    "session_token" => $token,
+                    "uid"           => $this->getAccount()['uid'],
+                    "last_seen"     => time(),
+                    "expiration"    => $expiration,
+                    "agent"         => trim($_SERVER['HTTP_USER_AGENT']),
+                    "remember"      => $remember,
+                    "ip_address"    => $_SERVER['REMOTE_ADDR'] // This should be changed at some point,
+                                                               // to take into account proxy servers.
+                ]
+            )) {
+                // Let's re-query the SQL for the account details, which will
+                // now have the session information included.
+                return $this->getAccount(sessionToken: $token, clearCache: true);
+            }
+
+            throw new Exception("Failed to insert session token!", 105);
+        }
+
+        throw new Exception("No account to bind session key to!", 104);
+    }
+
+    function destroySessionKey() {
+        if (isset($this->getAccount()['session_token'])) {
+            $this->db->delete("sessions",
+                [
+                    "session_token" => $this->getAccount()['session_token']
+                ]
+            );
+        }
     }
 
     /**
