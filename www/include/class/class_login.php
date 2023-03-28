@@ -17,14 +17,14 @@ use Exception;
 use Medoo\Medoo;
 use Account\Account;
 
-class Login
+class Login extends Account
 {
-    protected $db, 
-              $account,
-              $cache;
+    protected $cache;
 
     function __construct(Medoo &$db) {
-        $this->db = $db;
+
+        // PHP equivalent of "super".
+        parent::__construct(db: $db);
     }
 
     /**
@@ -41,8 +41,8 @@ class Login
                     // We already have an Account construct. We should use that
                     // so we can take advantage of the cache in the Account class.
 
-                    if (isset($this->account->getAccount()['session_token'])) {
-                        if ($this->account->getAccount()['session_token'] == $sessionToken) {
+                    if (isset(parent::getAccount()['session_token'])) {
+                        if (parent::getAccount()['session_token'] == $sessionToken) {
                             return true;
                         }
                     }
@@ -51,9 +51,9 @@ class Login
                     setcookie('session_token', "", time() - 3600, "/");
                     return false;
                 }
-                
-                $this->account = new Account(db: $this->db, sessionToken: $sessionToken);
-                if (count($this->account->getAccount()) > 0) {
+
+                // Account construct is empty. Look up an account based on session token.
+                if (count(parent::getAccount(sessionToken: $sessionToken, clearCache: true)) > 0) {
                     // We have account info. So that means we're logged in.
                     return true;
                 }
@@ -92,20 +92,18 @@ class Login
             throw new Exception("Empty password!", 201);
         }
 
-        $account = new Account(db: $this->db, username: $username);
-        if (count($account->getAccount()) > 0) {
+        if (count(parent::getAccount(username: $username, clearCache: true)) > 0) {
             // We have account info. Now we can verify the password against the bcrypt hash.
-            if (password_verify($password, $account->getAccount()['password'])) {
+            if (password_verify($password, parent::getAccount()['password'])) {
                 // Password is valid! Register a session token.
-                $account->assignSessionKey(remember: $remember);
+                parent::assignSessionKey(remember: $remember);
 
                 setcookie("session_token", 
-                          $account->getAccount()['session_token'], 
-                          $account->getAccount()['expiration'], 
-                          "/"
+                    parent::getAccount()['session_token'], 
+                    parent::getAccount()['expiration'], 
+                    "/"
                 );
 
-                $this->account = $account;
                 return true;
             }
         }
@@ -114,12 +112,12 @@ class Login
     }
 
     function logOut() {
-        $this->account->destroySessionKey();
+        parent::destroySessionKey();
         return true;
     }
 
     function getAccountInfo() {
-        return $this->account->getAccount();
+        return parent::getAccount();
     }
 }
 ?>
