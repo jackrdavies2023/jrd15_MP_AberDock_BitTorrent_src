@@ -1,8 +1,8 @@
 <?php
     use Account\Account;
 
-    if (isset($_GET['user']) && !empty($userIdLong = trim($_GET['user']))) {
-        try {
+    try {
+        if (isset($_GET['user']) && !empty($userIdLong = trim($_GET['user']))) {
             $account = new Account(db: $db, userIdLong: $userIdLong);
 
             if (count($account->getAccount()) > 0) {
@@ -11,10 +11,12 @@
             } else {
                 throw new Exception("Account not found!");
             }
-        } catch (Exception $e) {
-            $smarty->assign('exceptionMessage', $e->getMessage());
-            $smarty->assign('exceptionCode', $e->getCode());
+        } else {
+            throw new Exception("Account not specified!");
         }
+    } catch (Exception $e) {
+        $smarty->assign('exceptionMessage', $e->getMessage());
+        $smarty->assign('exceptionCode', $e->getCode());
     }
 
 

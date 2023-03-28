@@ -265,6 +265,11 @@ i.login {
     mask-image: url(../img/login.svg);
 }
 
+i.administration {
+    -webkit-mask-image: url(../img/admin.svg);
+    mask-image: url(../img/admin.svg);
+}
+
 statisticsSummaryBox {
     width: 200px;
     display: inline-flex;

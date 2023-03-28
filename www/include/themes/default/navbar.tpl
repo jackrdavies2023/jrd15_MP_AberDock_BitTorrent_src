@@ -7,6 +7,10 @@
         <a href="/?p=upload"><i class="upload"></i> Upload</a>
         <a href="/?p=statistics"><i class="statistics"></i> Statistics</a>
 
+        {if $accountInfo['is_admin'] eq 1}
+            <a href="/?p=administration"><i class="administration"></i> Administration</a>
+        {/if}
+
         {if $accountInfo['is_guest'] eq 1}
             <a href="/?p=login"><i class="login"></i> Login</a>
         {else}
