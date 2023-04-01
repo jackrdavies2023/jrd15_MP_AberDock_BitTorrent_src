@@ -61,34 +61,46 @@
 	$smarty->assign('siteName', 'AberDock'); // Assign the variable "siteName" for use inside of template files.
 	$smarty->assign('assetDir', "/include/themes/$theme/assets"); // Set the asset directory, for storing CSS, JS and other assets.
 
-	if (!$guestAllowed && !$login->isLoggedIn()) {
-		// User is not logged in and guest access is disabled.
-		// So we need to redirect to one of the login pages.
-		if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
-			switch(trim($_REQUEST['p'])) {
-				case "login":
-				case "register":
-				case "recover":
-					break; // No need to force a redirect if we're already visiting
-					       // one of the above pages.
-				default:
-					header('Location: /?p=login');
-					exit();
-			}
-		} else {
-			header('Location: /?p=login');
-			exit();
-		}
-	}
 
-	if ($login->isLoggedIn()) {
-		$smarty->assign('accountInfo', $login->getAccountInfo());
-	} else {
-		// This is temporary until the guest account is added to the SQL.
-		$smarty->assign('accountInfo', array(
-			"username" => "Guest"
-		));
+	try {
+		if (!$guestAllowed && !$login->isLoggedIn()) {
+			// User is not logged in and guest access is disabled.
+			// So we need to redirect to one of the login pages.
+			if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
+				switch(trim($_REQUEST['p'])) {
+					case "login":
+					case "register":
+					case "recover":
+						break; // No need to force a redirect if we're already visiting
+							   // one of the above pages.
+					default:
+						header('Location: /?p=login');
+						exit();
+				}
+			} else {
+				header('Location: /?p=login');
+				exit();
+			}
+		}
+	
+		if ($login->isLoggedIn()) {
+			$smarty->assign('accountInfo', $login->getAccountInfo());
+		} else {
+			// This is temporary until the guest account is added to the SQL.
+			$smarty->assign('accountInfo', array(
+				"username" => "Guest"
+			));
+		}
+	} catch (Exception $e) {
+		$smarty->assign('exceptionMessage', $e->getMessage()."\n\nHave you imported the SQL?");
+        $smarty->assign('exceptionCode', $e->getCode());
+        $smarty->assign('pageName', 'Error');
+
+        // Load error.tpl Smarty template file.
+        $smarty->display('error.tpl'); 
+        exit();
 	}
+	
 
     // Navigation handler.
 	if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {

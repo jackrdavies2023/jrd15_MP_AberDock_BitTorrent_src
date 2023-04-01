@@ -399,13 +399,17 @@ card.registration-card {
     height: 450px;
 }
 
+card.error-card {
+    width: 600px;
+}
+
 card.login-card-title {
     background-color: white;
     color: black;
     text-align: center;
 }
 
-loginContainer {
+loginContainer, errorContainer {
     display: block;
     width: 100%;
     height: 100%;
@@ -421,6 +425,12 @@ loginCardContainer {
 
 loginCardContainer input[type="submit"] {
     float: right;
+}
+
+errorCardConainer {
+    padding: 5mm;
+    display: block;
+    font-size: 11pt;
 }
 
 body.login-background {
@@ -453,9 +463,14 @@ torrentContainer .torrent-cover-img {
     width: 70mm;
 }
 
-torrentContainer pre {
+torrentContainer pre, errorContainer pre {
     background-color: var(--main-background-color);
     border-radius: var(--standard-border-radius);
     margin: 0;
     padding: 3mm;
+}
+
+errorContainer pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }

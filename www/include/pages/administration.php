@@ -12,6 +12,6 @@
 
     $smarty->assign('pageName', 'Administration');
 
-    // Load browse.tpl Smarty template file.
+    // Load administration.tpl Smarty template file.
     $smarty->display('administration.tpl'); 
 ?>

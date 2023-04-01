@@ -20,7 +20,9 @@
 
     <bottomUserOptions>
         <userName>
-            <img class="navbar-profile-img" src="{$assetDir}/img/profile.png">
+            <a href="/?p=profile&user={$accountInfo['uid_long']}">
+                <img class="navbar-profile-img" src="{$assetDir}/img/profile.png">
+            </a>
             <span><a href="/?p=profile&user={$accountInfo['uid_long']}">{$accountInfo['username']}</a></span>
         </userName>
     </bottomUserOptions>
