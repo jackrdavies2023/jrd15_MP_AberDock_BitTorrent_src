@@ -23,7 +23,7 @@
                     <tinySeperator></tinySeperator>
                     <adminAuthenticationContainer>
                         <card>
-                            <form>
+                            <form method="POST">
                                 <label for="login-required">Login required</label>
                                 <input type="checkbox" name="login-required" id="login-required">
 
@@ -51,12 +51,12 @@
 
                     <smallSeperator></smallSeperator>
 
-                    <!-- Groups -->
-                    <h2>Groups</h2>
+                    <!-- User groups -->
+                    <h2> User groups</h2>
                     <tinySeperator></tinySeperator>
                     <adminGroupsContainer>
                         <card>
-                            <form>
+                            <form method="POST">
                                 <label for="new-group-name">New group name</label>
                                 <input type="text" id="new-group-name" name="new-group-name" placeholder="Group name">
                                 <input type="submit" value="Add">
@@ -73,9 +73,66 @@
                     <tinySeperator></tinySeperator>
                     <adminTrackerContainer>
                         <card>
-                            Tracker settings here.
+                            <form method="POST">
+                                <label for="announcement-interval">Announcement interval (seconds)</label>
+                                <input type="number" id="announcement-interval" name="announcement-interval" placeholder="Seconds">
+
+                                <smallSeperator></smallSeperator>
+
+                                <label for="announcement-allow-guests">Guests can connect</label>
+                                <input type="checkbox" name="announcement-allow-guests" id="announcement-allow-guests">
+
+                                <smallSeperator></smallSeperator>
+
+                                <label for="announcement-url-default">Announcement interval (seconds)</label>
+                                <input type="text" id="announcement-url-default" name="announcement-url-default" placeholder="URL">
+
+                                <smallSeperator></smallSeperator>
+
+                                <input type="submit" value="Save">
+                            </form>
                         </card>
                     </adminTrackerContainer>
+
+                    <smallSeperator></smallSeperator>
+
+                    <!-- Interface -->
+                    <h2>Interface</h2>
+                    <tinySeperator></tinySeperator>
+                    <adminInterfaceContainer>
+                        <card>
+                            <form method="POST">
+                                <label for="interface-default-language">Default language</label>
+                                <select type="text" id="interface-default-language" name="interface-default-language">
+                                    <option value="eng">English</option>
+                                    <option value="cym">Cymraeg</option>
+                                </select>
+
+                                <smallSeperator></smallSeperator>
+
+                                <label for="interface-default-theme">Default theme</label>
+                                <select type="text" id="interface-default-theme" name="interface-default-theme">
+                                    <option value="default">default</option>
+                                </select>
+
+                                <smallSeperator></smallSeperator>
+
+                                <input type="submit" value="Save">
+                            </form>
+                        </card>
+                    </adminInterfaceContainer>
+
+                    <smallSeperator></smallSeperator>
+
+                    <!-- Torrent categories -->
+                    <h2>Torrent categories</h2>
+                    <tinySeperator></tinySeperator>
+                    <adminTorrentCategoryContainer>
+                        <card>
+                            A table will go here!
+                        </card>
+                    </adminTorrentCategoryContainer>
+
                 {/if}
             </main>
         </mainContainer>
