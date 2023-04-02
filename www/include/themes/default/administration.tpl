@@ -128,11 +128,41 @@
                     <h2>Torrent categories</h2>
                     <tinySeperator></tinySeperator>
                     <adminTorrentCategoryContainer>
-                        <card>
-                            A table will go here!
+                        <card class="rounded-top-corners margin-top-2mm">
+                            <statisticsTableHeader>
+                                <span class="username">Name</span>
+                                <span>Colour (hex)</span>
+                                <span>Guest</span>
+                                <span>New account</span>
+                                <span>Disabled</span>
+                                <span>Upload</span>
+                                <span>Download</span>
+                                <span>Delete</span>
+                                <span>Modify</span>
+                                <span>View profiles</span>
+                                <span>View statistics</span>
+                                <span>Comment</span>
+                                <span>Invite</span>
+                                <span>Admin</span>
+                            </statisticsTableHeader>
+                        </card>
+                        <card class="no-rounded-corners">
+                            <statisticsTableHeader>
+                                <span class="username">A bad human</span>
+                                <span>0</span>
+                                <span>1GiB</span>
+                                <span>600GiB</span>
+                            </statisticsTableHeader>
+                        </card>
+                        <card class="no-rounded-corners">
+                            <statisticsTableHeader>
+                                <span class="username">Another very bad human</span>
+                                <span>0</span>
+                                <span>1GiB</span>
+                                <span>500GiB</span>
+                            </statisticsTableHeader>
                         </card>
                     </adminTorrentCategoryContainer>
-
                 {/if}
             </main>
         </mainContainer>

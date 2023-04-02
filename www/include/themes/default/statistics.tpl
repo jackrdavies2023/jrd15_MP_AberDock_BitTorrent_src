@@ -119,7 +119,7 @@
                             <span>500GiB</span>
                         </statisticsTableHeader>
                     </card>
-                </topTenSeeders>
+                </topTenWorstSeeders>
             </main>
         </mainContainer>
     </body>
