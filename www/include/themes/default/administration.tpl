@@ -62,7 +62,65 @@
                                 <input type="submit" value="Add">
                             </form>
 
-                            A table will go here!
+                            <table>
+                                <tr class="table-header">
+                                    <th class="left-align">Name</th>
+                                    <th>Colour (hex)</th>
+                                    <th>Guest</th>
+                                    <th>New account</th>
+                                    <th>Disabled</th>
+                                    <th>Upload</th>
+                                    <th>Download</th>
+                                    <th>Delete</th>
+                                    <th>Modify</th>
+                                    <th>View profiles</th>
+                                    <th>View statistics</th>
+                                    <th>Can comment</th>
+                                    <th>Can invite</th>
+                                    <th>Administrator</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td class="left-align group-name">Administrator</td>
+                                    <td><label>Colour</label>ffffff</td>
+                                    <td><label>Guest</label><input type="checkbox"></td>
+                                    <td><label>New account</label><input type="checkbox"></td>
+                                    <td><label>Disabled</label><input type="checkbox"></td>
+                                    <td><label>Upload</label><input type="checkbox"></td>
+                                    <td><label>Download</label><input type="checkbox"></td>
+                                    <td><label>Delete</label><input type="checkbox"></td>
+                                    <td><label>Modify</label><input type="checkbox"></td>
+                                    <td><label>View profiles</label><input type="checkbox"></td>
+                                    <td><label>View statistics</label><input type="checkbox"></td>
+                                    <td><label>Can comment</label><input type="checkbox"></td>
+                                    <td><label>Can invite</label><input type="checkbox"></td>
+                                    <td><label>Administrator</label><input type="checkbox"></td>
+                                    <td class="right-align">
+                                        <button>Delete</button>
+                                        <button>Update</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="left-align group-name">User</td>
+                                    <td><label>Colour</label>ffffff</td>
+                                    <td><label>Guest</label><input type="checkbox"></td>
+                                    <td><label>New account</label><input type="checkbox"></td>
+                                    <td><label>Disabled</label><input type="checkbox"></td>
+                                    <td><label>Upload</label><input type="checkbox"></td>
+                                    <td><label>Download</label><input type="checkbox"></td>
+                                    <td><label>Delete</label><input type="checkbox"></td>
+                                    <td><label>Modify</label><input type="checkbox"></td>
+                                    <td><label>View profiles</label><input type="checkbox"></td>
+                                    <td><label>View statistics</label><input type="checkbox"></td>
+                                    <td><label>Can comment</label><input type="checkbox"></td>
+                                    <td><label>Can invite</label><input type="checkbox"></td>
+                                    <td><label>Administrator</label><input type="checkbox"></td>
+                                    <td class="right-align">
+                                        <button>Delete</button>
+                                        <button>Update</button>
+                                    </td>
+                                </tr>
+                            </table>
                         </card>
                     </adminGroupsContainer>
 
@@ -128,39 +186,8 @@
                     <h2>Torrent categories</h2>
                     <tinySeperator></tinySeperator>
                     <adminTorrentCategoryContainer>
-                        <card class="rounded-top-corners margin-top-2mm">
-                            <statisticsTableHeader>
-                                <span class="username">Name</span>
-                                <span>Colour (hex)</span>
-                                <span>Guest</span>
-                                <span>New account</span>
-                                <span>Disabled</span>
-                                <span>Upload</span>
-                                <span>Download</span>
-                                <span>Delete</span>
-                                <span>Modify</span>
-                                <span>View profiles</span>
-                                <span>View statistics</span>
-                                <span>Comment</span>
-                                <span>Invite</span>
-                                <span>Admin</span>
-                            </statisticsTableHeader>
-                        </card>
-                        <card class="no-rounded-corners">
-                            <statisticsTableHeader>
-                                <span class="username">A bad human</span>
-                                <span>0</span>
-                                <span>1GiB</span>
-                                <span>600GiB</span>
-                            </statisticsTableHeader>
-                        </card>
-                        <card class="no-rounded-corners">
-                            <statisticsTableHeader>
-                                <span class="username">Another very bad human</span>
-                                <span>0</span>
-                                <span>1GiB</span>
-                                <span>500GiB</span>
-                            </statisticsTableHeader>
+                        <card>
+                            
                         </card>
                     </adminTorrentCategoryContainer>
                 {/if}

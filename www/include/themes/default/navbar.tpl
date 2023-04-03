@@ -1,3 +1,7 @@
+<topBar>
+    <button>OpenMenu</button>
+</topBar>
+
 <!-- Contains the left navigation bar -->
 <navigationBar>
     <img id="aberdock_logo" src="{$assetDir}/img/logo.jpg">
