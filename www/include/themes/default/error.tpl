@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
     {include file='header.tpl'}
     <body class="login-background">

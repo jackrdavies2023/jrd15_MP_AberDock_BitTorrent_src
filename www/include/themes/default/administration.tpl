@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
     {include file='header.tpl'}
     <body>
@@ -61,66 +62,70 @@
                                 <input type="text" id="new-group-name" name="new-group-name" placeholder="Group name">
                                 <input type="submit" value="Add">
                             </form>
+                            <tinySeperator></tinySeperator>
+                            <form method="POST">
+                                <table>
+                                    <tr class="table-header">
+                                        <th class="left-align">Name</th>
+                                        <th>Colour (hex)</th>
+                                        <th>Guest</th>
+                                        <th>New account</th>
+                                        <th>Disabled</th>
+                                        <th>Upload</th>
+                                        <th>Download</th>
+                                        <th>Delete</th>
+                                        <th>Modify</th>
+                                        <th>View profiles</th>
+                                        <th>View statistics</th>
+                                        <th>Can comment</th>
+                                        <th>Can invite</th>
+                                        <th>Administrator</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <td class="left-align group-name">Administrator</td>
+                                        <td><label>Colour</label><input type="text" value="ffffff"></td>
+                                        <td><label>Guest</label><input type="checkbox"></td>
+                                        <td><label>New account</label><input type="checkbox"></td>
+                                        <td><label>Disabled</label><input type="checkbox"></td>
+                                        <td><label>Upload</label><input type="checkbox"></td>
+                                        <td><label>Download</label><input type="checkbox"></td>
+                                        <td><label>Delete</label><input type="checkbox"></td>
+                                        <td><label>Modify</label><input type="checkbox"></td>
+                                        <td><label>View profiles</label><input type="checkbox"></td>
+                                        <td><label>View statistics</label><input type="checkbox"></td>
+                                        <td><label>Can comment</label><input type="checkbox"></td>
+                                        <td><label>Can invite</label><input type="checkbox"></td>
+                                        <td><label>Administrator</label><input type="checkbox"></td>
+                                        <td class="right-align">
+                                            <button>Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left-align group-name">User</td>
+                                        <td><label>Colour</label><input type="text" value="ffffff"></td>
+                                        <td><label>Guest</label><input type="checkbox"></td>
+                                        <td><label>New account</label><input type="checkbox"></td>
+                                        <td><label>Disabled</label><input type="checkbox"></td>
+                                        <td><label>Upload</label><input type="checkbox"></td>
+                                        <td><label>Download</label><input type="checkbox"></td>
+                                        <td><label>Delete</label><input type="checkbox"></td>
+                                        <td><label>Modify</label><input type="checkbox"></td>
+                                        <td><label>View profiles</label><input type="checkbox"></td>
+                                        <td><label>View statistics</label><input type="checkbox"></td>
+                                        <td><label>Can comment</label><input type="checkbox"></td>
+                                        <td><label>Can invite</label><input type="checkbox"></td>
+                                        <td><label>Administrator</label><input type="checkbox"></td>
+                                        <td class="right-align">
+                                            <button>Delete</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
 
-                            <table>
-                                <tr class="table-header">
-                                    <th class="left-align">Name</th>
-                                    <th>Colour (hex)</th>
-                                    <th>Guest</th>
-                                    <th>New account</th>
-                                    <th>Disabled</th>
-                                    <th>Upload</th>
-                                    <th>Download</th>
-                                    <th>Delete</th>
-                                    <th>Modify</th>
-                                    <th>View profiles</th>
-                                    <th>View statistics</th>
-                                    <th>Can comment</th>
-                                    <th>Can invite</th>
-                                    <th>Administrator</th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <td class="left-align group-name">Administrator</td>
-                                    <td><label>Colour</label>ffffff</td>
-                                    <td><label>Guest</label><input type="checkbox"></td>
-                                    <td><label>New account</label><input type="checkbox"></td>
-                                    <td><label>Disabled</label><input type="checkbox"></td>
-                                    <td><label>Upload</label><input type="checkbox"></td>
-                                    <td><label>Download</label><input type="checkbox"></td>
-                                    <td><label>Delete</label><input type="checkbox"></td>
-                                    <td><label>Modify</label><input type="checkbox"></td>
-                                    <td><label>View profiles</label><input type="checkbox"></td>
-                                    <td><label>View statistics</label><input type="checkbox"></td>
-                                    <td><label>Can comment</label><input type="checkbox"></td>
-                                    <td><label>Can invite</label><input type="checkbox"></td>
-                                    <td><label>Administrator</label><input type="checkbox"></td>
-                                    <td class="right-align">
-                                        <button>Delete</button>
-                                        <button>Update</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="left-align group-name">User</td>
-                                    <td><label>Colour</label>ffffff</td>
-                                    <td><label>Guest</label><input type="checkbox"></td>
-                                    <td><label>New account</label><input type="checkbox"></td>
-                                    <td><label>Disabled</label><input type="checkbox"></td>
-                                    <td><label>Upload</label><input type="checkbox"></td>
-                                    <td><label>Download</label><input type="checkbox"></td>
-                                    <td><label>Delete</label><input type="checkbox"></td>
-                                    <td><label>Modify</label><input type="checkbox"></td>
-                                    <td><label>View profiles</label><input type="checkbox"></td>
-                                    <td><label>View statistics</label><input type="checkbox"></td>
-                                    <td><label>Can comment</label><input type="checkbox"></td>
-                                    <td><label>Can invite</label><input type="checkbox"></td>
-                                    <td><label>Administrator</label><input type="checkbox"></td>
-                                    <td class="right-align">
-                                        <button>Delete</button>
-                                        <button>Update</button>
-                                    </td>
-                                </tr>
-                            </table>
+                            <smallSeperator></smallSeperator>
+
+                            <button>Save</button>
                         </card>
                     </adminGroupsContainer>
 
@@ -187,7 +192,35 @@
                     <tinySeperator></tinySeperator>
                     <adminTorrentCategoryContainer>
                         <card>
-                            
+                            <form method="POST">
+                                <table>
+                                    <tr class="table-header">
+                                        <th class="left-align">Name</th>
+                                        <th>Parent</th>
+                                        <th>Child</th>
+                                        <th>Child of</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <td class="left-align group-name">Name of parent</td>
+                                        <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID1" name="is-parent-cateogoryID1" value="1" checked/></td>
+                                        <td><label>Child</label><input type="radio" id="is-parent-cateogoryID1" name="is-parent-cateogoryID1" value="0"></td>
+                                        <td><label>Child of</label><input type="text"></td>
+                                        <td class="right-align">
+                                            <button>Delete</button>
+                                        </td>
+                                    </tr>
+                                   <tr>
+                                        <td class="left-align group-name">Name of child</td>
+                                        <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID2" value="1"></td>
+                                        <td><label>Child</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID2" value="0"  checked/></td>
+                                        <td><label>Child of</label><input type="text"></td>
+                                        <td class="right-align">
+                                            <button>Delete</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
                         </card>
                     </adminTorrentCategoryContainer>
                 {/if}

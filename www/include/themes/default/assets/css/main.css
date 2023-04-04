@@ -35,6 +35,38 @@
     }
 }
 
+navigationcontainer .open-navbar-button, navigationcontainer .close-navbar-button {
+    display: none;
+}
+
+navigationcontainer .open-navbar-button:hover {
+    cursor: pointer;
+}
+
+#open-navbar {
+    display: none;
+}
+
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors#combinators */
+input[type=checkbox]:checked ~ navigationBar {
+    display: block !important;
+    z-index: 2;
+}
+
+input[type=checkbox]:checked ~ .open-navbar-button {
+    /*visibility: hidden !important;
+    height: 0px !important;*/
+    
+}
+
+
+navigationcontainer .close-navbar-button {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #00000082;
+}
 
 body {
     overflow-y: scroll;
@@ -42,7 +74,7 @@ body {
     width:100vw;
     margin: 0;
     padding: 0;
-    display: inline-block;
+    display: block;
     font-size: 14pt;
 
     background-color: var(--main-background-color);
@@ -270,6 +302,25 @@ i.administration {
     mask-image: url(../img/admin.svg);
 }
 
+i.hamburger-menu {
+    -webkit-mask-image: url(../img/menu.svg);
+    mask-image: url(../img/menu.svg);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    background-color: var(--card-icon-color);
+    display: inline-flex;
+    vertical-align: text-bottom;
+}
+
+.open-navbar-button, i.hamburger-menu, navigationBarToggleSpacer {
+    width: 50px;
+    height: 50px;
+}
+
+navigationBarToggleSpacer {
+    display: none;
+}
+
 statisticsSummaryBox {
     width: 200px;
     display: inline-flex;
@@ -414,7 +465,7 @@ loginContainer, errorContainer {
     width: 100%;
     height: 100%;
     background-color:  #0000000a;
-    backdrop-filter: blur(3mm);
+    /*backdrop-filter: blur(3mm); This breaks the UI after adding DOCTYPE html */
 }
 
 loginCardContainer {
@@ -435,7 +486,7 @@ errorCardConainer {
 
 body.login-background {
     background-image: url(../img/login-background.jpg);
-    background-position: center;
+    /*background-position: center;  This breaks the UI after adding DOCTYPE html */
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -475,11 +526,11 @@ errorContainer pre {
     word-wrap: break-word;
 }
 
-adminGroupsContainer table {
+adminGroupsContainer table, adminTorrentCategoryContainer table {
     width: 100%;
 }
 
-adminGroupsContainer table td {
+adminGroupsContainer table td, adminTorrentCategoryContainer table td {
     text-align: center;
 }
 
@@ -491,7 +542,7 @@ table .right-align {
     text-align: right;
 }
 
-adminGroupsContainer table label {
+adminGroupsContainer table label, adminTorrentCategoryContainer table label {
     display: none;
 }
 
@@ -500,17 +551,17 @@ topBar {
 }
 
 @media all and (max-width: 400mm) {
-    adminGroupsContainer table label {
+    adminGroupsContainer table label, adminTorrentCategoryContainer table label {
         margin-right: 2mm;
         width: 50mm;
         display: inline-block;
     }
 
-    adminGroupsContainer table th {
+    adminGroupsContainer table th, adminTorrentCategoryContainer table th {
         display: none;
     }
 
-    adminGroupsContainer table tr {
+    adminGroupsContainer table tr, adminTorrentCategoryContainer table tr {
         background-color: var(--main-background-color);
         display: block;
         border-radius: var(--standard-border-radius);
@@ -518,7 +569,7 @@ topBar {
         margin: 0 0 4mm 0;
     }
 
-    adminGroupsContainer table td {
+    adminGroupsContainer table td, adminTorrentCategoryContainer table td {
         display: block;
         text-align: left;
     }
@@ -539,7 +590,7 @@ topBar {
         margin: 4mm 0 0 0;
     }
 
-    adminGroupsContainer button {
+    adminGroupsContainer button, adminTorrentCategoryContainer button {
         background-color: var(--secondary-background-color);
     }
 }
@@ -562,8 +613,25 @@ topBar {
         z-index: 2;
     }
 
-    titleBar {
-        margin: 15mm 0 0 0;
+    navigationBar {
+        display: none;
+    }
+
+    navigationcontainer .open-navbar-button {
         display: block;
+        position: absolute;
+    }
+
+    navigationBarToggleSpacer {
+        display: block;
+    }
+
+    input[type=checkbox]:checked ~ .close-navbar-button {
+        z-index: 2;
+        display: block;
+    }
+
+    navigationBar {
+        display: none;
     }
 }
