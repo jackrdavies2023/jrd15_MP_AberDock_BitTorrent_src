@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 21, 2023 at 10:29 AM
+-- Generation Time: Apr 05, 2023 at 09:59 PM
 -- Server version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP Version: 8.1.16
 
@@ -20,6 +20,57 @@ SET time_zone = "+00:00";
 --
 -- Database: `aberdock`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_index` int(11) NOT NULL,
+  `category_subof` int(11) NOT NULL,
+  `category_name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`category_index`, `category_subof`, `category_name`) VALUES
+(1, 0, 'Test parent category'),
+(2, 0, 'Test second parent category'),
+(3, 1, 'Test child category'),
+(4, 1, 'Another child'),
+(5, 2, 'Second child');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `config`
+--
+
+CREATE TABLE `config` (
+  `config_id` int(11) NOT NULL,
+  `config_name` text NOT NULL,
+  `config_value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `config`
+--
+
+INSERT INTO `config` (`config_id`, `config_name`, `config_value`) VALUES
+(1, 'database_version', '1.2'),
+(2, 'login_required', '1'),
+(3, 'registration_enabled', '1'),
+(4, 'api_enabled', '0'),
+(5, 'default_language', '1'),
+(6, 'default_theme', 'default'),
+(7, 'registration_req_invite', '0'),
+(8, 'announcement_interval', '300'),
+(9, 'announcement_url', 'http://127.0.0.1'),
+(10, 'announcement_allow_guest', '0');
 
 -- --------------------------------------------------------
 
@@ -69,7 +120,8 @@ CREATE TABLE `languages` (
 --
 
 INSERT INTO `languages` (`lid`, `language_short`, `language_long`) VALUES
-(1, 'eng', 'English');
+(1, 'eng', 'English'),
+(2, 'cym', 'Cymraeg');
 
 -- --------------------------------------------------------
 
@@ -87,13 +139,6 @@ CREATE TABLE `sessions` (
   `agent` text NOT NULL,
   `ip_address` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `sessions`
---
-
-INSERT INTO `sessions` (`sid`, `session_token`, `uid`, `last_seen`, `expiration`, `remember`, `agent`, `ip_address`) VALUES
-(5, 'e49af1fdf67b017e4048f0df7fc6d5d861dd8bd5b6b8f17dbe8b92de25c93287', 1, 1679388432, 1679395632, 0, 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0', '11.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -134,6 +179,18 @@ INSERT INTO `users` (`uid`, `gid`, `pid`, `username`, `password`, `recovery_key`
 --
 
 --
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_index`);
+
+--
+-- Indexes for table `config`
+--
+ALTER TABLE `config`
+  ADD PRIMARY KEY (`config_id`);
+
+--
 -- Indexes for table `groups`
 --
 ALTER TABLE `groups`
@@ -162,6 +219,18 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_index` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `config`
+--
+ALTER TABLE `config`
+  MODIFY `config_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
@@ -171,13 +240,13 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `languages`
 --
 ALTER TABLE `languages`
-  MODIFY `lid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `lid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users`
