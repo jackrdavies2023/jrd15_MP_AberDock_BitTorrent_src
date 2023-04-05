@@ -79,7 +79,7 @@ use Medoo\Medoo;
         string $sessionToken = null,
         string $username = null,
         bool $clearCache = false
-    ) {
+    ): array {
         if ($clearCache) {
             $this->account = null;
         }
@@ -215,7 +215,7 @@ use Medoo\Medoo;
      */
     function assignSessionKey(
         bool $remember = false,
-    ) {
+    ): array {
         if (!$remember) {
             $expiration = time() + $this->defaultExpirationTime;
             $remember = 0;
@@ -252,7 +252,7 @@ use Medoo\Medoo;
         throw new Exception("No account to bind session key to!", 104);
     }
 
-    function destroySessionKey() {
+    function destroySessionKey(): bool {
         if (isset($this->getAccount()['session_token'])) {
             $this->db->delete("sessions",
                 [
@@ -260,6 +260,8 @@ use Medoo\Medoo;
                 ]
             );
         }
+
+        return true;
     }
 
     /**
@@ -283,7 +285,7 @@ use Medoo\Medoo;
         int $language = 1,
         int $groupID = 1,
         int $invitedBy = 0
-    ) {
+    ): bool {
         $username = trim($username);
         $password = trim($password);
 

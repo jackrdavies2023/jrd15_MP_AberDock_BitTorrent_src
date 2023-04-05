@@ -31,7 +31,7 @@ class Login extends Account
      * Checks if the user has a valid session token.
      * @return bool True if logged in, false if not.
      */
-    function isLoggedIn() {
+    function isLoggedIn(): bool {
         if (isset($_COOKIE['session_token'])) {
             if (!empty($sessionToken = trim($_COOKIE['session_token']))) {
                 // Session token is not empty. Let's check if it's in the DB
@@ -83,7 +83,7 @@ class Login extends Account
         string $username,
         string $password,
         bool $remember = false
-    ) {
+    ): bool {
         if (empty($username = trim($username))) {
             throw new Exception("Empty username!", 200);
         }
@@ -111,12 +111,12 @@ class Login extends Account
         throw new Exception("Invalid login credentials!", 202);
     }
 
-    function logOut() {
+    function logOut(): bool {
         parent::destroySessionKey();
         return true;
     }
 
-    function getAccountInfo() {
+    function getAccountInfo(): array {
         return parent::getAccount();
     }
 }

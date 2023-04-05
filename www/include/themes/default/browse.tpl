@@ -30,66 +30,17 @@
                                 <!-- Parent container. The top-level checkbox, when checked,
                                      will check all child categories.
                                 -->
+                                {foreach $categories as $category}
                                 <searchCategoryParent>
-                                    <input type="checkbox" name="1" value="1"> Meow parent
+                                    <input type="checkbox" name="{$category['category_index']}" value="1"> {$category['category_name']}
 
                                     <searchCategoryChild>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
-                                        <input type="checkbox" name="1" value="1"> Meow child<br>
+                                        {foreach $category['category_sub'] as $subcategory}
+                                        <input type="checkbox" name="{$subcategory['category_index']}" value="1"> {$subcategory['category_name']}<br>
+                                        {/foreach}
                                     </searchCategoryChild>
                                 </searchCategoryParent>
-                                <searchCategoryParent>
-                                    <input type="checkbox" name="1" value="1"> Meow
-
-                                    <searchCategoryChild>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                    </searchCategoryChild>
-                                </searchCategoryParent>
-                                <searchCategoryParent>
-                                    <input type="checkbox" name="1" value="1"> Meow
-
-                                    <searchCategoryChild>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                    </searchCategoryChild>
-                                </searchCategoryParent>
-                                <searchCategoryParent>
-                                    <input type="checkbox" name="1" value="1"> Meow
-
-                                    <searchCategoryChild>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                        <input type="checkbox" name="1" value="1"> Meow<br>
-                                    </searchCategoryChild>
-                                </searchCategoryParent>
+                                {/foreach}
                             </searchCategoriesContainer>
                         </form>
                     </card>

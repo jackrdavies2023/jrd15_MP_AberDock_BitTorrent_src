@@ -26,22 +26,22 @@
                         <card>
                             <form method="POST">
                                 <label for="login-required">Login required</label>
-                                <input type="checkbox" name="login-required" id="login-required">
+                                <input type="checkbox" name="login-required" id="login-required" {if $config['login_required'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
                                 <label for="registration-enabled">Registration enabled</label>
-                                <input type="checkbox" name="registration-enabled" id="registration-enabled">
+                                <input type="checkbox" name="registration-enabled" id="registration-enabled" {if $config['registration_enabled'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
                                 <label for="registration-invite-only">Registration requires invite</label>
-                                <input type="checkbox" name="registration-invite-only" id="registration-invite-only">
+                                <input type="checkbox" name="registration-invite-only" id="registration-invite-only" {if $config['registration_req_invite'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
                                 <label for="api-enabled">Enable API access</label>
-                                <input type="checkbox" name="api-enabled" id="api-enabled">
+                                <input type="checkbox" name="api-enabled" id="api-enabled" {if $config['api_enabled'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
@@ -138,17 +138,17 @@
                         <card>
                             <form method="POST">
                                 <label for="announcement-interval">Announcement interval (seconds)</label>
-                                <input type="number" id="announcement-interval" name="announcement-interval" placeholder="Seconds">
+                                <input type="number" id="announcement-interval" name="announcement-interval" placeholder="Seconds" value="{$config['announcement_interval']}">
 
                                 <smallSeperator></smallSeperator>
 
                                 <label for="announcement-allow-guests">Guests can connect</label>
-                                <input type="checkbox" name="announcement-allow-guests" id="announcement-allow-guests">
+                                <input type="checkbox" name="announcement-allow-guests" id="announcement-allow-guests" {if $config['announcement_allow_guest'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
-                                <label for="announcement-url-default">Announcement interval (seconds)</label>
-                                <input type="text" id="announcement-url-default" name="announcement-url-default" placeholder="URL">
+                                <label for="announcement-url-default">Announcement URL</label>
+                                <input type="text" id="announcement-url-default" name="announcement-url-default" placeholder="URL" value="{$config['announcement_url']}">
 
                                 <smallSeperator></smallSeperator>
 
@@ -167,8 +167,9 @@
                             <form method="POST">
                                 <label for="interface-default-language">Default language</label>
                                 <select type="text" id="interface-default-language" name="interface-default-language">
-                                    <option value="eng">English</option>
-                                    <option value="cym">Cymraeg</option>
+                                    {foreach $languages as $language}
+                                        <option value="{$language['language_short']}">{$language['language_long']}</option>
+                                    {/foreach}
                                 </select>
 
                                 <smallSeperator></smallSeperator>
@@ -193,6 +194,12 @@
                     <adminTorrentCategoryContainer>
                         <card>
                             <form method="POST">
+                                <label for="new-group-name">New category name</label>
+                                <input type="text" id="new-group-name" name="new-group-name" placeholder="Category name">
+                                <input type="submit" value="Add">
+                            </form>
+                            <tinySeperator></tinySeperator>
+                            <form method="POST">
                                 <table>
                                     <tr class="table-header">
                                         <th class="left-align">Name</th>
@@ -201,24 +208,44 @@
                                         <th>Child of</th>
                                         <th></th>
                                     </tr>
-                                    <tr>
-                                        <td class="left-align group-name">Name of parent</td>
-                                        <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID1" name="is-parent-cateogoryID1" value="1" checked/></td>
-                                        <td><label>Child</label><input type="radio" id="is-parent-cateogoryID1" name="is-parent-cateogoryID1" value="0"></td>
-                                        <td><label>Child of</label><input type="text"></td>
-                                        <td class="right-align">
-                                            <button>Delete</button>
-                                        </td>
-                                    </tr>
-                                   <tr>
-                                        <td class="left-align group-name">Name of child</td>
-                                        <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID2" value="1"></td>
-                                        <td><label>Child</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID2" value="0"  checked/></td>
-                                        <td><label>Child of</label><input type="text"></td>
-                                        <td class="right-align">
-                                            <button>Delete</button>
-                                        </td>
-                                    </tr>
+                                    {foreach $categories as $category}
+                                        <tr>
+                                            <td class="left-align group-name">{$category['category_name']}</td>
+                                            <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID{$category['category_index']}" name="is-parent-cateogoryID{$category['category_index']}" value="1" checked/></td>
+                                            <td><label>Child</label><input type="radio" id="is-parent-cateogoryID{$category['category_index']}" name="is-parent-cateogoryID{$category['category_index']}" value="0"></td>
+                                            <td>
+                                                <label>Child of</label>
+                                                <select>
+                                                    {foreach $categories as $categorySelect}
+                                                        <option>{$category['category_name']}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </td>
+                                            <td class="right-align">
+                                                <button>Delete</button>
+                                            </td>
+                                        </tr>
+
+                                        {foreach $category['category_sub'] as $subcategory}
+                                        <tr>
+                                            <td class="left-align group-name">{$subcategory['category_name']}</td>
+                                            <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID{$subcategory['category_index']}" value="0"></td>
+                                            <td><label>Child</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID{$subcategory['category_index']}" value="1"  checked/></td>
+                                            <td>
+                                                <label>Child of</label>
+                                                <select>
+                                                    {foreach $categories as $categorySelect}
+                                                        <option {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </td>
+                                            <td class="right-align">
+                                                <button>Delete</button>
+                                            </td>
+                                        </tr>
+                                        {/foreach}
+                                    {/foreach}
+
                                 </table>
                             </form>
                         </card>

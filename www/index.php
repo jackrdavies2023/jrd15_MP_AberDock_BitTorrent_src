@@ -3,6 +3,11 @@
 	ini_set('display_startup_errors', '1');
 	error_reporting(E_ALL);
 
+	// Some default variables until we hook up the SQL for site settings.
+	$theme  = "default";
+	$guestAllowed = false;
+	$requiredDbVersion = "1.2";
+
 	// Append our class directory to the include path.
 	set_include_path(get_include_path().PATH_SEPARATOR.__DIR__."/include/class");
 
@@ -19,12 +24,13 @@
 	// Require the login class.
 	require_once("class_login.php");
 
+	// Require the config class.
+	require_once("class_config.php");
+
 	// Global configuration.
 	require_once(__DIR__."/include/config.php");
-
-	// Some default variables until we hook up the SQL for site settings.
-	$theme  = "default";
-	$guestAllowed = false;
+	use Config\Config;
+	$config = new Config(db: $db);
 
 	// Set the required namespaces.
 	use Login\Login;
@@ -61,6 +67,16 @@
 	$smarty->assign('siteName', 'AberDock'); // Assign the variable "siteName" for use inside of template files.
 	$smarty->assign('assetDir', "/include/themes/$theme/assets"); // Set the asset directory, for storing CSS, JS and other assets.
 
+    // A check to make sure we have the correct database version.
+    if ($config->getDatabaseVersion() !== $requiredDbVersion) {
+		$smarty->assign('exceptionMessage', "Invalid database version!\n\nRequired version: $requiredDbVersion\nCurrent version: ".$config->getDatabaseVersion());
+		$smarty->assign('exceptionCode', "300");
+		$smarty->assign('pageName', 'Error');
+
+		// Load error.tpl Smarty template file.
+		$smarty->display('error.tpl');
+		exit();
+	}
 
 	try {
 		if (!$guestAllowed && !$login->isLoggedIn()) {

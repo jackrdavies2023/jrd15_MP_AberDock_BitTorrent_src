@@ -12,6 +12,10 @@
 
     $smarty->assign('pageName', 'Administration');
 
+    $smarty->assign("languages", $config->getLanguages());
+    $smarty->assign("config", $config->getConfig());
+    $smarty->assign("categories", $config->getTorrentCategories());
+
     // Load administration.tpl Smarty template file.
     $smarty->display('administration.tpl'); 
 ?>
