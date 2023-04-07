@@ -11,7 +11,7 @@
 
 /* Set some variables to make development easier. */
 :root {
-    --main-background-color: rgb(216, 215, 215);
+    --main-background-color: #ffffff;
     --secondary-background-color: #ccccccff;
     --text-color: rgb(0, 0, 0);
     --card-icon-color: #000000;
