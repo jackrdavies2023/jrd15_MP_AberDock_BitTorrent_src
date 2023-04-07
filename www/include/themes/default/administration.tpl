@@ -55,14 +55,14 @@
                     <!-- User groups -->
                     <h2> User groups</h2>
                     <tinySeperator></tinySeperator>
-                    <adminGroupsContainer>
+                    <adminGroupsContainer class="invert-input-background-mobile">
                         <card>
                             <form method="POST">
                                 <label for="new-group-name">New group name</label>
-                                <input type="text" id="new-group-name" name="new-group-name" placeholder="Group name">
+                                <input type="text" class="no-invert-input-background-mobile" id="new-group-name" name="new-group-name" placeholder="Group name">
                                 <input type="submit" value="Add">
                             </form>
-                            <tinySeperator></tinySeperator>
+                            <smallSeperator></smallSeperator>
                             <form method="POST">
                                 <table>
                                     <tr class="table-header">
@@ -191,14 +191,14 @@
                     <!-- Torrent categories -->
                     <h2>Torrent categories</h2>
                     <tinySeperator></tinySeperator>
-                    <adminTorrentCategoryContainer>
+                    <adminTorrentCategoryContainer class="invert-input-background-mobile">
                         <card>
                             <form method="POST">
-                                <label for="new-group-name">New category name</label>
-                                <input type="text" id="new-group-name" name="new-group-name" placeholder="Category name">
+                                <label for="new-category-name">New category name</label>
+                                <input type="text" class="no-invert-input-background-mobile" id="new-category-name" name="new-category-name" placeholder="Category name">
                                 <input type="submit" value="Add">
                             </form>
-                            <tinySeperator></tinySeperator>
+                            <smallSeperator></smallSeperator>
                             <form method="POST">
                                 <table>
                                     <tr class="table-header">
@@ -210,14 +210,14 @@
                                     </tr>
                                     {foreach $categories as $category}
                                         <tr>
-                                            <td class="left-align group-name">{$category['category_name']}</td>
+                                            <td class="left-align group-name"><input type="text" value="{$category['category_name']}"></td>
                                             <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID{$category['category_index']}" name="is-parent-cateogoryID{$category['category_index']}" value="1" checked/></td>
                                             <td><label>Child</label><input type="radio" id="is-parent-cateogoryID{$category['category_index']}" name="is-parent-cateogoryID{$category['category_index']}" value="0"></td>
                                             <td>
                                                 <label>Child of</label>
                                                 <select>
                                                     {foreach $categories as $categorySelect}
-                                                        <option>{$category['category_name']}</option>
+                                                        <option {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
                                                     {/foreach}
                                                 </select>
                                             </td>
@@ -228,7 +228,7 @@
 
                                         {foreach $category['category_sub'] as $subcategory}
                                         <tr>
-                                            <td class="left-align group-name">{$subcategory['category_name']}</td>
+                                            <td class="left-align group-name"><input type="text" value="{$subcategory['category_name']}"></td>
                                             <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID{$subcategory['category_index']}" value="0"></td>
                                             <td><label>Child</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID{$subcategory['category_index']}" value="1"  checked/></td>
                                             <td>
@@ -247,6 +247,10 @@
                                     {/foreach}
 
                                 </table>
+
+                                <smallSeperator></smallSeperator>
+
+                                <input type="submit" value="Save">
                             </form>
                         </card>
                     </adminTorrentCategoryContainer>

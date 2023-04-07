@@ -1,24 +1,18 @@
 <?php
     use Account\Account;
 
-    try {
-        if (isset($_GET['user']) && !empty($userIdLong = trim($_GET['user']))) {
-            $account = new Account(db: $db, userIdLong: $userIdLong);
+    if (isset($_GET['user']) && !empty($userIdLong = trim($_GET['user']))) {
+        $account = new Account(db: $db, userIdLong: $userIdLong);
 
-            if (count($account->getAccount()) > 0) {
-                // Account exists.
-                $smarty->assign('viewProfileDetails', $account->getAccount());
-            } else {
-                throw new Exception("Account not found!");
-            }
+        if (count($account->getAccount()) > 0) {
+            // Account exists.
+            $smarty->assign('viewProfileDetails', $account->getAccount());
         } else {
-            throw new Exception("Account not specified!");
+            throw new Exception("Account not found!");
         }
-    } catch (Exception $e) {
-        $smarty->assign('exceptionMessage', $e->getMessage());
-        $smarty->assign('exceptionCode', $e->getCode());
+    } else {
+        throw new Exception("Account not specified!");
     }
-
 
     $smarty->assign('pageName', 'Profile');
 

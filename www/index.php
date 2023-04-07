@@ -116,49 +116,56 @@
         $smarty->display('error.tpl'); 
         exit();
 	}
-	
 
-    // Navigation handler.
-	if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
-		switch(trim($_REQUEST['p'])) {
-			case "browse":
-				require(__DIR__."/include/pages/browse.php");
-				break;
-			case "viewtorrent":
-				require(__DIR__."/include/pages/viewtorrent.php");
-				break;
-			case "upload":
-				require(__DIR__."/include/pages/upload.php");
-				break;
-			case "statistics":
-				require(__DIR__."/include/pages/statistics.php");
-				break;
-			case "profile":
-				require(__DIR__."/include/pages/profile.php");
-				break;
-			case "accountsettings":
-				require(__DIR__."/include/pages/accountsettings.php");
-				break;
-			case "login":
-				require(__DIR__."/include/pages/login.php");
-				break;
-			case "register":
-				require(__DIR__."/include/pages/register.php");
-				break;
-			case "recover":
-				require(__DIR__."/include/pages/recover.php");
-				break;
-			case "administration":
-				require(__DIR__."/include/pages/administration.php");
-				break;
-			default:
-				// No page specified. Redirect to torrent browse page.
-				header('Location: /?p=browse');
-				exit();
+	try {
+		// Navigation handler.
+		if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
+			switch(trim($_REQUEST['p'])) {
+				case "browse":
+					require(__DIR__."/include/pages/browse.php");
+					break;
+				case "viewtorrent":
+					require(__DIR__."/include/pages/viewtorrent.php");
+					break;
+				case "upload":
+					require(__DIR__."/include/pages/upload.php");
+					break;
+				case "statistics":
+					require(__DIR__."/include/pages/statistics.php");
+					break;
+				case "profile":
+					require(__DIR__."/include/pages/profile.php");
+					break;
+				case "accountsettings":
+					require(__DIR__."/include/pages/accountsettings.php");
+					break;
+				case "login":
+					require(__DIR__."/include/pages/login.php");
+					break;
+				case "register":
+					require(__DIR__."/include/pages/register.php");
+					break;
+				case "recover":
+					require(__DIR__."/include/pages/recover.php");
+					break;
+				case "administration":
+					require(__DIR__."/include/pages/administration.php");
+					break;
+				default:
+					// No page specified. Redirect to torrent browse page.
+					header('Location: /?p=browse');
+					exit();
+			}
+		} else {
+			// No page specified. Redirect to torrent browse page.
+			header('Location: /?p=browse');
+			exit();
 		}
-	} else {
-		// No page specified. Redirect to torrent browse page.
-		header('Location: /?p=browse');
+	} catch (Exception $e) {
+		$smarty->assign('exceptionMessage', $e->getMessage());
+		$smarty->assign('exceptionCode', $e->getCode());
+		$smarty->display('error.tpl');
 		exit();
 	}
+
 ?>

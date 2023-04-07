@@ -59,7 +59,6 @@ input[type=checkbox]:checked ~ .open-navbar-button {
     
 }
 
-
 navigationcontainer .close-navbar-button {
     display: none;
     position: absolute;
@@ -551,6 +550,21 @@ topBar {
 }
 
 @media all and (max-width: 400mm) {
+    .invert-input-background-mobile input[type="text"],
+    .invert-input-background-mobile input[type="password"],
+    .invert-input-background-mobile input[type="number"],
+    .invert-input-background-mobile select,
+    .invert-input-background-mobile textarea {
+        background-color: var(--secondary-background-color);
+    }
+
+    input.no-invert-input-background-mobile,
+    select.no-invert-input-background-mobile ,
+    textarea.no-invert-input-background-mobile  {
+        background-color: var(--main-background-color) !important;
+    }
+
+
     adminGroupsContainer table label, adminTorrentCategoryContainer table label {
         margin-right: 2mm;
         width: 50mm;

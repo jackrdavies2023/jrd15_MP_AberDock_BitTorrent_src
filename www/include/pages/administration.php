@@ -1,13 +1,7 @@
 <?php
-    try {
-        if ($login->isLoggedIn() && $login->getAccountInfo()['is_admin'] == 1) {
-                // Yay
-        } else {
-            throw new Exception("Not authorised!");
-        }
-    } catch (Exception $e) {
-        $smarty->assign('exceptionMessage', $e->getMessage());
-        $smarty->assign('exceptionCode', $e->getCode());
+
+    if (!$login->isLoggedIn() || $login->getAccountInfo()['is_admin'] == 0) {
+        throw new Exception("Not authorised!");
     }
 
     $smarty->assign('pageName', 'Administration');
@@ -16,6 +10,12 @@
     $smarty->assign("config", $config->getConfig());
     $smarty->assign("categories", $config->getTorrentCategories());
 
+    if (isset($_REQUEST["new-category-name"]) && !empty($newCategory = trim($_REQUEST["new-category-name"]))) {
+        // We are trying to add a new torrent category.
+
+    }
+
     // Load administration.tpl Smarty template file.
-    $smarty->display('administration.tpl'); 
+    $smarty->display('administration.tpl');
+
 ?>
