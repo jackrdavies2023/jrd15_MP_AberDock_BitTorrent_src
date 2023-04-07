@@ -164,6 +164,7 @@
 	} catch (Exception $e) {
 		$smarty->assign('exceptionMessage', $e->getMessage());
 		$smarty->assign('exceptionCode', $e->getCode());
+		$smarty->assign('pageName', 'Error');
 		$smarty->display('error.tpl');
 		exit();
 	}
