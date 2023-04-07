@@ -59,7 +59,7 @@ class Config
      * @return mixed Returns the value of the provided key.
      * @throws Exception 302 error thrown when the configuration option does not exist.
      */
-    public function getConfigVal(String $config) {
+    public function getConfigVal(string $config) {
         if (isset($this->config[$config])) {
             return $this->config[$config];
         } else {
@@ -158,6 +158,45 @@ class Config
         }
 
         return $this->categories;
+    }
+
+
+    /**
+     * Creates a new torrent category.
+     * @param string $categoryName The name of the new category.
+     * @return bool True on success.
+     */
+    public function addTorrentCategory(string $categoryName): bool {
+        $categoryName = trim($categoryName);
+
+        foreach ($this->getTorrentCategories() as $category) {
+            if ($category['category_name'] == $categoryName) {
+                throw new Exception("Category already exists with that name!");
+            }
+
+            foreach ($category['category_sub'] as $child) {
+                if ($child['category_name'] == $categoryName) {
+                    throw new Exception("Category already exists with that name!");
+                }
+            }
+        }
+
+        // Category doesn't exist. Let's insert it into the DB.
+
+        if ($this->db->insert("categories",
+            [
+                "category_subof" => 0,
+                "category_name"  => trim($categoryName)
+            ]
+        )) {
+            // Now that we've added a new category, we'll clear the category cache so the next request to it
+            // will reflect our changes.
+            $this->categories = null;
+
+            return true;
+        }
+
+        return false;
     }
 
     public function getLanguages(): array {
