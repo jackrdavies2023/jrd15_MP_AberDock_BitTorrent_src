@@ -200,6 +200,7 @@
                             </form>
                             <smallSeperator></smallSeperator>
                             <form method="POST">
+                                <input type="hidden" name="update-categories">
                                 <table>
                                     <tr class="table-header">
                                         <th class="left-align">Name</th>
@@ -210,14 +211,14 @@
                                     </tr>
                                     {foreach $categories as $category}
                                         <tr>
-                                            <td class="left-align group-name"><input type="text" value="{$category['category_name']}"></td>
-                                            <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID{$category['category_index']}" name="is-parent-cateogoryID{$category['category_index']}" value="1" checked/></td>
-                                            <td><label>Child</label><input type="radio" id="is-parent-cateogoryID{$category['category_index']}" name="is-parent-cateogoryID{$category['category_index']}" value="0"></td>
+                                            <td class="left-align group-name"><input type="text" name="name-categoryID{$category['category_index']}" value="{$category['category_name']}"></td>
+                                            <td><label>Parent</label><input type="radio" name="is-parent-categoryID{$category['category_index']}" value=1 checked/></td>
+                                            <td><label>Child</label><input type="radio" name="is-parent-categoryID{$category['category_index']}" value=0></td>
                                             <td>
                                                 <label>Child of</label>
-                                                <select>
+                                                <select name="is-child-of-categoryID{$category['category_index']}">
                                                     {foreach $categories as $categorySelect}
-                                                        <option {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
+                                                        <option value="{$categorySelect['category_index']}" {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
                                                     {/foreach}
                                                 </select>
                                             </td>
@@ -228,14 +229,14 @@
 
                                         {foreach $category['category_sub'] as $subcategory}
                                         <tr>
-                                            <td class="left-align group-name"><input type="text" value="{$subcategory['category_name']}"></td>
-                                            <td><label>Parent</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID{$subcategory['category_index']}" value="0"></td>
-                                            <td><label>Child</label><input type="radio" id="is-parent-cateogoryID2" name="is-parent-cateogoryID{$subcategory['category_index']}" value="1"  checked/></td>
+                                            <td class="left-align group-name"><input type="text" name="name-categoryID{$subcategory['category_index']}" value="{$subcategory['category_name']}"></td>
+                                            <td><label>Parent</label><input type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=1></td>
+                                            <td><label>Child</label><input type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=0 checked/></td>
                                             <td>
                                                 <label>Child of</label>
-                                                <select>
+                                                <select name="is-child-of-categoryID{$subcategory['category_index']}">
                                                     {foreach $categories as $categorySelect}
-                                                        <option {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
+                                                        <option value={$categorySelect['category_index']} {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
                                                     {/foreach}
                                                 </select>
                                             </td>

@@ -113,6 +113,11 @@ class Config
         return $this->groups;
     }
 
+    /**
+     * Retrieves all torrent categories.
+     * @return array An array of all torrent categories.
+     * @throws Exception Exception if cannot retrieve categories from the database.
+     */
     public function getTorrentCategories(): array {
         if (!$this->categories) {
             // We haven't fetched torrent categories before, so lets make a request to the SQL DB.
@@ -139,6 +144,7 @@ class Config
                             "category_index" => $categories[$i]['category_index'],
                             "category_name"  => $categories[$i]['category_name'],
                             "category_parent" => 1,
+                            "category_child_of" => 0,
                             "category_sub"   => array()
                         );
                     } else {
@@ -146,7 +152,8 @@ class Config
                         $newCategories[$categories[$i]['category_subof']]['category_sub'][] = array(
                             "category_index"   => $categories[$i]['category_index'],
                             "category_name" => $categories[$i]['category_name'],
-                            "category_parent" => 0
+                            "category_parent" => 0,
+                            "category_child_of" => $categories[$i]['category_subof']
                         );
                     }
                 }
@@ -165,6 +172,7 @@ class Config
      * Creates a new torrent category.
      * @param string $categoryName The name of the new category.
      * @return bool True on success.
+     * @throws Exception Exception when a category already exists or if DB import fails.
      */
     public function addTorrentCategory(string $categoryName): bool {
         $categoryName = trim($categoryName);
@@ -196,9 +204,117 @@ class Config
             return true;
         }
 
+        throw new Exception("Failed to add new category!");
+    }
+
+    /**
+     * Updates a categories configuration.
+     * @param int $categoryIndex Index ID of the category.
+     * @param string|null $categoryName New name of the category.
+     * @param int|null $isParent 1 = Category to be a parent, 0 = Category to be a child.
+     * @param int|null $childOf Index ID of the parent category to be a child of.
+     * @return true True on success.
+     * @throws Exception Exception if update parameters are invalid or cannot update the DB.
+     */
+    public function updateTorrentCategory(
+        int $categoryIndex,
+        string $categoryName = null,
+        int $isParent = null,
+        int $childOf = null
+    ) {
+        $toUpdate = array();
+
+        if ($this->doesTorrentCategoryExist(categoryIndex: $categoryIndex)) {
+            // Category we're trying to update exists.
+
+            if ($childOf > 0) {
+                // We're trying to update the category child parameter. Check if it's a child of a real parent.
+
+                if ($this->isTorrentCategoryParent(categoryIndex: $childOf)) {
+                    // Parent category exists!
+
+                    if ($categoryIndex == $childOf) {
+                        throw new Exception("Cannot set category as a child of itself!");
+                    }
+                    $toUpdate['category_subof'] = $childOf;
+                } else {
+                    throw new Exception("Specified parent category is invalid!");
+                }
+            }
+
+            if ($isParent) {
+                $toUpdate['category_subof'] = 0;
+            } else {
+                if (isset($this->categories[$categoryIndex]['category_sub']) &&
+                    count($this->categories[$categoryIndex]['category_sub']) > 0
+                ) {
+                    throw new Exception("Cannot change parent to a child if the parent has children!");
+                }
+            }
+
+            if ($categoryName && !empty($categoryName = trim($categoryName))) {
+                $toUpdate['category_name'] = $categoryName;
+            }
+
+            if ($this->db->update("categories", $toUpdate,
+                [
+                    "category_index" => $categoryIndex
+                ]
+            )) {
+                // Category updated. We should clear the cache so the updates are reflected on next request.
+                $this->categories = null;
+                return true;
+            }
+
+            throw new Exception("Failed to update torrent category!");
+        } else {
+            throw new Exception("Category does not exist!");
+        }
+    }
+
+    /**
+     * Queries if a category is a parent or not.
+     * @param int $categoryIndex Index ID of a category.
+     * @return bool True if the category is a parent. False if it is a child.
+     * @throws Exception Exception if getTorrentCategories fails to retrieve torrent categories.
+     */
+    public function isTorrentCategoryParent(int $categoryIndex) {
+        foreach ($this->getTorrentCategories() as $category) {
+            if ($categoryIndex == $category['category_index']) {
+                return true;
+            }
+        }
+
         return false;
     }
 
+    /**
+     * Queries if a category exists.
+     * @param int $categoryIndex Index ID of a category.
+     * @return bool True if the category exists. False if it does not.
+     * @throws Exception Exception if getTorrentCategories fails to retrieve torrent categories.
+     */
+    public function doesTorrentCategoryExist(int $categoryIndex) {
+        foreach ($this->getTorrentCategories() as $category) {
+            if ($categoryIndex == $category['category_index']) {
+                return true;
+            }
+
+            foreach ($category['category_sub'] as $childCategory) {
+                if ($categoryIndex == $childCategory['category_index']) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Queries the list of languages defined in the database.
+     * @return array An array of installed language packs.
+     * @throws Exception Exception if there is an issue querying the database.
+     */
     public function getLanguages(): array {
         if (!$this->languages) {
             // We haven't fetched system languages before, so lets make a request to the SQL DB.
