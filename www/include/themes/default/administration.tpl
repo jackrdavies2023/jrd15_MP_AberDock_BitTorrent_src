@@ -189,17 +189,17 @@
                     <smallSeperator></smallSeperator>
 
                     <!-- Torrent categories -->
-                    <h2>Torrent categories</h2>
+                    <h2 id="torrent-categories">Torrent categories</h2>
                     <tinySeperator></tinySeperator>
                     <adminTorrentCategoryContainer class="invert-input-background-mobile">
                         <card>
-                            <form method="POST">
+                            <form method="POST" action="#torrent-categories">
                                 <label for="new-category-name">New category name</label>
                                 <input type="text" class="no-invert-input-background-mobile" id="new-category-name" name="new-category-name" placeholder="Category name">
                                 <input type="submit" value="Add">
                             </form>
                             <smallSeperator></smallSeperator>
-                            <form method="POST">
+                            <form method="POST" action="#torrent-categories">
                                 <input type="hidden" name="update-categories">
                                 <table>
                                     <tr class="table-header">
@@ -223,7 +223,11 @@
                                                 </select>
                                             </td>
                                             <td class="right-align">
-                                                <button>Delete</button>
+                                                <form method="POST" action="#torrent-categories">
+                                                    <input type="hidden" name="delete-category" value="{$category['category_index']}">
+                                                    <input type="submit" value="Delete">
+                                                </form>
+
                                             </td>
                                         </tr>
 
@@ -241,7 +245,10 @@
                                                 </select>
                                             </td>
                                             <td class="right-align">
-                                                <button>Delete</button>
+                                                <form method="POST" action="#torrent-categories">
+                                                    <input type="hidden" name="delete-category" value="{$subcategory['category_index']}">
+                                                    <input type="submit" value="Delete">
+                                                </form>
                                             </td>
                                         </tr>
                                         {/foreach}

@@ -76,6 +76,22 @@
         }
     }
 
+    if (isset($_REQUEST['delete-category'])) {
+        $toDelete = intval($_REQUEST['delete-category']);
+
+        foreach ($config->getTorrentCategories() as $category) {
+            if ($category['category_index'] == $toDelete) {
+                $config->deleteTorrentCategory($toDelete);
+            }
+
+            foreach($category['category_sub'] as $subcategory) {
+                if ($subcategory['category_index'] == $toDelete) {
+                    $config->deleteTorrentCategory($toDelete);
+                }
+            }
+        }
+    }
+
     $smarty->assign('pageName', 'Administration');
     $smarty->assign("languages", $config->getLanguages());
     $smarty->assign("config", $config->getConfig());

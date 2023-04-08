@@ -273,6 +273,49 @@ class Config
     }
 
     /**
+     * Deletes a torrent category.
+     * @param int $categoryIndex Index ID of a category.
+     * @return true True on successful delete.
+     * @throws Exception Exception if trying to delete a parent with children; the category doesn't exist;
+     *                   trying to delete the last parent or there was an issue with the DB.
+     */
+    public function deleteTorrentCategory(int $categoryIndex) {
+        if ($this->doesTorrentCategoryExist(categoryIndex: $categoryIndex)) {
+            if ($this->isTorrentCategoryParent(categoryIndex: $categoryIndex)) {
+                // This is a parent category. We need to check if there are children. If there are
+                // then we cannot delete the category.
+
+                if (isset($this->categories[$categoryIndex]['category_sub']) &&
+                    count($this->categories[$categoryIndex]['category_sub']) > 0
+                ) {
+                    throw new Exception("Cannot delete a parent category that has children!");
+                }
+            }
+        } else {
+            throw new Exception("Category does not exist!");
+        }
+
+        if (count($this->getTorrentCategories()) == 1 &&
+            $this->isTorrentCategoryParent(categoryIndex: $categoryIndex)
+        ) {
+            // We're trying to delete our last parent!
+            throw new Exception("Cannot delete the last parent category!");
+        }
+
+        if ($this->db->delete("categories",
+            [
+                "category_index" => $categoryIndex
+            ]
+        )) {
+            // Delete success. Clear the categories cache so the changes are reflected immediately.
+            $this->categories = null;
+            return true;
+        }
+
+        throw new Exception("Failed to delete category!");
+    }
+
+    /**
      * Queries if a category is a parent or not.
      * @param int $categoryIndex Index ID of a category.
      * @return bool True if the category is a parent. False if it is a child.
