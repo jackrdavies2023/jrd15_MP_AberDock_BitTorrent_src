@@ -1,5 +1,11 @@
 <?php
 
+    /**
+     * Checks if there is POST/GET data for a given category, and if it needs updating.
+     * @param array $category The category array.
+     * @return void
+     * @throws Exception Exception thrown if update data is invalid.
+     */
     function updateCategory(array &$category) {
         global $config;
         $update      = false;
