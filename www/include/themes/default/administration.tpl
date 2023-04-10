@@ -25,23 +25,24 @@
                     <adminAuthenticationContainer>
                         <card>
                             <form method="POST">
-                                <label for="login-required">Login required</label>
-                                <input type="checkbox" name="login-required" id="login-required" {if $config['login_required'] eq 1}checked{/if}>
+                                <input type="hidden" name="update-global">
+                                <label for="login_required">Login required</label>
+                                <input type="checkbox" value="1" name="login_required" id="login_required" {if $config['login_required'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
-                                <label for="registration-enabled">Registration enabled</label>
-                                <input type="checkbox" name="registration-enabled" id="registration-enabled" {if $config['registration_enabled'] eq 1}checked{/if}>
+                                <label for="registration_enabled">Registration enabled</label>
+                                <input type="checkbox" value="1" name="registration_enabled" id="registration_enabled" {if $config['registration_enabled'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
-                                <label for="registration-invite-only">Registration requires invite</label>
-                                <input type="checkbox" name="registration-invite-only" id="registration-invite-only" {if $config['registration_req_invite'] eq 1}checked{/if}>
+                                <label for="registration_req_invite">Registration requires invite</label>
+                                <input type="checkbox" value="1" name="registration_req_invite" id="registration_req_invite" {if $config['registration_req_invite'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
-                                <label for="api-enabled">Enable API access</label>
-                                <input type="checkbox" name="api-enabled" id="api-enabled" {if $config['api_enabled'] eq 1}checked{/if}>
+                                <label for="api_enabled">Enable API access</label>
+                                <input type="checkbox" value="1" name="api_enabled" id="api_enabled" {if $config['api_enabled'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
@@ -137,18 +138,19 @@
                     <adminTrackerContainer>
                         <card>
                             <form method="POST">
-                                <label for="announcement-interval">Announcement interval (seconds)</label>
-                                <input type="number" id="announcement-interval" name="announcement-interval" placeholder="Seconds" value="{$config['announcement_interval']}">
+                                <input type="hidden" name="update-global">
+                                <label for="announcement_interval">Announcement interval (seconds)</label>
+                                <input type="number" id="announcement_interval" name="announcement_interval" placeholder="Seconds" value="{$config['announcement_interval']}">
 
                                 <smallSeperator></smallSeperator>
 
-                                <label for="announcement-allow-guests">Guests can connect</label>
-                                <input type="checkbox" name="announcement-allow-guests" id="announcement-allow-guests" {if $config['announcement_allow_guest'] eq 1}checked{/if}>
+                                <label for="announcement_allow_guest">Guests can connect</label>
+                                <input type="checkbox" name="announcement_allow_guest" id="announcement_allow_guest" {if $config['announcement_allow_guest'] eq 1}checked{/if}>
 
                                 <smallSeperator></smallSeperator>
 
-                                <label for="announcement-url-default">Announcement URL</label>
-                                <input type="text" id="announcement-url-default" name="announcement-url-default" placeholder="URL" value="{$config['announcement_url']}">
+                                <label for="announcement_url">Announcement URL</label>
+                                <input type="text" id="announcement_url" name="announcement_url" placeholder="URL" value="{$config['announcement_url']}">
 
                                 <smallSeperator></smallSeperator>
 
@@ -165,8 +167,9 @@
                     <adminInterfaceContainer>
                         <card>
                             <form method="POST">
-                                <label for="interface-default-language">Default language</label>
-                                <select type="text" id="interface-default-language" name="interface-default-language">
+                                <input type="hidden" name="update-global">
+                                <label for="default_language">Default language</label>
+                                <select type="text" id="default_language" name="default_language">
                                     {foreach $languages as $language}
                                         <option value="{$language['language_short']}">{$language['language_long']}</option>
                                     {/foreach}
@@ -174,8 +177,8 @@
 
                                 <smallSeperator></smallSeperator>
 
-                                <label for="interface-default-theme">Default theme</label>
-                                <select type="text" id="interface-default-theme" name="interface-default-theme">
+                                <label for="default_theme">Default theme</label>
+                                <select type="text" id="default_theme" name="default_theme">
                                     <option value="default">default</option>
                                 </select>
 

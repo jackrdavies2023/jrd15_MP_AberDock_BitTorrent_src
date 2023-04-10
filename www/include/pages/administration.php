@@ -82,6 +82,7 @@
         }
     }
 
+    // Are we trying to delete a category?
     if (isset($_REQUEST['delete-category'])) {
         $toDelete = intval($_REQUEST['delete-category']);
 
@@ -96,6 +97,14 @@
                 }
             }
         }
+    }
+
+    // Are we trying to change the authentication configuration?
+    if (isset($_REQUEST['update-global'])) {
+        foreach ($_REQUEST as $parameter => $value) {
+            echo("Received update parameter for $parameter<br>\n");
+        }
+        exit();
     }
 
     $smarty->assign('pageName', 'Administration');
