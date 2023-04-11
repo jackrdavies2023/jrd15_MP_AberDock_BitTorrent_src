@@ -59,12 +59,40 @@ class Config
      * @return mixed Returns the value of the provided key.
      * @throws Exception 302 error thrown when the configuration option does not exist.
      */
-    public function getConfigVal(string $config) {
-        if (isset($this->config[$config])) {
-            return $this->config[$config];
-        } else {
-            throw new Exception("Setting '$config' does not exist!", 302);
+    public function getConfigVal(string $parameter) {
+        if (!isset($this->config[$parameter])) {
+            throw new Exception("Setting '$parameter' does not exist!", 302);
         }
+
+        return $this->config[$parameter];
+    }
+
+    /**
+     * Updates a global configuration parameter.
+     * @param string $config The name of the configuration parameter.
+     * @param string $value The value of the configuration parameter.
+     * @return true True when update is a success.
+     * @throws Exception Exception when a configuration parameter is invalid or the database has failed.
+     */
+    public function updateConfigVal(string $parameter, string $value) {
+        if (!isset($this->config[$parameter])) {
+            throw new Exception("Setting '$parameter' does not exist!", 302);
+        }
+
+        if ($this->db->update("config",
+            [
+                "config_value" => $value
+            ],
+            [
+                "config_name"  => $parameter
+            ]
+        )) {
+            // Success. Update the cache.
+            $this->config[$parameter] = $value;
+            return true;
+        }
+
+        throw new Exception("Failed to update configuration table!");
     }
 
     /**
