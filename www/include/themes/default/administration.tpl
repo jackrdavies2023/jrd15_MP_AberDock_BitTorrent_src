@@ -26,6 +26,7 @@
                         <card>
                             <form method="POST">
                                 <input type="hidden" name="update-global">
+                                <input type="hidden" name="authentication-configuration">
                                 <label for="login_required">Login required</label>
                                 <input type="checkbox" value="1" name="login_required" id="login_required" {if $config['login_required'] eq 1}checked{/if}>
 
@@ -139,6 +140,7 @@
                         <card>
                             <form method="POST">
                                 <input type="hidden" name="update-global">
+                                <input type="hidden" name="tracker-configuration">
                                 <label for="announcement_interval">Announcement interval (seconds)</label>
                                 <input type="number" id="announcement_interval" name="announcement_interval" placeholder="Seconds" value="{$config['announcement_interval']}">
 
@@ -168,6 +170,7 @@
                         <card>
                             <form method="POST">
                                 <input type="hidden" name="update-global">
+                                <input type="hidden" name="interface-configuration">
                                 <label for="default_language">Default language</label>
                                 <select type="text" id="default_language" name="default_language">
                                     {foreach $languages as $language}

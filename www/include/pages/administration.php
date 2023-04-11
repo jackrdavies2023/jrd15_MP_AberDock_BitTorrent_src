@@ -1,66 +1,6 @@
 <?php
 
-    /**
-     * Checks if there is POST/GET data for a given category, and if it needs updating.
-     * @param array $category The category array.
-     * @return void
-     * @throws Exception Exception thrown if update data is invalid.
-     */
-    function updateCategory(array &$category) {
-        global $config;
-        $update      = false;
-        $name     = $category['category_name'];
-        $isParent = intval($category['category_parent']);
-        $childOf  = intval($category['category_child_of']);
-
-        if (isset($_REQUEST['name-categoryID'.$category['category_index']])) {
-            $newName = trim($_REQUEST['name-categoryID'.$category['category_index']]);
-
-            if ($newName !== $name) {
-                $update = true;
-                $name   = $newName;
-            }
-        }
-
-        if (isset($_REQUEST['is-parent-categoryID'.$category['category_index']])) {
-            $newIsParent = intval($_REQUEST['is-parent-categoryID'.$category['category_index']]);
-
-            if ($newIsParent !== $isParent) {
-                $update = true;
-
-                if ($newIsParent > 0) {
-                    $isParent = 1;
-                } else {
-                    $isParent = 0;
-                }
-            }
-        }
-
-        if (isset($_REQUEST['is-child-of-categoryID'.$category['category_index']])) {
-            if ($isParent == 0) {
-                // Only children can be added to parents.
-
-                $newChildOf = intval($_REQUEST['is-child-of-categoryID'.$category['category_index']]);
-
-                if ($newChildOf > 0) {
-                    if ($newChildOf !== $childOf) {
-                        // We're changing the child category to another one.
-                        $update  = true;
-                        $childOf = $newChildOf;
-                    }
-                }
-            }
-        }
-
-        if ($update) {
-            $config->updateTorrentCategory(
-                categoryIndex: $category['category_index'],
-                categoryName: $name,
-                isParent: $isParent,
-                childOf: $childOf
-            );
-        }
-    }
+    require_once("administration_functions.php");
 
     if (!$login->isLoggedIn() || $login->getAccountInfo()['is_admin'] == 0) {
         throw new Exception("Not authorised!");
@@ -99,12 +39,85 @@
         }
     }
 
-    // Are we trying to change the authentication configuration?
+    // Are we trying to change a global configuration?
     if (isset($_REQUEST['update-global'])) {
-        foreach ($_REQUEST as $parameter => $value) {
-            echo("Received update parameter for $parameter<br>\n");
+        $toUpdate = array();
+
+        foreach ($config->getConfig() as $parameter => $value) {
+            switch($parameter) {
+                // These cases are for checkboxes in authentication-configuration.
+                case "login_required":
+                case "registration_enabled":
+                case "registration_req_invite":
+                case "api_enabled":
+                    if (isset($_REQUEST['authentication-configuration'])) {
+                        //echo("Authentication configuration received"); exit();
+                        // We only want to change the configuration values for these parameters
+                        // if the "authentication-configuration" field has been sent in the request.
+                        // We need to do this as unchecked checkboxes are not posted by browsers, and we need to
+                        // know if an option needs to be disabled or not. The same rule applies to other
+                        // configuration categories.
+
+                        if (isset($_REQUEST[$parameter]) && !empty($_REQUEST[$parameter])) {
+                            $_REQUEST[$parameter] = "1";
+                        } else {
+                            // Option has not been provided by the client, meaning it is disabled.
+                            $_REQUEST[$parameter] = "0";
+                        }
+                    }
+
+                    break;
+
+                // These cases are for checkboxes in tracker-configuration.
+                case "announcement_allow_guest":
+                    if (isset($_REQUEST['tracker-configuration'])) {
+                        if (isset($_REQUEST[$parameter]) && !empty($_REQUEST[$parameter])) {
+                            $_REQUEST[$parameter] = "1";
+                        } else {
+                            // Option has not been provided by the client, meaning it is disabled.
+                            $_REQUEST[$parameter] = "0";
+                        }
+                    }
+
+                    break;
+
+                // These cases are for integers in tracker-configuration.
+                case "announcement_interval":
+                    if (isset($_REQUEST[$parameter])) {
+                        if (intval($_REQUEST[$parameter]) >= 60) {
+                            $_REQUEST[$parameter] = intval($_REQUEST[$parameter]);
+                        } else {
+                            throw new Exception("Invalid announcement interval! Minimum time is 60 seconds!");
+                        }
+                    }
+
+                    break;
+
+                // These cases are for trimming strings in tracker-configuration.
+                case "announcement_url":
+                    if (isset($_REQUEST[$parameter]) && !empty(trim($_REQUEST[$parameter]))) {
+                        $_REQUEST[$parameter] = trim($_REQUEST[$parameter]);
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (isset($_REQUEST[$parameter]) && $_REQUEST[$parameter] !== $value) {
+                // Configuration has been changed, so the DB needs updating.
+                $toUpdate[$parameter] = $_REQUEST[$parameter];
+
+            }
         }
-        exit();
+
+        if (count($toUpdate) > 0) {
+            // We have settings that need updating.
+            foreach ($toUpdate as $parameter => $value) {
+                $config->updateConfigVal(parameter: $parameter, value: $value);
+            }
+        }
     }
 
     $smarty->assign('pageName', 'Administration');
