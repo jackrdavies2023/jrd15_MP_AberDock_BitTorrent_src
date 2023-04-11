@@ -8,8 +8,9 @@
 	$guestAllowed = false;
 	$requiredDbVersion = "1.2";
 
-	// Append our class directory to the include path.
-	set_include_path(get_include_path().PATH_SEPARATOR.__DIR__."/include/class");
+	// Append our class and function directory to the include path.
+	set_include_path(get_include_path().PATH_SEPARATOR.__DIR__."/include/class"
+		                                          .PATH_SEPARATOR.__DIR__."/include/function");
 
 	// Require the Smarty template class, to make theme development easier.
 	// Smarty template acquired from: https://www.smarty.net/
