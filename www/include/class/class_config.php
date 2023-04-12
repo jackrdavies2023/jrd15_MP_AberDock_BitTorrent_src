@@ -142,6 +142,39 @@ class Config
     }
 
     /**
+     * Creates a new user group.
+     * @param string $groupName The name of the group.
+     * @return true Returns true on successful group creation.
+     * @throws Exception Exception if the group already exists or if the DB was unable to insert.
+     */
+    public function addUserGroup(string $groupName) {
+        $groupName = trim($groupName);
+
+        foreach ($this->getUserGroups() as $group => $parameters) {
+            if ($group == $groupName) {
+                throw new Exception("User group already exists with that name!");
+            }
+        }
+
+        // Category doesn't exist. Let's insert it into the DB.
+
+        if ($this->db->insert("groups",
+            [
+                "group_color" => "ffffff",
+                "group_name"  => $groupName
+            ]
+        )) {
+            // Now that we've added a new group, we'll clear the group cache so the next request to it
+            // will reflect our changes.
+            $this->groups = null;
+
+            return true;
+        }
+
+        throw new Exception("Failed to add new group!");
+    }
+
+    /**
      * Retrieves all torrent categories.
      * @return array An array of all torrent categories.
      * @throws Exception Exception if cannot retrieve categories from the database.
@@ -222,7 +255,7 @@ class Config
         if ($this->db->insert("categories",
             [
                 "category_subof" => 0,
-                "category_name"  => trim($categoryName)
+                "category_name"  => $categoryName
             ]
         )) {
             // Now that we've added a new category, we'll clear the category cache so the next request to it
