@@ -20,11 +20,11 @@
                     <smallSeperator></smallSeperator>
 
                     <!-- Authentication -->
-                    <h2>Authentication</h2>
+                    <h2 id="authentication">Authentication</h2>
                     <tinySeperator></tinySeperator>
                     <adminAuthenticationContainer>
                         <card>
-                            <form method="POST">
+                            <form method="POST" action="#authentication">
                                 <input type="hidden" name="update-global">
                                 <input type="hidden" name="authentication-configuration">
                                 <label for="login_required">Login required</label>
@@ -55,17 +55,17 @@
                     <smallSeperator></smallSeperator>
 
                     <!-- User groups -->
-                    <h2> User groups</h2>
+                    <h2 id="user-groups"> User groups</h2>
                     <tinySeperator></tinySeperator>
                     <adminGroupsContainer class="invert-input-background-mobile">
                         <card>
-                            <form method="POST">
+                            <form method="POST" action="#user-groups">
                                 <label for="new-group-name">New group name</label>
                                 <input type="text" class="no-invert-input-background-mobile" id="new-group-name" name="new-group-name" placeholder="Group name">
                                 <input type="submit" value="Add">
                             </form>
                             <smallSeperator></smallSeperator>
-                            <form method="POST">
+                            <form method="POST" action="#user-groups">
                                 <table>
                                     <tr class="table-header">
                                         <th class="left-align">Name</th>
@@ -134,11 +134,11 @@
                     <smallSeperator></smallSeperator>
 
                     <!-- Tracker/announcement -->
-                    <h2>Tracker/announcement</h2>
+                    <h2 id="tracker-announcement">Tracker/announcement</h2>
                     <tinySeperator></tinySeperator>
                     <adminTrackerContainer>
                         <card>
-                            <form method="POST">
+                            <form method="POST" action="#tracker-announcement">
                                 <input type="hidden" name="update-global">
                                 <input type="hidden" name="tracker-configuration">
                                 <label for="announcement_interval">Announcement interval (seconds)</label>
@@ -164,11 +164,11 @@
                     <smallSeperator></smallSeperator>
 
                     <!-- Interface -->
-                    <h2>Interface</h2>
+                    <h2 id="interface">Interface</h2>
                     <tinySeperator></tinySeperator>
                     <adminInterfaceContainer>
                         <card>
-                            <form method="POST">
+                            <form method="POST" action="#interface">
                                 <input type="hidden" name="update-global">
                                 <input type="hidden" name="interface-configuration">
                                 <label for="default_language">Default language</label>
@@ -205,7 +205,10 @@
                                 <input type="submit" value="Add">
                             </form>
                             <smallSeperator></smallSeperator>
-                            <form method="POST" action="#torrent-categories">
+                            <!-- Define the forms here. Without this, nesting forms results in categories being deleted
+                                 upon clicking "Save" -->
+                            <form method="POST" action="#torrent-categories" id="form-torrent-categories"></form>
+                            <form method="POST" action="#torrent-categories" id="form-delete-torrent-category"></form>
                                 <input type="hidden" name="update-categories">
                                 <table>
                                     <tr class="table-header">
@@ -217,44 +220,39 @@
                                     </tr>
                                     {foreach $categories as $category}
                                         <tr>
-                                            <td class="left-align group-name"><input type="text" name="name-categoryID{$category['category_index']}" value="{$category['category_name']}"></td>
-                                            <td><label>Parent</label><input type="radio" name="is-parent-categoryID{$category['category_index']}" value=1 checked/></td>
-                                            <td><label>Child</label><input type="radio" name="is-parent-categoryID{$category['category_index']}" value=0></td>
+                                            <td class="left-align group-name"><input form="form-torrent-categories" type="text" name="name-categoryID{$category['category_index']}" value="{$category['category_name']}"></td>
+                                            <td><label>Parent</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$category['category_index']}" value=1 checked/></td>
+                                            <td><label>Child</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$category['category_index']}" value=0></td>
                                             <td>
                                                 <label>Child of</label>
-                                                <select name="is-child-of-categoryID{$category['category_index']}">
+                                                <select form="form-torrent-categories" name="is-child-of-categoryID{$category['category_index']}">
                                                     {foreach $categories as $categorySelect}
                                                         <option value="{$categorySelect['category_index']}" {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
                                                     {/foreach}
                                                 </select>
                                             </td>
                                             <td class="right-align">
-                                                <form method="POST" action="#torrent-categories">
-                                                    <input type="hidden" name="delete-category" value="{$category['category_index']}">
-                                                    <input type="submit" value="Delete">
-                                                </form>
-
+                                                <input form="form-delete-torrent-category" type="hidden" name="delete-category" value="{$category['category_index']}">
+                                                <input form="form-delete-torrent-category" type="submit" value="Delete">
                                             </td>
                                         </tr>
 
                                         {foreach $category['category_sub'] as $subcategory}
                                         <tr>
-                                            <td class="left-align group-name"><input type="text" name="name-categoryID{$subcategory['category_index']}" value="{$subcategory['category_name']}"></td>
-                                            <td><label>Parent</label><input type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=1></td>
-                                            <td><label>Child</label><input type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=0 checked/></td>
+                                            <td class="left-align group-name"><input form="form-torrent-categories" type="text" name="name-categoryID{$subcategory['category_index']}" value="{$subcategory['category_name']}"></td>
+                                            <td><label>Parent</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=1></td>
+                                            <td><label>Child</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=0 checked/></td>
                                             <td>
                                                 <label>Child of</label>
-                                                <select name="is-child-of-categoryID{$subcategory['category_index']}">
+                                                <select form="form-torrent-categories" name="is-child-of-categoryID{$subcategory['category_index']}">
                                                     {foreach $categories as $categorySelect}
                                                         <option value={$categorySelect['category_index']} {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
                                                     {/foreach}
                                                 </select>
                                             </td>
                                             <td class="right-align">
-                                                <form method="POST" action="#torrent-categories">
-                                                    <input type="hidden" name="delete-category" value="{$subcategory['category_index']}">
-                                                    <input type="submit" value="Delete">
-                                                </form>
+                                                <input form="form-delete-torrent-category" type="hidden" name="delete-category" value="{$subcategory['category_index']}">
+                                                <input form="form-delete-torrent-category" type="submit" value="Delete">
                                             </td>
                                         </tr>
                                         {/foreach}
@@ -264,8 +262,7 @@
 
                                 <smallSeperator></smallSeperator>
 
-                                <input type="submit" value="Save">
-                            </form>
+                                <input form="form-torrent-categories" type="submit" value="Save">
                         </card>
                     </adminTorrentCategoryContainer>
                 {/if}
