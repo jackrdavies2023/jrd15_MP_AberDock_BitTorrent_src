@@ -39,6 +39,25 @@
         }
     }
 
+    // Are we trying to create a new user group?
+    if (isset($_REQUEST["new-group-name"]) && !empty($newGroup = trim($_REQUEST["new-group-name"]))) {
+        $config->addUserGroup(groupName: $newGroup);
+    }
+
+    // Are we trying to delete a user group?
+    if (isset($_REQUEST['delete-group'])) {
+        $toDelete = intval($_REQUEST['delete-group']);
+
+        $config->deleteUserGroup(groupID: $toDelete);
+    }
+
+    // Are we trying to change any of the group configurations?
+    if (isset($_REQUEST['update-groups'])) {
+        foreach ($config->getUserGroups() as $group) {
+            updateGroup($group);
+        }
+    }
+
     // Are we trying to change a global configuration?
     if (isset($_REQUEST['update-global'])) {
         $toUpdate = array();
@@ -124,8 +143,7 @@
     $smarty->assign("languages", $config->getLanguages());
     $smarty->assign("config", $config->getConfig());
     $smarty->assign("categories", $config->getTorrentCategories());
-
-
+    $smarty->assign("groups", $config->getUserGroups());
 
     // Load administration.tpl Smarty template file.
     $smarty->display('administration.tpl');

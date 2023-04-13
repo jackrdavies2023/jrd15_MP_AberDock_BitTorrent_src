@@ -65,69 +65,102 @@
                                 <input type="submit" value="Add">
                             </form>
                             <smallSeperator></smallSeperator>
-                            <form method="POST" action="#user-groups">
-                                <table>
-                                    <tr class="table-header">
-                                        <th class="left-align">Name</th>
-                                        <th>Colour (hex)</th>
-                                        <th>Guest</th>
-                                        <th>New account</th>
-                                        <th>Disabled</th>
-                                        <th>Upload</th>
-                                        <th>Download</th>
-                                        <th>Delete</th>
-                                        <th>Modify</th>
-                                        <th>View profiles</th>
-                                        <th>View statistics</th>
-                                        <th>Can comment</th>
-                                        <th>Can invite</th>
-                                        <th>Administrator</th>
-                                        <th></th>
-                                    </tr>
-                                    <tr>
-                                        <td class="left-align group-name">Administrator</td>
-                                        <td><label>Colour</label><input type="text" value="ffffff"></td>
-                                        <td><label>Guest</label><input type="checkbox"></td>
-                                        <td><label>New account</label><input type="checkbox"></td>
-                                        <td><label>Disabled</label><input type="checkbox"></td>
-                                        <td><label>Upload</label><input type="checkbox"></td>
-                                        <td><label>Download</label><input type="checkbox"></td>
-                                        <td><label>Delete</label><input type="checkbox"></td>
-                                        <td><label>Modify</label><input type="checkbox"></td>
-                                        <td><label>View profiles</label><input type="checkbox"></td>
-                                        <td><label>View statistics</label><input type="checkbox"></td>
-                                        <td><label>Can comment</label><input type="checkbox"></td>
-                                        <td><label>Can invite</label><input type="checkbox"></td>
-                                        <td><label>Administrator</label><input type="checkbox"></td>
-                                        <td class="right-align">
-                                            <button>Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="left-align group-name">User</td>
-                                        <td><label>Colour</label><input type="text" value="ffffff"></td>
-                                        <td><label>Guest</label><input type="checkbox"></td>
-                                        <td><label>New account</label><input type="checkbox"></td>
-                                        <td><label>Disabled</label><input type="checkbox"></td>
-                                        <td><label>Upload</label><input type="checkbox"></td>
-                                        <td><label>Download</label><input type="checkbox"></td>
-                                        <td><label>Delete</label><input type="checkbox"></td>
-                                        <td><label>Modify</label><input type="checkbox"></td>
-                                        <td><label>View profiles</label><input type="checkbox"></td>
-                                        <td><label>View statistics</label><input type="checkbox"></td>
-                                        <td><label>Can comment</label><input type="checkbox"></td>
-                                        <td><label>Can invite</label><input type="checkbox"></td>
-                                        <td><label>Administrator</label><input type="checkbox"></td>
-                                        <td class="right-align">
-                                            <button>Delete</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form>
+                            <form method="POST" action="#user-groups" id="form-user-groups"></form>
+                            <input form="form-user-groups" type="hidden" name="update-groups">
+                            <table>
+                                <tr class="table-header">
+                                    <th class="left-align">Name</th>
+                                    <th>Colour (hex)</th>
+                                    <th>Guest</th>
+                                    <th>New account</th>
+                                    <th>Disabled</th>
+                                    <th>Upload</th>
+                                    <th>Download</th>
+                                    <th>Delete</th>
+                                    <th>Modify</th>
+                                    <th>View profiles</th>
+                                    <th>View statistics</th>
+                                    <th>Can comment</th>
+                                    <th>Can invite</th>
+                                    <th>API access</th>
+                                    <th>Administrator</th>
+                                    <th></th>
+                                </tr>
+
+                                {foreach $groups as $group}
+                                <tr>
+                                    <td class="left-align group-name">
+                                        <input form="form-user-groups" type="text" name="group_name-groupID{$group['group_id']}" value="{$group['group_name']}">
+                                    </td>
+                                    <td>
+                                        <label>Colour</label>
+                                        <input form="form-user-groups" type="text" value="{$group['group_color']}" name="group_color-groupID{$group['group_id']}">
+                                    </td>
+                                    <td>
+                                        <label>Guest</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="is_guest-groupID{$group['group_id']}" {if $group['is_guest'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>New account</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="is_new-groupID{$group['group_id']}" {if $group['is_new'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Disabled</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="is_disabled-groupID{$group['group_id']}" {if $group['is_disabled'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Upload</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_upload-groupID{$group['group_id']}" {if $group['can_upload'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Download</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_download-groupID{$group['group_id']}" {if $group['can_download'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Delete</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_delete-groupID{$group['group_id']}" {if $group['can_delete'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Modify</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_modify-groupID{$group['group_id']}" {if $group['can_modify'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>View profiles</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_viewprofile-groupID{$group['group_id']}" {if $group['can_viewprofile'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>View statistics</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_viewstats-groupID{$group['group_id']}" {if $group['can_viewstats'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Can comment</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_comment-groupID{$group['group_id']}" {if $group['can_comment'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Can invite</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_invite-groupID{$group['group_id']}" {if $group['can_invite'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>API access</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="can_useapi-groupID{$group['group_id']}" {if $group['can_useapi'] eq 1}checked{/if}>
+                                    </td>
+                                    <td>
+                                        <label>Administrator</label>
+                                        <input form="form-user-groups" value="1" type="checkbox" name="is_admin-groupID{$group['group_id']}" {if $group['is_admin'] eq 1}checked{/if}>
+                                    </td>
+                                    <td class="right-align">
+                                        <form method="POST" action="#user-groups">
+                                            <input type="hidden" name="delete-group" value="{$group['group_id']}">
+                                            <input type="submit" value="Delete">
+                                        </form>
+                                    </td>
+                                </tr>
+                                {/foreach}
+                            </table>
 
                             <smallSeperator></smallSeperator>
 
-                            <button>Save</button>
+                            <input type="submit" form="form-user-groups" value="Save">
                         </card>
                     </adminGroupsContainer>
 
@@ -142,7 +175,7 @@
                                 <input type="hidden" name="update-global">
                                 <input type="hidden" name="tracker-configuration">
                                 <label for="announcement_interval">Announcement interval (seconds)</label>
-                                <input type="number" id="announcement_interval" name="announcement_interval" placeholder="Seconds" value="{$config['announcement_interval']}">
+                                <input type="number" id="announcement_interval" name="announcement_interval" placeholder="Seconds" value="{$config['announcement_interval']}" min="60" max="600">
 
                                 <smallSeperator></smallSeperator>
 
@@ -206,63 +239,82 @@
                             </form>
                             <smallSeperator></smallSeperator>
                             <!-- Define the forms here. Without this, nesting forms results in categories being deleted
-                                 upon clicking "Save" -->
+                                 upon clicking "Save". Reference: https://www.impressivewebs.com/html5-form-attribute/ -->
                             <form method="POST" action="#torrent-categories" id="form-torrent-categories"></form>
-                            <form method="POST" action="#torrent-categories" id="form-delete-torrent-category"></form>
-                                <input type="hidden" name="update-categories">
-                                <table>
-                                    <tr class="table-header">
-                                        <th class="left-align">Name</th>
-                                        <th>Parent</th>
-                                        <th>Child</th>
-                                        <th>Child of</th>
-                                        <th></th>
+                            <input form="form-torrent-categories" type="hidden" name="update-categories">
+                            <table>
+                                <tr class="table-header">
+                                    <th class="left-align">Name</th>
+                                    <th>Parent</th>
+                                    <th>Child</th>
+                                    <th>Child of</th>
+                                    <th></th>
+                                </tr>
+                                {foreach $categories as $category}
+                                    <tr>
+                                        <td class="left-align group-name">
+                                            <input form="form-torrent-categories" type="text" name="category_name-categoryID{$category['category_index']}" value="{$category['category_name']}">
+                                        </td>
+                                        <td>
+                                            <label>Parent</label>
+                                            <input form="form-torrent-categories" type="radio" name="is_parent-categoryID{$category['category_index']}" value=1 checked/>
+                                        </td>
+                                        <td>
+                                            <label>Child</label>
+                                            <input form="form-torrent-categories" type="radio" name="is_parent-categoryID{$category['category_index']}" value=0>
+                                        </td>
+                                        <td>
+                                            <label>Child of</label>
+                                            <select form="form-torrent-categories" name="is_child_of-categoryID{$category['category_index']}">
+                                                {foreach $categories as $categorySelect}
+                                                    <option value="{$categorySelect['category_index']}" {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
+                                                {/foreach}
+                                            </select>
+                                        </td>
+                                        <td class="right-align">
+                                            <form method="POST" action="#torrent-categories">
+                                                <input type="hidden" name="delete-category" value="{$category['category_index']}">
+                                                <input type="submit" value="Delete">
+                                            </form>
+                                        </td>
                                     </tr>
-                                    {foreach $categories as $category}
-                                        <tr>
-                                            <td class="left-align group-name"><input form="form-torrent-categories" type="text" name="name-categoryID{$category['category_index']}" value="{$category['category_name']}"></td>
-                                            <td><label>Parent</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$category['category_index']}" value=1 checked/></td>
-                                            <td><label>Child</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$category['category_index']}" value=0></td>
-                                            <td>
-                                                <label>Child of</label>
-                                                <select form="form-torrent-categories" name="is-child-of-categoryID{$category['category_index']}">
-                                                    {foreach $categories as $categorySelect}
-                                                        <option value="{$categorySelect['category_index']}" {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
-                                                    {/foreach}
-                                                </select>
-                                            </td>
-                                            <td class="right-align">
-                                                <input form="form-delete-torrent-category" type="hidden" name="delete-category" value="{$category['category_index']}">
-                                                <input form="form-delete-torrent-category" type="submit" value="Delete">
-                                            </td>
-                                        </tr>
 
-                                        {foreach $category['category_sub'] as $subcategory}
-                                        <tr>
-                                            <td class="left-align group-name"><input form="form-torrent-categories" type="text" name="name-categoryID{$subcategory['category_index']}" value="{$subcategory['category_name']}"></td>
-                                            <td><label>Parent</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=1></td>
-                                            <td><label>Child</label><input form="form-torrent-categories" type="radio" name="is-parent-categoryID{$subcategory['category_index']}" value=0 checked/></td>
-                                            <td>
-                                                <label>Child of</label>
-                                                <select form="form-torrent-categories" name="is-child-of-categoryID{$subcategory['category_index']}">
-                                                    {foreach $categories as $categorySelect}
-                                                        <option value={$categorySelect['category_index']} {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
-                                                    {/foreach}
-                                                </select>
-                                            </td>
-                                            <td class="right-align">
-                                                <input form="form-delete-torrent-category" type="hidden" name="delete-category" value="{$subcategory['category_index']}">
-                                                <input form="form-delete-torrent-category" type="submit" value="Delete">
-                                            </td>
-                                        </tr>
-                                        {/foreach}
+                                    {foreach $category['category_sub'] as $subcategory}
+                                    <tr>
+                                        <td class="left-align group-name">
+                                            <input form="form-torrent-categories" type="text" name="category_name-categoryID{$subcategory['category_index']}" value="{$subcategory['category_name']}">
+                                        </td>
+                                        <td>
+                                            <label>Parent</label>
+                                            <input form="form-torrent-categories" type="radio" name="is_parent-categoryID{$subcategory['category_index']}" value=1>
+                                        </td>
+                                        <td>
+                                            <label>Child</label>
+                                            <input form="form-torrent-categories" type="radio" name="is_parent-categoryID{$subcategory['category_index']}" value=0 checked/>
+                                        </td>
+                                        <td>
+                                            <label>Child of</label>
+                                            <select form="form-torrent-categories" name="is_child_of-categoryID{$subcategory['category_index']}">
+                                                {foreach $categories as $categorySelect}
+                                                    <option value={$categorySelect['category_index']} {if $category['category_index'] eq $categorySelect['category_index']} selected{/if}>{$categorySelect['category_name']}</option>
+                                                {/foreach}
+                                            </select>
+                                        </td>
+                                        <td class="right-align">
+                                            <form method="POST" action="#torrent-categories">
+                                                <input type="hidden" name="delete-category" value="{$subcategory['category_index']}">
+                                                <input type="submit" value="Delete">
+                                            </form>
+                                        </td>
+                                    </tr>
                                     {/foreach}
+                                {/foreach}
 
-                                </table>
+                            </table>
 
-                                <smallSeperator></smallSeperator>
+                            <smallSeperator></smallSeperator>
 
-                                <input form="form-torrent-categories" type="submit" value="Save">
+                            <input form="form-torrent-categories" type="submit" value="Save">
                         </card>
                     </adminTorrentCategoryContainer>
                 {/if}

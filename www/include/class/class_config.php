@@ -114,7 +114,8 @@ class Config
         if (!$this->groups) {
             // We haven't fetched the user groups before, so lets make a request to the SQL DB.
             if ($groups = $this->db->select("groups", [
-                "group_name" => [
+                "gid" => [
+                    "group_name",
                     "gid(group_id)",
                     "group_color",
                     "is_admin",
@@ -128,7 +129,8 @@ class Config
                     "can_viewprofile",
                     "can_viewstats",
                     "can_comment",
-                    "can_invite"
+                    "can_invite",
+                    "can_useapi"
                 ]
             ])) {
                 // Success!
@@ -166,12 +168,123 @@ class Config
         )) {
             // Now that we've added a new group, we'll clear the group cache so the next request to it
             // will reflect our changes.
-            $this->groups = null;
+            $this->clearUserGroupCache();
 
             return true;
         }
 
         throw new Exception("Failed to add new group!");
+    }
+
+    public function deleteUserGroup(int $groupID) {
+        if ($this->doesUserGroupExist(groupID: $groupID)) {
+            if (!$this->db->delete("groups",
+                [
+                    "gid" => $groupID
+                ]
+            )) {
+                throw new Exception("Failed to delete user group!");
+            }
+
+            // Group deleted. Clear the group cache so changes are immediately reflected.
+            $this->clearUserGroupCache();
+
+            return true;
+        }
+
+        throw new Exception("User group does not exist!");
+    }
+
+    public function updateUserGroup(
+        int $groupID,
+        array $newParameters
+    ) {
+        if (count($newParameters) > 0) {
+            if ($this->doesUserGroupExist(groupID: $groupID)) {
+                foreach ($newParameters as $parameter => $value) {
+                    switch($parameter) {
+                        case "group_name":
+                        case "group_color":
+                            $value = trim($value);
+
+                            if (empty($value)) {
+                                throw new Exception("Group name or colour cannot be empty!");
+                            }
+
+                            if ($this->getUserGroups()[$groupID][$parameter] == $value) {
+                                // Group parameter has not changed. Unset it from the update array.
+                                unset($newParameters[$parameter]);
+                            } else {
+                                $newParameters[$parameter] = $value;
+                            }
+
+                            break;
+                        case "is_admin":
+                        case "is_guest":
+                        case "is_new":
+                        case "is_disabled":
+                        case "can_upload":
+                        case "can_download":
+                        case "can_delete":
+                        case "can_modify":
+                        case "can_viewprofile":
+                        case "can_viewstats":
+                        case "can_comment":
+                        case "can_invite":
+                        case "can_useapi":
+                            if ($value) {
+                                $value = 1;
+                            } else {
+                                $value = 0;
+                            }
+
+                            if ($this->getUserGroups()[$groupID][$parameter] == $value) {
+                                // Group parameter has not changed. Unset it from the update array.
+                                unset($newParameters[$parameter]);
+                            } else {
+                                $newParameters[$parameter] = $value;
+                            }
+
+                            break;
+                        default:
+                            throw new Exception("Invalid group parameter provided!");
+                    }
+                }
+            } else {
+                throw new Exception("Invalid user group ID provided!");
+            }
+
+            if (count($newParameters) > 0) {
+                // We still have parameters that need updating.
+                if (!$this->db->update("groups",
+                    $newParameters,
+                    [
+                        "gid" => $groupID
+                    ]
+                )) {
+                    throw new Exception("Failed to update user groups!");
+                }
+
+                // Clear group cache, so changes are reflected immediately.
+                $this->clearUserGroupCache();
+            }
+        }
+
+        return true;
+    }
+
+    public function doesUserGroupExist(int $groupID) {
+        if (isset($this->getUserGroups()[$groupID])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function clearUserGroupCache() {
+        $this->groups = null;
+
+        return true;
     }
 
     /**
@@ -260,7 +373,7 @@ class Config
         )) {
             // Now that we've added a new category, we'll clear the category cache so the next request to it
             // will reflect our changes.
-            $this->categories = null;
+            $this->clearTorrentCategoryCache();
 
             return true;
         }
@@ -323,7 +436,7 @@ class Config
                 ]
             )) {
                 // Category updated. We should clear the cache so the updates are reflected on next request.
-                $this->categories = null;
+                $this->clearTorrentCategoryCache();
                 return true;
             }
 
@@ -369,7 +482,7 @@ class Config
             ]
         )) {
             // Delete success. Clear the categories cache so the changes are reflected immediately.
-            $this->categories = null;
+            $this->clearTorrentCategoryCache();
             return true;
         }
 
@@ -412,6 +525,12 @@ class Config
         }
 
         return false;
+    }
+
+    public function clearTorrentCategoryCache() {
+        $this->categories = null;
+
+        return true;
     }
 
     /**
