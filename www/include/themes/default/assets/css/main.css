@@ -400,6 +400,11 @@ input[type=text], input[type=password], input[type=number], select, textarea {
     color: var(--text-color)
 }
 
+input[type=color] {
+    border: none;
+    padding: 0;
+}
+
 input[type=submit], input[type=file], button {
     border-radius: var(--standard-border-radius);
     padding: var(--input-padding-vertical) var(--input-padding-horizontal) var(--input-padding-vertical) var(--input-padding-horizontal);
