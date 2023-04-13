@@ -70,7 +70,7 @@
                             <table>
                                 <tr class="table-header">
                                     <th class="left-align">Name</th>
-                                    <th>Colour (hex)</th>
+                                    <th>Colour</th>
                                     <th>Guest</th>
                                     <th>New account</th>
                                     <th>Disabled</th>
@@ -94,7 +94,7 @@
                                     </td>
                                     <td>
                                         <label>Colour</label>
-                                        <input form="form-user-groups" type="text" value="{$group['group_color']}" name="group_color-groupID{$group['group_id']}">
+                                        <input form="form-user-groups" type="color" value="{$group['group_color']}" name="group_color-groupID{$group['group_id']}">
                                     </td>
                                     <td>
                                         <label>Guest</label>
