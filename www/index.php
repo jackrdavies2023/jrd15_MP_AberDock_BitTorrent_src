@@ -6,7 +6,7 @@
 	// Some default variables until we hook up the SQL for site settings.
 	$theme  = "default";
 	$guestAllowed = false;
-	$requiredDbVersion = "1.2";
+	$requiredDbVersion = "1.3";
 
 	// Append our class and function directory to the include path.
 	set_include_path(get_include_path().PATH_SEPARATOR.__DIR__."/include/class"
