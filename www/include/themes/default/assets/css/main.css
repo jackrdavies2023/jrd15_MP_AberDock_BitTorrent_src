@@ -649,8 +649,4 @@ topBar {
         z-index: 2;
         display: block;
     }
-
-    navigationBar {
-        display: none;
-    }
 }
