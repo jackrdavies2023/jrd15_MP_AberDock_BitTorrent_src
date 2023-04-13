@@ -9,8 +9,14 @@
 
         <mainLinks>
             <a href="/?p=browse"><i class="search"></i> Browse</a>
-            <a href="/?p=upload"><i class="upload"></i> Upload</a>
-            <a href="/?p=statistics"><i class="statistics"></i> Statistics</a>
+
+            {if $accountInfo['can_upload'] eq 1}
+                <a href="/?p=upload"><i class="upload"></i> Upload</a>
+            {/if}
+
+            {if $accountInfo['can_viewstats'] eq 1}
+                <a href="/?p=statistics"><i class="statistics"></i> Statistics</a>
+            {/if}
 
             {if $accountInfo['is_admin'] eq 1}
                 <a href="/?p=administration"><i class="administration"></i> Administration</a>
