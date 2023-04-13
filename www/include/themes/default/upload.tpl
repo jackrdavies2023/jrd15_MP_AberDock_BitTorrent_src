@@ -18,7 +18,8 @@
                             Your announcement URL: http://127.0.0.1/announce.php?pid=123456789abcdefghijklmnopqrstuvwxyz
                         </p>
 
-                        <form>
+                        <form method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="torrent-upload">
                             <label for="torrent-file">Torrent file</label>
                             <tinySeperator></tinySeperator>
                             <input accept=".torrent" id="torrent-file" type="file" name="torrent-file" placeholder="Torrent file" required="">
@@ -35,22 +36,13 @@
                             <tinySeperator></tinySeperator>
                             <select type="text" id="torrent-category" name="torrent-category">
                                 <option value="0">[Select a category]</option>
-
-                                <optgroup label="First parent category">
-                                    <option value="1">First child category</option>
-                                    <option value="1">Second child category</option>
-                                    <option value="1">Third child category</option>
-                                    <option value="1">Fourth child category</option>
-                                    <option value="1">Fifth child category</option>
-                                </optgroup>
-
-                                <optgroup label="Second parent category">
-                                    <option value="1">First child category</option>
-                                    <option value="1">Second child category</option>
-                                    <option value="1">Third child category</option>
-                                    <option value="1">Fourth child category</option>
-                                    <option value="1">Fifth child category</option>
-                                </optgroup>
+                                {foreach $categories as $category}
+                                    <optgroup label="{$category['category_name']}">
+                                        {foreach $category['category_sub'] as $subcategory}
+                                            <option value="{$subcategory['category_index']}">{$subcategory['category_name']}</option>
+                                        {/foreach}
+                                    </optgroup>
+                                {/foreach}
                             </select>
 
                             <smallSeperator></smallSeperator>
