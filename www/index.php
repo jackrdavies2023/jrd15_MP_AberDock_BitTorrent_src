@@ -4,9 +4,12 @@
 	error_reporting(E_ALL);
 
 	// Some default variables until we hook up the SQL for site settings.
+    // Once the configuration is loaded from the DB, most of these variables
+    // will be ignored.
 	$theme  = "default";
 	$guestAllowed = false;
 	$requiredDbVersion = "1.3";
+	$siteName = "AberDock";
 
 	// Append our class and function directory to the include path.
 	set_include_path(get_include_path().PATH_SEPARATOR.__DIR__."/include/class"
@@ -15,71 +18,48 @@
 	// Require the Smarty template class, to make theme development easier.
 	// Smarty template acquired from: https://www.smarty.net/
 	require_once(__DIR__."/include/class/Smarty/Smarty.class.php");
+	$smarty  = new Smarty();
+
+	// Smarty template settings. This just sets the default values before
+    // we load the custom ones from the SQL.
+	$smarty->debugging = false; // Used for debugging templates.
+	$smarty->setTemplateDir(__DIR__."/include/themes/$theme/"); // Template directory.
+	$smarty->setCompileDir("/tmp"); // Smarty compiled template directory.
+	$smarty->assign('siteName', $siteName); // Assign the variable "siteName" for use inside of template files.
+	$smarty->assign('assetDir', "/include/themes/$theme/assets"); // Set the asset directory, for storing CSS, JS and other assets.
 
 	// Require Medoo Database Framework.
 	require_once("class_medoo.php");
 
 	// Require the account class.
 	require_once("class_account.php");
+	use Account\Account;
 
 	// Require the login class.
 	require_once("class_login.php");
+	use Login\Login;
 
 	// Require the config class.
 	require_once("class_config.php");
-
-	// Global configuration.
-	require_once(__DIR__."/include/config.php");
 	use Config\Config;
-	$config = new Config(db: $db);
-
-	// Set the required namespaces.
-	use Login\Login;
-	use Account\Account;
-
-	// Initialise constructs.
-	$smarty  = new Smarty();        // Used for loading themes/templates.
-	$login   = new Login(db: $db);  // Used for checking if the user is authenticated
-								    // and for performing various account tasks.
-
-	/*if (!$login->isLoggedIn()) {
-		echo("Not logged in. Creating...");
-		$account = new Account(db: $db);
-		try {
-			$account -> createAccount(
-				username: "testAccount",
-				password: "testPassword"
-			);
-		} catch (Exception $e) {
-			exit("Error! ".$e->getMessage());
-		}
-	}*/
-
-	/*$account = new Account(db: $db, userId: 1);
-	print_r($account->getAccount());
-	print_r($account->getAccount());
-	exit();*/
-
-
-	// Smarty template settings.
-	$smarty->debugging = false; // Used for debugging templates.
-	$smarty->setTemplateDir(__DIR__."/include/themes/$theme/"); // Template directory.
-	$smarty->setCompileDir("/tmp"); // Smarty compiled template directory.
-	$smarty->assign('siteName', 'AberDock'); // Assign the variable "siteName" for use inside of template files.
-	$smarty->assign('assetDir', "/include/themes/$theme/assets"); // Set the asset directory, for storing CSS, JS and other assets.
-
-    // A check to make sure we have the correct database version.
-    if ($config->getDatabaseVersion() !== $requiredDbVersion) {
-		$smarty->assign('exceptionMessage', "Invalid database version!\n\nRequired version: $requiredDbVersion\nCurrent version: ".$config->getDatabaseVersion());
-		$smarty->assign('exceptionCode', "300");
-		$smarty->assign('pageName', 'Error');
-
-		// Load error.tpl Smarty template file.
-		$smarty->display('error.tpl');
-		exit();
-	}
 
 	try {
+		// Global configuration.
+		require_once(__DIR__."/include/config.php");
+
+		// Initialise constructs.
+		$config  = new Config(db: $db);
+		$login   = new Login(db: $db);  // Used for checking if the user is authenticated
+										   // and for performing various account tasks.
+
+		// A check to make sure we have the correct database version.
+		if ($config->getDatabaseVersion() !== $requiredDbVersion) {
+			throw new Exception("Invalid database version!\n\n\
+			Required version: $requiredDbVersion\n\
+			Current version: ".$config->getDatabaseVersion(), 300);
+		}
+
+
 		if (!$guestAllowed && !$login->isLoggedIn()) {
 			// User is not logged in and guest access is disabled.
 			// So we need to redirect to one of the login pages.
@@ -169,5 +149,4 @@
 		$smarty->display('error.tpl');
 		exit();
 	}
-
 ?>
