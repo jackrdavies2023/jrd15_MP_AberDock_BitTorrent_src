@@ -558,6 +558,7 @@ topBar {
     .invert-input-background-mobile input[type="text"],
     .invert-input-background-mobile input[type="password"],
     .invert-input-background-mobile input[type="number"],
+    .invert-input-background-mobile input[type="submit"],
     .invert-input-background-mobile select,
     .invert-input-background-mobile textarea {
         background-color: var(--secondary-background-color);

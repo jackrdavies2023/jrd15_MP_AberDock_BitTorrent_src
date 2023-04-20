@@ -62,7 +62,7 @@
                             <form method="POST" action="#user-groups">
                                 <label for="new-group-name">New group name</label>
                                 <input type="text" class="no-invert-input-background-mobile" id="new-group-name" name="new-group-name" placeholder="Group name">
-                                <input type="submit" value="Add">
+                                <input type="submit" class="no-invert-input-background-mobile" value="Add">
                             </form>
                             <smallSeperator></smallSeperator>
                             <form method="POST" action="#user-groups" id="form-user-groups"></form>
@@ -160,7 +160,7 @@
 
                             <smallSeperator></smallSeperator>
 
-                            <input type="submit" form="form-user-groups" value="Save">
+                            <input type="submit" form="form-user-groups" class="no-invert-input-background-mobile" value="Save">
                         </card>
                     </adminGroupsContainer>
 
@@ -235,7 +235,7 @@
                             <form method="POST" action="#torrent-categories">
                                 <label for="new-category-name">New category name</label>
                                 <input type="text" class="no-invert-input-background-mobile" id="new-category-name" name="new-category-name" placeholder="Category name">
-                                <input type="submit" value="Add">
+                                <input type="submit" class="no-invert-input-background-mobile" value="Add">
                             </form>
                             <smallSeperator></smallSeperator>
                             <!-- Define the forms here. Without this, nesting forms results in categories being deleted
@@ -314,7 +314,7 @@
 
                             <smallSeperator></smallSeperator>
 
-                            <input form="form-torrent-categories" type="submit" value="Save">
+                            <input form="form-torrent-categories" class="no-invert-input-background-mobile" type="submit" value="Save">
                         </card>
                     </adminTorrentCategoryContainer>
                 {/if}
