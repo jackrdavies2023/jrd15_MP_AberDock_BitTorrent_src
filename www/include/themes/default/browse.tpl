@@ -49,61 +49,21 @@
                 <!-- Torrent listing -->
                 <h2>Latest torrents</h2>
                 <torrentBrowser>
-                    <card>
-                        <h3><a href="/?p=viewtorrent&uuid=89474814-df1a-11ed-9203-02420b000003">Torrent title</a></h3>
-                        <p>
-                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&uuid=somerandomid">human</a><br>
-                        2.3 GiB - 10 seeders, 5 leechers
-                        </p>
-                        <options>
-                            <i class="download"></i>
-                            <i class="bookmark"></i>
-                            <i class="like"></i>
-                            <i class="info"></i>
-                        </options>
-                    </card>
-
-                    <card>
-                        <h3><a href="/?p=viewtorrent&uuid=89474814-df1a-11ed-9203-02420b000003">Torrent title</a></h3>
-                        <p>
-                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&uuid=somerandomid">human</a><br>
-                        2.3 GiB - 10 seeders, 5 leechers
-                        </p>
-                        <options>
-                            <i class="download"></i>
-                            <i class="bookmark"></i>
-                            <i class="like"></i>
-                            <i class="info"></i>
-                        </options>
-                    </card>
-
-                    <card>
-                        <h3><a href="/?p=viewtorrent">Torrent title</a></h3>
-                        <p>
-                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
-                        2.3 GiB - 10 seeders, 5 leechers
-                        </p>
-                        <options>
-                            <i class="download"></i>
-                            <i class="bookmark"></i>
-                            <i class="like"></i>
-                            <i class="info"></i>
-                        </options>
-                    </card>
-
-                    <card>
-                        <h3><a href="/?p=viewtorrent">Torrent title</a></h3>
-                        <p>
-                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
-                        2.3 GiB - 10 seeders, 5 leechers
-                        </p>
-                        <options>
-                            <i class="download"></i>
-                            <i class="bookmark"></i>
-                            <i class="like"></i>
-                            <i class="info"></i>
-                        </options>
-                    </card>
+                    {foreach $torrentList as $torrent}
+                        <card>
+                            <h3><a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}">{$torrent['title']}</a></h3>
+                            <p>
+                                Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&uuid={$torrent['uploader']['uuid']}">{$torrent['uploader']['username']}</a><br>
+                                2.3 GiB - 10 seeders, 5 leechers
+                            </p>
+                            <options>
+                                <i class="download"></i>
+                                <i class="bookmark"></i>
+                                <i class="like"></i>
+                                <i class="info"></i>
+                            </options>
+                        </card>
+                    {/foreach}
                 </torrentBrowser>
             </main>
         </mainContainer>

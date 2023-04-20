@@ -17,6 +17,7 @@ use Account\Account;
 
 class Torrent extends Config
 {
+    protected $torrentCache = array();
 
     function __construct(
         Medoo &$db
@@ -33,8 +34,7 @@ class Torrent extends Config
         string $torrentFilePath,
         int $userId,
         int $isAnonymous = 0
-    ) {
-
+    ): array {
         if (!file_exists($torrentFilePath)) {
             throw new Exception("Torrent file does not exist! Cannot import!");
         }
@@ -43,8 +43,13 @@ class Torrent extends Config
             throw new Exception("Failed to parse torrent file!");
         }
 
-        if (count($decoded['info']['files']) <= 0) {
-            throw new Exception("Torrent contains no files!");
+        if (!isset($decoded['info']['name'])) {
+            // "name" doesn't exist in the "info" array, meaning
+            // that we are expecting a multi-file torrent.
+
+            if (!isset($decoded['info']['files']) || count($decoded['info']['files']) <= 0) {
+                throw new Exception("Torrent contains no files!");
+            }
         }
 
         if (empty($title = trim($title))) {
@@ -70,14 +75,13 @@ class Torrent extends Config
         }
 
         $infoHash      = sha1(Bencode::encode($decoded['info']));
-        $torrentIdLong =  $this->db->raw("UUID()");
 
         $toInsert = array(
             "uid"             =>  $userId,
             "anonymous"       =>  $isAnonymous,
             "category_index"  =>  $categoryIndex,
             "info_hash"       =>  $infoHash,
-            "torrent_id_long" => $torrentIdLong,
+            "torrent_id_long" =>  Medoo::raw("UUID()"),
             "file_name"       =>  "$title",
             "file_size"       =>  $decoded['info']['piece length'],
             "file_size_calc"  =>  "100GiB",
@@ -100,26 +104,41 @@ class Torrent extends Config
            throw new Exception("Failed to insert torrent into database!");
        }
 
-        return $torrentIdLong;
+       return $this->getTorrent(torrentId: $this->db->id());
     }
 
     function getTorrent(
-        string $torrentIdLong
+        string $torrentIdLong = "",
+        int    $torrentId = 0
     ) {
+        $where = array(
+            "torrent_id_long" => $torrentIdLong
+        );
+
         if (empty($torrentIdLong = trim($torrentIdLong))) {
-            throw new Exception("Empty torrent ID provided!");
+            if ($torrentId > 0) {
+                $where = array(
+                    "torrent_id" => $torrentId
+                );
+            } else {
+                throw new Exception("Empty torrent ID provided!");
+            }
         }
 
         if (!$torrent = $this->db->get("torrents",
             [
                 "[<]users"      => "uid", // We're joining the users table based on the uid.
-                "[<]categories" => "category_index"
+                "[<]categories" => "category_index",
+                "[>]groups"     => "gid"
             ],
             [
-                "users.username(uploader)",
-                "users.uid_long(uploader_uid)",
+                "uploader" => [
+                    "users.username(username)",
+                    "users.uid_long(uuid)",
+                    "groups.group_name"
+                ],
                 "torrents.torrent_id",
-                "torrents.torrent_id_long",
+                "torrents.torrent_id_long(torrent_uuid)",
                 "torrents.anonymous",
                 "torrents.category_index",
                 "torrents.info_hash",
@@ -137,9 +156,7 @@ class Torrent extends Config
                 "categories.category_subof",
                 "categories.category_name"
             ],
-            [
-                "torrent_id_long" => $torrentIdLong
-            ]
+            $where
         )) {
             throw new Exception("Torrent does not exist!");
         }
@@ -152,7 +169,8 @@ class Torrent extends Config
         string $searchBy    =  "title",
         int    $maxResults  =  50,
         string $sortBy      =  "torrent_id",
-        bool   $orderDesc   =  false
+        bool   $orderDesc   =  false,
+        array  $categories  = array()
     ) {
         $order = "ASC";
 
@@ -164,6 +182,83 @@ class Torrent extends Config
             throw new Exception("Invalid return limit!");
         }
 
+        // We have this query already cached. It is unlikely that we will have the
+        // same query with different filter parameters in the same request, so this will
+        // suffice.
+        if (isset($this->torrentCache['torrent_listing'][$searchQuery])) {
+            return $this->torrentCache['torrent_listing'][$searchQuery];
+        }
 
+        switch($sortBy) {
+            case "time":
+                $sortBy = "time";
+                break;
+            case "size":
+                $sortBy = "file_size";
+                break;
+            case "title":
+                $sortBy = "title";
+            case "id":
+            default:
+                $sortBy = "torrent_id";
+                break;
+        }
+
+        $where["ORDER"] = array(
+            $sortBy => $order
+        );
+
+        switch($searchBy) {
+            case "date":
+                $searchBy = "time";
+                break;
+            case "size":
+                $searchBy = "file_size";
+                break;
+            case "id":
+                $searchBy = "torrent_id";
+                break;
+            default:
+                $searchBy = "title";
+                break;
+        }
+
+        if (!empty($searchQuery = trim($searchQuery))) {
+            $where[$searchBy."[~]"] = "$searchQuery";
+        }
+
+        if (count($categories) > 0) {
+            $where["AND"]["categories.category_index"] = array();
+
+            foreach ($categories as $category) {
+                $where["AND"]["categories.category_index"][] = $category;
+            }
+        }
+
+        // Save the query response to the cache, regardless of what the response is.
+        $this->torrentCache['torrent_listing'][$searchQuery] = $this->db->select("torrents",
+            [
+                "[<]categories" => "category_index",
+                "[<]users"      => "uid",
+                "[>]groups"     => "gid"
+            ],
+            [
+                "uploader" => [
+                    "users.username(username)",
+                    "users.uid_long(uuid)",
+                    "groups.group_name"
+                ],
+                "torrents.torrent_id",
+                "torrents.torrent_id_long(torrent_uuid)",
+                "torrents.title",
+                "torrents.info_hash",
+                "torrents.anonymous",
+
+                "categories.category_name"
+            ],
+            $where
+        );
+
+        return $this->torrentCache['torrent_listing'][$searchQuery];
     }
 }

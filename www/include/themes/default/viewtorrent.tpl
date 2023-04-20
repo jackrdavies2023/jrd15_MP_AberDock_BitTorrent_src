@@ -18,7 +18,7 @@
                         <card class="torrent-stats no-background">
                             <img class="torrent-cover-img" src="{$assetDir}/img/torrent-cover.png">
                             <stats>
-                                Uploaded by: <a class="profile-link" href="/?p=profile&uuid={$torrentDetails['uploader_uid']}">{$torrentDetails['uploader']}</a><br>
+                                Uploaded by: <a class="profile-link" href="/?p=profile&uuid={$torrentDetails['uploader']['uuid']}">{$torrentDetails['uploader']['username']}</a><br>
                                 Size: 2.3GiB<br>
                                 Category: {$torrentDetails['category_name']}<br>
                                 Date: 01/01/2023<br>

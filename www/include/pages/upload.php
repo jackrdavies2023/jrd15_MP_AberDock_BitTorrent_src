@@ -78,7 +78,7 @@
         // We've made sure we have all the POST data we need.
         $torrent = new Torrent(db: $db);
 
-        if ($torrentIdLong = $torrent->addTorrent(
+        if ($torrentDetails = $torrent->addTorrent(
             title: $_REQUEST['torrent-title'],
             description: $_REQUEST['torrent-description'],
             categoryIndex: $_REQUEST['torrent-category'],
@@ -87,7 +87,7 @@
             userId: $login->getAccountInfo()['uid'],
             isAnonymous: $_REQUEST['torrent-anonymous']
         )) {
-            header('Location: /?p=viewtorrent&uuid='.$torrentIdLong);
+            header('Location: /?p=viewtorrent&uuid='.$torrentDetails['torrent_uuid']);
         }
 
     }
