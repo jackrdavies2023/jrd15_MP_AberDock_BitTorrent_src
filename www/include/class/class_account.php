@@ -96,6 +96,7 @@ class Account
             "users.username",
             "users.password",
             "users.uid_long",
+            "users.pid",
             "groups.group_name",
             "groups.group_color",
             "groups.is_admin",

@@ -15,7 +15,7 @@
                 <uploadArea>
                     <card>
                         <p>
-                            Your announcement URL: http://127.0.0.1/announce.php?pid=123456789abcdefghijklmnopqrstuvwxyz
+                            Your announcement URL: {$announcementUrl}
                         </p>
 
                         <form method="POST" enctype="multipart/form-data">

@@ -54,7 +54,7 @@
                             <h3><a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}">{$torrent['title']}</a></h3>
                             <p>
                                 Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&uuid={$torrent['uploader']['uuid']}">{$torrent['uploader']['username']}</a><br>
-                                2.3 GiB - 10 seeders, 5 leechers
+                                {$torrent['file_size_calc']} - {$torrent['seeders']} seeders, {$torrent['leechers']} leechers
                             </p>
                             <options>
                                 <i class="download"></i>

@@ -17,13 +17,17 @@ use Account\Account;
 
 class Torrent extends Config
 {
-    protected $torrentCache = array();
+    protected $torrentCache = array(),
+              $peerExpirationTime;
 
     function __construct(
         Medoo &$db
     ) {
         // PHP equivalent of "super".
         parent::__construct(db: $db);
+
+        // If the peer hasn't updated its status within 30 seconds of the announcement interval, deem it dead.
+        $this->peerExpirationTime = time() - (intval(parent::getConfigVal("announcement_interval")) + 30);
     }
 
     function addTorrent(
@@ -178,6 +182,11 @@ class Torrent extends Config
             $order = "DESC";
         }
 
+        $where = array(
+            "published" => 1,
+            "GROUP"     => "torrent_id"
+        );
+
         if ($maxResults <= 0 || $maxResults > 100) {
             throw new Exception("Invalid return limit!");
         }
@@ -240,21 +249,25 @@ class Torrent extends Config
             [
                 "[<]categories" => "category_index",
                 "[<]users"      => "uid",
-                "[>]groups"     => "gid"
+                "[>]groups"     => "gid",
+                "[>]peers"      => array("torrents.torrent_id" => "torrent_id")
             ],
             [
                 "uploader" => [
                     "users.username(username)",
                     "users.uid_long(uuid)",
-                    "groups.group_name"
+                    "groups.group_name",
+                    "users.gid(group_id)"
                 ],
                 "torrents.torrent_id",
                 "torrents.torrent_id_long(torrent_uuid)",
                 "torrents.title",
                 "torrents.info_hash",
                 "torrents.anonymous",
-
-                "categories.category_name"
+                "torrents.file_size_calc",
+                "categories.category_name",
+                "seeders"  => Medoo::raw("SUM(if (peers.seeding = 1 and peers.last_seen > ".$this->peerExpirationTime.", 1, 0))"),
+                "leechers" => Medoo::raw("SUM(if (peers.seeding = 0 and peers.last_seen > ".$this->peerExpirationTime.", 1, 0))")
             ],
             $where
         );

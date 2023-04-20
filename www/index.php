@@ -8,7 +8,7 @@
     // will be ignored.
 	$theme  = "default";
 	$guestAllowed = false;
-	$requiredDbVersion = "1.4";
+	$requiredDbVersion = "1.5";
 	$siteName = "AberDock";
 
 	// Append our class and function directory to the include path.
