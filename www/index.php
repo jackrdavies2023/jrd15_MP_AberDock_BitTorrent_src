@@ -8,7 +8,7 @@
     // will be ignored.
 	$theme  = "default";
 	$guestAllowed = false;
-	$requiredDbVersion = "1.3";
+	$requiredDbVersion = "1.4";
 	$siteName = "AberDock";
 
 	// Append our class and function directory to the include path.
@@ -54,9 +54,7 @@
 
 		// A check to make sure we have the correct database version.
 		if ($config->getDatabaseVersion() !== $requiredDbVersion) {
-			throw new Exception("Invalid database version!\n\n\
-			Required version: $requiredDbVersion\n\
-			Current version: ".$config->getDatabaseVersion(), 300);
+			throw new Exception("Invalid database version!\n\nRequired version: $requiredDbVersion\nCurrent version: ".$config->getDatabaseVersion(), 300);
 		}
 
 

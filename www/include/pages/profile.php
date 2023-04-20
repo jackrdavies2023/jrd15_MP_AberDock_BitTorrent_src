@@ -1,7 +1,7 @@
 <?php
     use Account\Account;
 
-    if (isset($_GET['user']) && !empty($userIdLong = trim($_GET['user']))) {
+    if (isset($_GET['uuid']) && !empty($userIdLong = trim($_GET['uuid']))) {
         $account = new Account(db: $db, userIdLong: $userIdLong);
 
         if (count($account->getAccount()) > 0) {

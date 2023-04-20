@@ -4,6 +4,12 @@
         throw new Exception("Not authorised!");
     }
 
+    require_once("class_bencode.php");
+    use Bencode\Bencode;
+
+    require_once("class_torrent.php");
+    use Torrent\Torrent;
+
     if (isset($_REQUEST['torrent-upload'])) {
         // Trying to upload.
 
@@ -54,12 +60,37 @@
                     }
 
                     break;
+                case "torrent-anonymous":
+                    if (isset($_REQUEST[$field])) {
+                        if ($_REQUEST[$field] == "on" || $_REQUEST[$field] == "1") {
+                            $_REQUEST[$field] = 1;
+                            break;
+                        }
+                    }
 
+                    $_REQUEST[$field] = 0;
+                    break;
+                default:
+                    break;
             }
         }
+
+        // We've made sure we have all the POST data we need.
+        $torrent = new Torrent(db: $db);
+
+        if ($torrentIdLong = $torrent->addTorrent(
+            title: $_REQUEST['torrent-title'],
+            description: $_REQUEST['torrent-description'],
+            categoryIndex: $_REQUEST['torrent-category'],
+            coverImagePath: $_FILES['torrent-cover']['tmp_name'],
+            torrentFilePath: $_FILES['torrent-file']['tmp_name'],
+            userId: $login->getAccountInfo()['uid'],
+            isAnonymous: $_REQUEST['torrent-anonymous']
+        )) {
+            header('Location: /?p=viewtorrent&uuid='.$torrentIdLong);
+        }
+
     }
-
-
 
     $smarty->assign('pageName', 'Upload');
     $smarty->assign("categories", $config->getTorrentCategories());

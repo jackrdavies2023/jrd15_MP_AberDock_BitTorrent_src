@@ -106,7 +106,7 @@ class Config
     }
 
     /**
-     * Fetches the list of user groups and their permissions.
+     * Fetches the list of  groups and their permissions.
      * @return array An array of each user group and its permissions.
      * @throws Exception 303 Failed to retrieve the user groups.
      */

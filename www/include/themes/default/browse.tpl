@@ -50,9 +50,9 @@
                 <h2>Latest torrents</h2>
                 <torrentBrowser>
                     <card>
-                        <h3><a href="/?p=viewtorrent">Torrent title</a></h3>
+                        <h3><a href="/?p=viewtorrent&uuid=89474814-df1a-11ed-9203-02420b000003">Torrent title</a></h3>
                         <p>
-                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
+                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&uuid=somerandomid">human</a><br>
                         2.3 GiB - 10 seeders, 5 leechers
                         </p>
                         <options>
@@ -64,9 +64,9 @@
                     </card>
 
                     <card>
-                        <h3><a href="/?p=viewtorrent">Torrent title</a></h3>
+                        <h3><a href="/?p=viewtorrent&uuid=89474814-df1a-11ed-9203-02420b000003">Torrent title</a></h3>
                         <p>
-                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
+                        Posted in ISO -> Linux 2 days ago by <a class="profile-link" href="/?p=profile&uuid=somerandomid">human</a><br>
                         2.3 GiB - 10 seeders, 5 leechers
                         </p>
                         <options>

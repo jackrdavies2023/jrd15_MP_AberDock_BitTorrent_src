@@ -15,8 +15,8 @@ namespace Account;
 use Exception;
 use Medoo\Medoo;
 
- class Account
- {
+class Account
+{
     protected $db,
               $account,
               $defaultExpirationTime    = (60 * 60) * 2,   // Expires in 2 hours.
@@ -311,6 +311,5 @@ use Medoo\Medoo;
 
         throw new Exception("Failed to create account!", 102);
     }
- }
-
+}
 ?>

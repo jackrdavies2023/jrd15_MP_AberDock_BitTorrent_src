@@ -9,7 +9,7 @@
             <!-- Contains main page content. -->
             <main>
                 <titleBar>
-                    <h1>Torrent title</h1>
+                    <h1>{$torrentDetails['title']}</h1>
                 </titleBar>
 
                 <!-- Torrent card -->
@@ -18,15 +18,15 @@
                         <card class="torrent-stats no-background">
                             <img class="torrent-cover-img" src="{$assetDir}/img/torrent-cover.png">
                             <stats>
-                                Uploaded by: <a class="profile-link" href="/?p=profile&user=somerandomid">human</a><br>
+                                Uploaded by: <a class="profile-link" href="/?p=profile&uuid={$torrentDetails['uploader_uid']}">{$torrentDetails['uploader']}</a><br>
                                 Size: 2.3GiB<br>
-                                Category: ISO -> Linux<br>
+                                Category: {$torrentDetails['category_name']}<br>
                                 Date: 01/01/2023<br>
-                                Seeders: 10<br>
-                                Leechers: 5<br>
-                                Peers: 15<br>
-                                Likes: 4<br>
-                                Downloads: 100<br>
+                                Seeders: 0<br>
+                                Leechers: 0<br>
+                                Peers: 0<br>
+                                Likes: 0<br>
+                                Downloads: 0<br>
 
                                 <smallSeperator></smallSeperator>
 
@@ -38,7 +38,7 @@
                         <smallSeperator></smallSeperator>
                         Description:
                         <tinySeperator></tinySeperator>
-                        <pre>The torrent description will go here!</pre>
+                        <pre>{$torrentDetails['description']}</pre>
 
                         <smallSeperator></smallSeperator>
                         File list:<br>

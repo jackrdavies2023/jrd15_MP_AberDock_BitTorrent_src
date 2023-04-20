@@ -31,10 +31,10 @@
 
         <bottomUserOptions>
             <userName>
-                <a href="/?p=profile&user={$accountInfo['uid_long']}">
+                <a href="/?p=profile&uuid={$accountInfo['uid_long']}">
                     <img class="navbar-profile-img" src="{$assetDir}/img/profile.png">
                 </a>
-                <span><a href="/?p=profile&user={$accountInfo['uid_long']}">{$accountInfo['username']}</a></span>
+                <span><a href="/?p=profile&uuid={$accountInfo['uid_long']}">{$accountInfo['username']}</a></span>
             </userName>
         </bottomUserOptions>
     </navigationBar>
