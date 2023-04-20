@@ -550,6 +550,10 @@ adminGroupsContainer table label, adminTorrentCategoryContainer table label {
     display: none;
 }
 
+tr.admin-category-child {
+    margin-left: 5mm;
+}
+
 topBar {
     display: none;
 }

@@ -280,7 +280,7 @@
                                     </tr>
 
                                     {foreach $category['category_sub'] as $subcategory}
-                                    <tr>
+                                    <tr class="admin-category-child">
                                         <td class="left-align group-name">
                                             <input form="form-torrent-categories" type="text" name="category_name-categoryID{$subcategory['category_index']}" value="{$subcategory['category_name']}">
                                         </td>
