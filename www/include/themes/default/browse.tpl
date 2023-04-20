@@ -21,7 +21,7 @@
                                 <!-- Setting the "action" in the form to "/?p=browse&" doesn't work.
                                      Instead we add a hidden field named "p", to set the page. -->
                                 <input type="hidden" name="p" value="browse">
-                                <input type="text" name="query" id="search-query" placeholder="Search for something...">
+                                <input type="text" name="query" id="search-query" placeholder="Search for something..." value="{$query}" autofocus>
                                 <input type="submit" value="Search!">
                             </center>
 
