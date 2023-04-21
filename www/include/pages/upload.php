@@ -94,8 +94,7 @@
 
     $smarty->assign('pageName', 'Upload');
     $smarty->assign("categories", $config->getTorrentCategories());
-    $smarty->assign("announcementUrl", $config->getConfigVal("announcement_url").
-                                              "?pid=".$login->getAccountInfo()['pid']);
+    $smarty->assign("announcementUrl", $config->getAnnouncementUrl(peerId: $login->getAccountInfo()['pid']));
 
     // Load browse.tpl Smarty template file.
     $smarty->display('upload.tpl');

@@ -22,15 +22,21 @@
                                 Size: {$torrentDetails['file_size_calc']}<br>
                                 Category: {$torrentDetails['category_name']}<br>
                                 Date: 01/01/2023<br>
-                                Seeders: 0<br>
-                                Leechers: 0<br>
-                                Peers: 0<br>
+                                Seeders: {$torrentDetails['seeders']}<br>
+                                Leechers: {$torrentDetails['leechers']}<br>
+                                Peers: {$torrentDetails['peers']}<br>
                                 Likes: 0<br>
                                 Downloads: 0<br>
 
                                 <smallSeperator></smallSeperator>
+                                <form id="form-download" method="GET">
+                                    <input type="hidden" name="p" value="viewtorrent"/>
+                                    <input type="hidden" name="download"/>
+                                    <input type="hidden" name="uuid" value="{$torrentDetails['torrent_uuid']}"/>
+                                </form>
 
-                                <button>Download</button>
+                                <button form="form-download" type="submit">Download</button>
+
                                 <button>Bookmark</button>
                                 <button>Like</button>
                             </stats>

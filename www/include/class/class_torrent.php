@@ -9,11 +9,14 @@
 
 namespace Torrent;
 
+// Ensure this class is loaded and don't depend on other scripts
+// to include it for us.
+require_once("class_bencode.php");
+
 use Exception;
 use Medoo\Medoo;
 use Bencode\Bencode;
 use Config\Config;
-use Account\Account;
 
 class Torrent extends Config
 {
@@ -30,7 +33,7 @@ class Torrent extends Config
         $this->peerExpirationTime = time() - (intval(parent::getConfigVal("announcement_interval")) + 30);
     }
 
-    function addTorrent(
+    public function addTorrent(
         string $title,
         string $description,
         int $categoryIndex,
@@ -141,7 +144,7 @@ class Torrent extends Config
             "description"     =>  "$description",
             "upload_time"     =>  time(),
             "published"       =>  1,
-            "torrent_data"    =>  file_get_contents($torrentFilePath)
+            "torrent_data"    =>  Bencode::encode($decoded)
         );
 
        if (!empty($coverImagePath = trim($coverImagePath))) {
@@ -159,10 +162,12 @@ class Torrent extends Config
        return $this->getTorrent(torrentId: $this->db->id());
     }
 
-    function getTorrent(
+    public function getTorrent(
         string $torrentIdLong = "",
         int    $torrentId = 0,
-        string $infoHash = ""
+        string $infoHash = "",
+        bool   $download = false,
+        string $peerId = ""
     ) {
         $where = array();
 
@@ -177,7 +182,7 @@ class Torrent extends Config
 
         if ($torrentId > 0) {
             $where = array(
-                "torrent_id" => $torrentId
+                "torrents.torrent_id" => $torrentId
             );
 
             $identifier = "torrent_id".$torrentId;
@@ -195,13 +200,17 @@ class Torrent extends Config
             throw new Exception("No torrent GET parameters specified!");
         }
 
+        $where['published']  =  1;
+        $where['GROUP']      =  "torrent_id";
+
         // No database cache is set. Make database request and cache it.
         if (!isset($this->torrentCache[$identifier])) {
             $this->torrentCache[$identifier] = $this->db->get("torrents",
                 [
                     "[<]users"      => "uid", // We're joining the users table based on the uid.
                     "[<]categories" => "category_index",
-                    "[>]groups"     => "gid"
+                    "[>]groups"     => "gid",
+                    "[>]peers"      => array("torrents.torrent_id" => "torrent_id")
                 ],
                 [
                     "uploader" => [
@@ -226,11 +235,42 @@ class Torrent extends Config
                     "torrents.torrent_data",
                     "torrents.category_index",
                     "categories.category_subof",
-                    "categories.category_name"
+                    "categories.category_name",
+                    "seeders"  => Medoo::raw("SUM(if (peers.seeding = 1 and peers.last_seen > ".$this->peerExpirationTime.", 1, 0))"),
+                    "leechers" => Medoo::raw("SUM(if (peers.seeding = 0 and peers.last_seen > ".$this->peerExpirationTime.", 1, 0))")
                 ],
                 $where
             );
+
+            if (!empty($this->torrentCache[$identifier])) {
+                $this->torrentCache[$identifier]['peers'] = $this->torrentCache[$identifier]['seeders'] +
+                                                            $this->torrentCache[$identifier]['leechers'];
+            }
         }
+
+        if ($download) {
+            // We need to prepare a .torrent for download.
+
+            if (empty($peerId = trim($peerId))) {
+                throw new Exception("No peer ID provided for torrent download!");
+            }
+
+            if (empty($this->torrentCache[$identifier])) {
+                throw new Exception("Torrent cannot be downloaded because it does not exist.");
+            }
+
+            // Now we need to decode the torrent blob and add our tracker URLs.
+            if (!$decoded = Bencode::decode($this->torrentCache[$identifier]['torrent_data'])) {
+                throw new Exception("Failed to parse torrent file!");
+            }
+
+            // Add our tracker announcement URL with the users peer Id appended to it.
+            $decoded['announce']  =  parent::getAnnouncementUrl(peerId: $peerId);
+
+            // Return the customised bencoded torrent.
+            return Bencode::encode($decoded);
+        }
+
 
         // Return the cached database response.
         return $this->torrentCache[$identifier];

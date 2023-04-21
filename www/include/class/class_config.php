@@ -67,6 +67,14 @@ class Config
         return $this->config[$parameter];
     }
 
+    public function getAnnouncementUrl(string $peerId) {
+        if (empty($peerId = trim($peerId))) {
+            throw new Exception("Peer ID not provided!");
+        }
+
+        return $this::getConfigVal("announcement_url")."?pid=$peerId";
+    }
+
     /**
      * Updates a global configuration parameter.
      * @param string $config The name of the configuration parameter.
