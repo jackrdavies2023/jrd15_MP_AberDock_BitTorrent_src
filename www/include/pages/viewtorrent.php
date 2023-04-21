@@ -5,7 +5,11 @@
     if (isset($_GET['uuid']) && !empty($torrentIdLong = trim($_GET['uuid']))) {
         $torrent = new Torrent(db: $db);
 
-        $smarty->assign("torrentDetails", $torrent->getTorrent(torrentIdLong: $torrentIdLong));
+        if (empty($torrentDetails = $torrent->getTorrent(torrentIdLong: $torrentIdLong))) {
+            throw new Exception("Torrent does not exist!");
+        }
+
+        $smarty->assign("torrentDetails", $torrentDetails);
     } else {
         throw new Exception("Torrent UUID not specified!");
     }

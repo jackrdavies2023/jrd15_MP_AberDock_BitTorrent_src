@@ -47,6 +47,13 @@ class Torrent extends Config
             throw new Exception("Failed to parse torrent file!");
         }
 
+        // A torrent's info hash is calculated via a sha1 of the bencoded "info" array.
+        $infoHash  =  sha1(Bencode::encode($decoded['info']));
+
+        if (!empty($this->getTorrent(infoHash: $infoHash))) {
+            throw new Exception("Provided torrent already exists!");
+        }
+
         if (!isset($decoded['info']['name'])) {
             // "name" doesn't exist in the "info" array, meaning
             // that we are expecting a multi-file torrent.
@@ -54,6 +61,49 @@ class Torrent extends Config
             if (!isset($decoded['info']['files']) || count($decoded['info']['files']) <= 0) {
                 throw new Exception("Torrent contains no files!");
             }
+        }
+
+        if (isset($decoded['info']['piece length'])) {
+            // We'll typically see this for torrents with only a single file.
+            $fileSize     =  $decoded['info']['piece length'];
+            $fileSizeCalc =  $this->bytesFormat($decoded['info']['piece length']);
+        } else {
+            // Torrent has more than one file. So we'll need to get the size of each file, sum them
+            // and then calculate the overall size.
+            if (isset($decoded['info']['files'])) {
+                $fileSize = 0;
+
+                foreach ($decoded['info']['files'] as $file) {
+                    if (!isset($file['piece length'])) {
+                        throw new Exception("Field 'piece length' is not set for a file!");
+                    }
+
+                    $fileSize += $file['piece length'];
+                }
+
+                $fileSizeCalc = $this->bytesFormat($fileSize);
+            } else {
+                throw new Exception("Torrent contains no files!");
+            }
+        }
+
+        if (!isset($decoded['info']['private']) || $decoded['info']['private'] == 0) {
+            // Whilst we can mark the torrent as private via PHP, it's best for the uploader to mark it as
+            // private as it means the info_hash won't change and they will be instantly seeding content
+            // rather than needing to download an updated .torrent from the site.
+            throw new Exception(("The torrent must be marked as private! Regenerate it."));
+        }
+
+        if (isset($decoded['announce-list'])) {
+            // Torrent contains a list of backup tracker URL. We don't need these, so remove them.
+            unset($decoded['announce-list']);
+        }
+
+        if (isset($decoded['announce'])) {
+            // Remove the announcement URL currently set in the torrent. This will be added/updated each
+            // time a user downloads the .torrent from the site. No need to waste additional database storage
+            // on URLs that may change.
+            unset($decoded['announce']);
         }
 
         if (empty($title = trim($title))) {
@@ -78,8 +128,6 @@ class Torrent extends Config
             throw new Exception("Category does not exist!");
         }
 
-        $infoHash      = sha1(Bencode::encode($decoded['info']));
-
         $toInsert = array(
             "uid"             =>  $userId,
             "anonymous"       =>  $isAnonymous,
@@ -87,8 +135,8 @@ class Torrent extends Config
             "info_hash"       =>  $infoHash,
             "torrent_id_long" =>  Medoo::raw("UUID()"),
             "file_name"       =>  "$title",
-            "file_size"       =>  $decoded['info']['piece length'],
-            "file_size_calc"  =>  "100GiB",
+            "file_size"       =>  $fileSize,
+            "file_size_calc"  =>  $fileSizeCalc,
             "title"           =>  "$title",
             "description"     =>  "$description",
             "upload_time"     =>  time(),
@@ -113,59 +161,79 @@ class Torrent extends Config
 
     function getTorrent(
         string $torrentIdLong = "",
-        int    $torrentId = 0
+        int    $torrentId = 0,
+        string $infoHash = ""
     ) {
-        $where = array(
-            "torrent_id_long" => $torrentIdLong
-        );
+        $where = array();
 
-        if (empty($torrentIdLong = trim($torrentIdLong))) {
-            if ($torrentId > 0) {
-                $where = array(
-                    "torrent_id" => $torrentId
-                );
-            } else {
-                throw new Exception("Empty torrent ID provided!");
-            }
+        if (!empty($torrentIdLong = trim($torrentIdLong))) {
+            $where = array(
+                "torrent_id_long" => $torrentIdLong
+            );
+
+            // We use this "identifier" to name the cache variable for this request.
+            $identifier = "torrent_id_long".$torrentIdLong;
         }
 
-        if (!$torrent = $this->db->get("torrents",
-            [
-                "[<]users"      => "uid", // We're joining the users table based on the uid.
-                "[<]categories" => "category_index",
-                "[>]groups"     => "gid"
-            ],
-            [
-                "uploader" => [
-                    "users.username(username)",
-                    "users.uid_long(uuid)",
-                    "groups.group_name"
+        if ($torrentId > 0) {
+            $where = array(
+                "torrent_id" => $torrentId
+            );
+
+            $identifier = "torrent_id".$torrentId;
+        }
+
+        if (!empty($infoHash = trim($infoHash))) {
+            $where = array(
+                "info_hash" => $infoHash
+            );
+
+            $identifier = "info_hash".$infoHash;
+        }
+
+        if (!$where) {
+            throw new Exception("No torrent GET parameters specified!");
+        }
+
+        // No database cache is set. Make database request and cache it.
+        if (!isset($this->torrentCache[$identifier])) {
+            $this->torrentCache[$identifier] = $this->db->get("torrents",
+                [
+                    "[<]users"      => "uid", // We're joining the users table based on the uid.
+                    "[<]categories" => "category_index",
+                    "[>]groups"     => "gid"
                 ],
-                "torrents.torrent_id",
-                "torrents.torrent_id_long(torrent_uuid)",
-                "torrents.anonymous",
-                "torrents.category_index",
-                "torrents.info_hash",
-                "torrents.file_name",
-                "torrents.file_size",
-                "torrents.file_size_calc",
-                "torrents.title",
-                "torrents.description",
-                "torrents.cover",
-                "torrents.upload_time",
-                "torrents.published",
-                "torrents.staff_recommended",
-                "torrents.torrent_data",
-                "torrents.category_index",
-                "categories.category_subof",
-                "categories.category_name"
-            ],
-            $where
-        )) {
-            throw new Exception("Torrent does not exist!");
+                [
+                    "uploader" => [
+                        "users.username(username)",
+                        "users.uid_long(uuid)",
+                        "groups.group_name"
+                    ],
+                    "torrents.torrent_id",
+                    "torrents.torrent_id_long(torrent_uuid)",
+                    "torrents.anonymous",
+                    "torrents.category_index",
+                    "torrents.info_hash",
+                    "torrents.file_name",
+                    "torrents.file_size",
+                    "torrents.file_size_calc",
+                    "torrents.title",
+                    "torrents.description",
+                    "torrents.cover",
+                    "torrents.upload_time",
+                    "torrents.published",
+                    "torrents.staff_recommended",
+                    "torrents.torrent_data",
+                    "torrents.category_index",
+                    "categories.category_subof",
+                    "categories.category_name"
+                ],
+                $where
+            );
         }
 
-        return $torrent;
+        // Return the cached database response.
+        return $this->torrentCache[$identifier];
     }
 
     public function getTorrentListing(
@@ -273,5 +341,22 @@ class Torrent extends Config
         );
 
         return $this->torrentCache['torrent_listing'][$searchQuery];
+    }
+
+    /**
+     * Returns byte input in IEC format.
+     * @param float $size Input bytes to convert.
+     * @param int $precision Level of precision (default is 2DP).
+     * @return String Size in IEC format.
+     */
+    public function bytesFormat(float $size, int $precision = 2): string {
+        if ($size <= 0) {
+            return "0 B";
+        }
+
+        $base = log($size, 1024);
+        $suffixes = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
+
+        return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
     }
 }
