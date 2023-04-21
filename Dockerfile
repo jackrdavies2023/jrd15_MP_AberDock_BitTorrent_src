@@ -8,7 +8,7 @@ RUN apt update && apt upgrade -y && apt-get install -y \
 RUN rm -f /var/www/html/index.nginx-debian.html
 
 COPY "./AberDock_Docker/entrypoint.sh" "/"
-COPY "./AberDock_Docker/config/nginx" "/etc/nginx"
+COPY "./AberDock_Docker/config/" "/etc/"
 
 # Temprarily disable copying web directory contents,
 # as we will be mapping a volume during development.
