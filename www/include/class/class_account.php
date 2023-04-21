@@ -36,7 +36,9 @@ class Account
         string $sessionToken = null,
         int $userId = null, 
         string $userIdLong = null,
-        string $username = null
+        string $username = null,
+        string $peerId = null,
+        bool $guestAccount = false
     ) {
         $this->db = $db;
 
@@ -59,25 +61,67 @@ class Account
             $this->account = $this->getAccount(username: $username);
             return;
         }
+
+        if ($peerId) {
+            $this->account = $this->getAccount(peerId: $peerId);
+            return;
+        }
+
+        if ($guestAccount) {
+            $this->account = $this->getGuestAccount();
+            return;
+        }
+
+    }
+
+    function getGuestAccount() {
+        if (is_array($this->account)) {
+            // We've already retrieved the account info. Return that instead
+            // of making another query to the database.
+            return $this->account;
+        }
+
+        // Fetch the user ID of the guest account.
+        if ($account = $this->db->get("groups",
+            [
+                "[<]users"    => "gid"
+            ],
+            [
+                "users.uid"
+            ],
+            [
+                "groups.is_guest" => 1
+            ]
+        )) {
+            if ($this->getAccount(userId: $account['uid'])) {
+                return $this->getAccount(userId: $account['uid']);;
+            }
+        }
+
+        throw new Exception("No guest account or group exists!");
     }
 
     /**
      * Fetches information regarding an account.
-     * 
+     *
      *  Exception codes:
      *     103 - Account search parameters not specified (not enough arguments)
-     * 
-     * @param int $userId The ID of the account to retrieve.
-     * @param string $userIdLong The long ID of the account to retrieve.
-     * @param string $sessionToken The login session token to retrieve the account info for.
-     * @param string $username The username of the account to retrieve.
+     *
+     * @param int|null $userId The ID of the account to retrieve.
+     * @param string|null $userIdLong The long ID of the account to retrieve.
+     * @param string|null $sessionToken The login session token to retrieve the account info for.
+     * @param string|null $username The username of the account to retrieve.
+     * @param string|null $peerId The PID of an account. Used by the tracker/announcement.
+     * @param bool $clearCache Erase the account cache before making a new request.
      * @return array An array of the account details.
+     * @throws Exception
      */
     function getAccount(
         int $userId = null, 
         string $userIdLong = null,
         string $sessionToken = null,
         string $username = null,
+        string $peerId = null,
         bool $clearCache = false
     ): array {
         if ($clearCache) {
@@ -182,6 +226,12 @@ class Account
         if ($username) {
             $where = array(
                 "username" => $username
+            );
+        }
+
+        if ($peerId) {
+            $where = array(
+                "pid" => $peerId
             );
         }
 
@@ -303,7 +353,10 @@ class Account
                 "username"   => "$username",
                 "password"   => password_hash(trim($password), PASSWORD_BCRYPT, array('cost' => 12)),
                 "gid"        => $groupID,
-                "invited_by" => $invitedBy
+                "invited_by" => $invitedBy,
+                "pid"        => Medoo::raw("UUID()"),
+                "uid_long"   => Medoo::raw("UUID()"),
+                "join_date"  => time()
             ]
         )) {
             // Account created!

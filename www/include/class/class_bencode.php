@@ -16,7 +16,21 @@ class Bencode
      * @param $data
      * @return void
      */
-    static function encode($data) {
+    static function encode($data, bool $announceError = false) {
+        if ($announceError) {
+            // We're replying with an error message.
+
+            if (is_string($data)) {
+                $data = array(
+                    "failure reason" => $data
+                );
+            } else {
+                $data = array(
+                    "failure reason" => "Unknown error."
+                );
+            }
+        }
+
         if (is_int($data)) {
             return "i{$data}e";
         }
