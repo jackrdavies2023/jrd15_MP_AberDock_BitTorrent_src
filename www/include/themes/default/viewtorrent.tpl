@@ -44,12 +44,12 @@
                         <smallSeperator></smallSeperator>
                         Description:
                         <tinySeperator></tinySeperator>
-                        <pre>{$torrentDetails['description']}</pre>
+                        <pre class="torrent-description">{$torrentDetails['description']}</pre>
 
                         <smallSeperator></smallSeperator>
                         File list:<br>
                         <tinySeperator></tinySeperator>
-                        <pre>
+                        <pre class="torrent-files">
 - /
     - aPicture.jpg
     - someAudio.mp3

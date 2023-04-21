@@ -558,6 +558,14 @@ topBar {
     display: none;
 }
 
+pre.torrent-description {
+    white-space: pre-wrap;
+}
+
+pre.torrent-files {
+    overflow-x: scroll;
+}
+
 @media all and (max-width: 400mm) {
     .invert-input-background-mobile input[type="text"],
     .invert-input-background-mobile input[type="password"],
