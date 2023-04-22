@@ -15,6 +15,8 @@ namespace Account;
 use Exception;
 use Medoo\Medoo;
 
+require_once("utility_functions.php");
+
 class Account
 {
     protected $db,
@@ -181,7 +183,8 @@ class Account
                 "sessions.agent",
                 "sessions.uid",
                 "sessions.sid",
-                "sessions.ip_address"
+                "sessions.ip_address",
+                "sessions.last_seen"
             );
 
             $where = array(
@@ -266,17 +269,46 @@ class Account
      */
     function assignSessionKey(
         bool $remember = false,
+        bool $updateSession = false
     ): array {
-        if (!$remember) {
-            $expiration = time() + $this->defaultExpirationTime;
-            $remember = 0;
-        } else {
-            // "Remember me" extends the lifespan of a session token.
-            $expiration = time() + $this->defaultMaxExpirationTime;
-            $remember = 1;
-        }
-
         if (count($this->getAccount()) > 0) {
+            if (!$remember || isset($this->getAccount()['remember']) && $this->getAccount()['remember'] == 0) {
+                $expiration = time() + $this->defaultExpirationTime;
+                $remember = 0;
+            } else {
+                // "Remember me" extends the lifespan of a session token.
+                $expiration = time() + $this->defaultMaxExpirationTime;
+                $remember = 1;
+            }
+
+            if ($updateSession) {
+                // We're updating an existing session key.
+                if (!isset($this->getAccount()['sid'])) {
+                    throw new Exception("Cannot update a session that does not exist!");
+                }
+
+                if ($this->db->update("sessions",
+                    [
+                        "last_seen"   =>  time(),
+                        "expiration"  =>  $expiration,
+                        "agent"       =>  getClientAgent(),
+                        "ip_address"  =>  getClientIp()
+                    ],
+                    [
+                        "sid"         =>  $this->getAccount()['sid']
+                    ]
+                )) {
+                    // Update success. Now reflect the changes in the account cache without making
+                    // another SQL request.
+                    $this->account['last_seen']   = time();
+                    $this->account['expiration']  = $expiration;
+                    $this->account['agent']       = getClientAgent();
+                    $this->account['ip_address']  = getClientIp();
+
+                    return $this->getAccount();
+                }
+            }
+
             // We have an account to bind the session key to. Generate random key.
             $token = hash('sha256', $this->getAccount()['username'] . time() . rand(32, 32));
 
@@ -286,10 +318,9 @@ class Account
                     "uid"           => $this->getAccount()['uid'],
                     "last_seen"     => time(),
                     "expiration"    => $expiration,
-                    "agent"         => trim($_SERVER['HTTP_USER_AGENT']),
+                    "agent"         => getClientAgent(),
                     "remember"      => $remember,
-                    "ip_address"    => $_SERVER['REMOTE_ADDR'] // This should be changed at some point,
-                                                               // to take into account proxy servers.
+                    "ip_address"    => getClientIp()
                 ]
             )) {
                 // Let's re-query the SQL for the account details, which will

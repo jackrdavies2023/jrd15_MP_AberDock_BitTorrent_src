@@ -53,8 +53,24 @@ class Login extends Account
                 }
 
                 // Account construct is empty. Look up an account based on session token.
-                if (count(parent::getAccount(sessionToken: $sessionToken, clearCache: true)) > 0) {
-                    // We have account info. So that means we're logged in.
+                if (count(
+                    parent::getAccount(
+                        sessionToken: $sessionToken,
+                        clearCache: true
+                    )
+                ) > 0) {
+                    // We have account info. So that means we're logged in. Now we
+                    // need to update the session expiration information and IP address.
+                    parent::assignSessionKey(updateSession: true);
+
+                    // Update our cookie value.
+                    setcookie("session_token",
+                        parent::getAccount()['session_token'],
+                        parent::getAccount()['expiration'],
+                        "/"
+                    );
+
+
                     return true;
                 }
 

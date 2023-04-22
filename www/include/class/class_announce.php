@@ -5,6 +5,8 @@ use Config\Config;
 use Exception;
 use Medoo\Medoo;
 
+require_once("utility_functions.php");
+
 class Announce extends Config {
     protected $cache,
               $peerExpirationTime;
@@ -19,17 +21,6 @@ class Announce extends Config {
         $this->peerExpirationTime = time() - (intval(parent::getConfigVal("announcement_interval")) + 30);
     }
 
-    /**
-     * Returns a string of the users client user agent.
-     * @return string
-     */
-    public function getClientAgent(): string {
-        if (isset($_SERVER['HTTP_USER_AGENT']) && !empty(trim($_SERVER['HTTP_USER_AGENT']))) {
-            return trim($_SERVER['HTTP_USER_AGENT']);
-        }
-
-        return "Unknown";
-    }
 
     /**
      * Returns the 'peer_id' REQUEST parameter in sha256(bin2hex()) form, with the torrent info_hash combined with
@@ -84,36 +75,6 @@ class Announce extends Config {
         }
 
         throw new Exception("No port provided!");
-    }
-
-    /**
-     * Returns the IP address of the client. This takes into consideration the use
-     * of a proxy server.
-     * @return string
-     * @throws Exception
-     */
-    public function getClientIp(): string {
-        // These are the typical headers provided when using a HTTP proxy.
-        $proxyHeaders = array(
-            'X-Real-IP',
-            'X-Forwarded-For',
-            'X-Forwarded-Host'
-        );
-
-        foreach ($proxyHeaders as $header) {
-            if ($ip = trim(getenv($header))) {
-                if (!empty($ip)) {
-                    if(filter_var($ip, FILTER_VALIDATE_IP) !== false) {
-                        // IP address is valid
-                        return $ip;
-                    } else {
-                        throw new Exception("Invalid proxy IP address provided!");
-                    }
-                }
-            }
-        }
-
-        return $_SERVER['REMOTE_ADDR'];
     }
 
     /**
@@ -341,7 +302,7 @@ class Announce extends Config {
         $peerInfo = array(
             "client_id"  => $this->getClientID(),
             "client_key" => $this->getClientKey(),
-            "ip_address" => $this->getClientIp(),
+            "ip_address" => getClientIp(),
             "port"       => $this->getClientPort(),
             "uploaded"   => $this->getClientUploaded(),
             "downloaded" => $this->getClientDownloaded(),
@@ -349,7 +310,7 @@ class Announce extends Config {
             "corrupt"    => $this->getClientCorrupt(),
             "seeding"    => $this->isClientSeeding(),
             "last_seen"  => time(),
-            "agent"      => $this->getClientAgent(),
+            "agent"      => getClientAgent(),
             "uid"        => $userId,
             "torrent_id" => $torrentId
         );
@@ -405,7 +366,7 @@ class Announce extends Config {
                 "torrent_id"    => $torrentId,
                 "last_seen[>]"  => $this->peerExpirationTime,
                 // We don't want to give our own client to ourself in the list of peers.
-                "ip_address[!]" => $this->getClientIp(),
+                "ip_address[!]" => getClientIp(),
                 "port[!]"       => $this->getClientPort()
             ]
         );
