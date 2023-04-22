@@ -67,10 +67,48 @@
             throw new Exception("Invalid info hash!");
         }
 
+        // Torrent exists. Is this peer registered?
+        if (!$peerInfo = $announce->getPeerInfo(
+            userId: $account->getAccount()['uid'],
+            torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
+        )) {
+            // Peer not registered.
+            if (!$peerInfo = $announce->registerPeer(
+                userId: $account->getAccount()['uid'],
+                torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
+            )) {
+                throw new Exception("Failed to register peer!");
+            }
+        } else {
+            // Peer already registered. Update its stats.
+            $announce->updatePeer(
+                userId: $account->getAccount()['uid'],
+                torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
+            );
+        }
 
+        // Our peer should be registered and the torrent exists. Does the client want to unregister?
+        if (isset($_REQUEST['event']) && $_REQUEST['event'] == 'stopped') {
+            // Client has stopped/is disconnecting. Remove them from the peers table.
+            $announce->unregisterPeer(
+                userId: $account->getAccount()['uid'],
+                torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
+            );
 
+            // Exit with an empty bEncode.
+            exit($announce->bEncode(null));
+        }
+
+        // Return a list of peers.
+        exit(Bencode::encode(
+            data: $announce->getPeers(
+                torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
+            ),
+            announceResponse: true,
+            requirePeerId: $announce->isClientRequirePeerID(),
+            announcementInterval: $announce->getConfigVal("announcement_interval")
+        ));
     } catch (Exception $e) {
-        error_log(Bencode::encode($e->getMessage()));
-        echo(Bencode::encode(data: $e->getMessage(), announceError: true));
+        echo(Bencode::encode(data: $e->getMessage(), announceResponse: true));
     }
 ?>

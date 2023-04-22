@@ -9,6 +9,8 @@
 
 namespace Bencode;
 
+use Exception;
+
 class Bencode
 {
     /**
@@ -16,18 +18,55 @@ class Bencode
      * @param $data
      * @return void
      */
-    static function encode($data, bool $announceError = false) {
-        if ($announceError) {
-            // We're replying with an error message.
+    static function encode(
+        $data,
+        bool $announceResponse = false,
+        bool $requirePeerId = false,
+        int $announcementInterval = 60
+    ): string {
+        if ($announceResponse) {
+            // We're replying to a torrent client through the announcement system.
+
+            // Some variables that will be incremented and used in the final response.
+            $complete   = 0;
+            $incomplete = 0;
+            $peersResponse = '';
+
+            if ($announcementInterval < 300) {
+                throw new Exception("Invalid announcement interval!");
+            }
 
             if (is_string($data)) {
                 $data = array(
                     "failure reason" => $data
                 );
             } else {
-                $data = array(
-                    "failure reason" => "Unknown error."
-                );
+                if (is_array($data) && !empty($data)) {
+                    foreach ($data as $peer) {
+                        $cid = '';
+
+                        if ($peer['seeding'] == 1) {
+                            $complete++;
+                        } else {
+                            $incomplete++;
+                        }
+
+                        if ($requirePeerId) {
+                            $cid = '7:peer id' . strlen($peer['cid']) . ':' . $peer['cid'];
+                        }
+
+                        // Manually build the response containing peer IP addresses.
+                        // Ideally I'd have the bEncoder algorithm build this, but this seems to be
+                        // the simplest way of approaching it.
+                        $peersResponse .= 'd2:ip'.strlen($peer['ip']).':'.$peer['ip'].$cid.'4:porti'.$peer['port'].'ee';
+                    }
+                }
+
+                return 'd8:intervali'.$announcementInterval.
+                       'e12:min intervali'.$announcementInterval.
+                       'e8:completei'.$complete.
+                       'e10:incompletei'.$incomplete.
+                       'e5:peersl'.$peersResponse.'ee';
             }
         }
 

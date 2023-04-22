@@ -240,16 +240,16 @@ class Announce extends Config {
 
     /**
      * Does the client require its 'peer_id' to be specified in the tracker response?
-     * @return int
+     * @return bool
      */
-    public function isClientRequirePeerID() {
+    public function isClientRequirePeerID(): bool {
         if (isset($_REQUEST['no_peer_id']) && is_int($_REQUEST['no_peer_id'])) {
             if ($_REQUEST['no_peer_id'] == 1) {
-                return 0;
+                return false;
             }
         }
 
-        return 1;
+        return true;
     }
 
     /**
@@ -319,8 +319,7 @@ class Announce extends Config {
         int $userId,
         int $torrentId
     ) {
-        if ($this->getPeerInfo()) {
-
+        if ($this->getPeerInfo(userId: $userId, torrentId: $torrentId)) {
             // Peer exists, call registerPeer method with the update argument.
             return $this->registerPeer(userId: $userId, torrentId: $torrentId, update: true);
         }
@@ -342,7 +341,7 @@ class Announce extends Config {
         $peerInfo = array(
             "client_id"  => $this->getClientID(),
             "client_key" => $this->getClientKey(),
-            "ip"         => $this->getClientIp(),
+            "ip_address" => $this->getClientIp(),
             "port"       => $this->getClientPort(),
             "uploaded"   => $this->getClientUploaded(),
             "downloaded" => $this->getClientDownloaded(),
@@ -363,6 +362,7 @@ class Announce extends Config {
                     "torrent_id"  =>  $peerInfo['torrent_id']
                 ]
             )) {
+                // Stats updated.
                 return $peerInfo;
             }
 
@@ -379,13 +379,13 @@ class Announce extends Config {
     }
 
     public function getPeers(
-        int $torrent_id,
+        int $torrentId,
         bool $extraInfo = false
     ): array {
         $toFetch = [
-            "client_id",
-            "client_key",
-            "ip_address",
+            "client_id(cid)",
+            "client_key(ckey)",
+            "ip_address(ip)",
             "port",
             "seeding"
         ];
@@ -402,11 +402,13 @@ class Announce extends Config {
 
         return $this->db->select("peers", $toFetch,
             [
-                "torrent_id" => $torrent_id,
-                "last_seen[>]" => $this->peerExpirationTime
+                "torrent_id"    => $torrentId,
+                "last_seen[>]"  => $this->peerExpirationTime,
+                // We don't want to give our own client to ourself in the list of peers.
+                "ip_address[!]" => $this->getClientIp(),
+                "port[!]"       => $this->getClientPort()
             ]
         );
     }
-
 }
 ?>
