@@ -57,7 +57,7 @@
             throw new Exception("Invalid database version!\n\nRequired version: $requiredDbVersion\nCurrent version: ".$config->getDatabaseVersion(), 300);
         }
 
-        if (!$guestAllowed && !$login->isLoggedIn()) {
+        if ($config->getConfigVal("login_required") == 1 && !$login->isLoggedIn()) {
             // User is not logged in and guest access is disabled.
             // So we need to redirect to one of the login pages.
             if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
@@ -80,10 +80,8 @@
         if ($login->isLoggedIn()) {
             $smarty->assign('accountInfo', $login->getAccountInfo());
         } else {
-            // This is temporary until the guest account is added to the SQL.
-            $smarty->assign('accountInfo', array(
-                "username" => "Guest"
-            ));
+            // Guests are allowed to browse. Fetch the guest account details.
+            $smarty->assign('accountInfo', $login->logInAsGuest());
         }
     } catch (Exception $e) {
         $smarty->assign('exceptionMessage', $e->getMessage()."\n\nHave you imported the SQL?");

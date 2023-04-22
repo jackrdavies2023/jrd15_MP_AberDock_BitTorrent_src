@@ -45,32 +45,32 @@ class Account
         $this->db = $db;
 
         if ($sessionToken) {
-            $this->account = $this->getAccount(sessionToken: $sessionToken);
+            $this->getAccount(sessionToken: $sessionToken);
             return;
         }
 
         if ($userId) {
-            $this->account = $this->getAccount(userId: $userId);
+            $this->getAccount(userId: $userId);
             return;
         }
 
         if ($userIdLong) {
-            $this->account = $this->getAccount(userIdLong: $userIdLong);
+            $this->getAccount(userIdLong: $userIdLong);
             return;
         }
 
         if ($username) {
-            $this->account = $this->getAccount(username: $username);
+            $this->getAccount(username: $username);
             return;
         }
 
         if ($peerId) {
-            $this->account = $this->getAccount(peerId: $peerId);
+            $this->getAccount(peerId: $peerId);
             return;
         }
 
         if ($guestAccount) {
-            $this->account = $this->getGuestAccount();
+            $this->getGuestAccount();
             return;
         }
 

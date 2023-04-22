@@ -127,6 +127,10 @@ class Login extends Account
         throw new Exception("Invalid login credentials!", 202);
     }
 
+    public function logInAsGuest() {
+        return parent::getGuestAccount();
+    }
+
     function logOut(): bool {
         parent::destroySessionKey();
         return true;
