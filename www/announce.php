@@ -96,7 +96,11 @@
             );
 
             // Exit with an empty bEncode.
-            exit($announce->bEncode(null));
+            exit(Bencode::encode(
+                data: null,
+                announceResponse: true,
+                announcementInterval: $announce->getConfigVal("announcement_interval")
+            ));
         }
 
         // Return a list of peers.

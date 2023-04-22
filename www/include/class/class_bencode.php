@@ -22,7 +22,7 @@ class Bencode
         $data,
         bool $announceResponse = false,
         bool $requirePeerId = false,
-        int $announcementInterval = 60
+        int $announcementInterval = 300
     ): string {
         if ($announceResponse) {
             // We're replying to a torrent client through the announcement system.
