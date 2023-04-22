@@ -46,28 +46,28 @@ class Account
         string $username = null,
         string $peerId = null,
         bool $guestAccount = false,
-        bool $getUpAndDown = false,
-        int $getUpAndDownLimit = 10
+        bool $getShareHistory = false,
+        int $getShareLimit = 10
     ) {
         $this->db = $db;
 
         if ($sessionToken) {
-            $this->getAccount(sessionToken: $sessionToken, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
+            $this->getAccount(sessionToken: $sessionToken, getShareHistory: $getShareHistory, getShareLimit: $getShareLimit);
             return;
         }
 
         if ($userId) {
-            $this->getAccount(userId: $userId, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
+            $this->getAccount(userId: $userId, getShareHistory: $getShareHistory, getShareLimit: $getShareLimit);
             return;
         }
 
         if ($userIdLong) {
-            $this->getAccount(userIdLong: $userIdLong, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
+            $this->getAccount(userIdLong: $userIdLong, getShareHistory: $getShareHistory, getShareLimit: $getShareLimit);
             return;
         }
 
         if ($username) {
-            $this->getAccount(username: $username, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
+            $this->getAccount(username: $username, getShareHistory: $getShareHistory, getShareLimit: $getShareLimit);
             return;
         }
 
@@ -294,8 +294,7 @@ class Account
             [
                 "downloads.uid"    =>  $this->account['uid'],
                 "torrents.uid[!]"  =>  $this->account['uid'],
-                "LIMIT"            =>  $limit,
-                "downloads.download_id" => "DESC"
+                "LIMIT"            =>  $limit
             ]
         );
 
@@ -305,8 +304,7 @@ class Account
             ],
             [
                 "torrents.uid" => $this->account['uid'],
-                "LIMIT" => $limit,
-                "torrents.torrent_id" => "DESC"
+                "LIMIT" => $limit
             ]
         );
     }

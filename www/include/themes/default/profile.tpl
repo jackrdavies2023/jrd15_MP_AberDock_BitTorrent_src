@@ -39,19 +39,23 @@
                     <!-- User uploads -->
                     <h2>Recent uploads</h2>
                     <torrentBrowser>
-                        <card>
-                            <h3>Torrent title</h3>
-                            <p>
-                            Posted in ISO -> Linux 2 days ago<br>
-                            2.3 GiB - 10 seeders, 5 leechers
-                            </p>
-                            <options>
-                                <i class="download"></i>
-                                <i class="bookmark"></i>
-                                <i class="like"></i>
-                                <i class="info"></i>
-                            </options>
-                        </card>
+                        {if isset($viewProfileDetails['share_history']['uploads'])}
+                            {foreach $viewProfileDetails['share_history']['uploads'] as $upload}
+                                <card>
+                                    <h3>{$upload['title']}</h3>
+                                    <p>
+                                        Posted in ISO -> Linux 2 days ago<br>
+                                        2.3 GiB - 10 seeders, 5 leechers
+                                    </p>
+                                    <options>
+                                        <i class="download"></i>
+                                        <i class="bookmark"></i>
+                                        <i class="like"></i>
+                                        <i class="info"></i>
+                                    </options>
+                                </card>
+                            {/foreach}
+                        {/if}
                     </torrentBrowser>
 
                     <smallseperator></smallseperator>

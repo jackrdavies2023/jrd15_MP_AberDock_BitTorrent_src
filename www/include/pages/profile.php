@@ -13,10 +13,13 @@
                 throw new Exception("Account not found!");
             }
 
+            // We need to retrieve our own upload and download stats.
+            $login->getAccount(getShareHistory: true);
+
             $smarty->assign('viewProfileDetails', $login->getAccount());
         } else {
             $viewingSelf = false;
-            $account = new Account(db: $db, userIdLong: $userIdLong);
+            $account = new Account(db: $db, userIdLong: $userIdLong, getShareHistory: true);
 
             if (count($account->getAccount()) > 0 && $account->getAccount()['is_guest'] == 0) {
                 // Account exists and is not a guest.
