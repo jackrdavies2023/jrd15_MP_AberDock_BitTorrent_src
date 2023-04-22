@@ -7,7 +7,6 @@
     // Once the configuration is loaded from the DB, most of these variables
     // will be ignored.
     $theme  = "default";
-    $guestAllowed = false;
     $requiredDbVersion = "1.5";
     $siteName = "AberDock";
 
