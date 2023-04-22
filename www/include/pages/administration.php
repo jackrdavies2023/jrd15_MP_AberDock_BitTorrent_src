@@ -103,7 +103,7 @@
                 // These cases are for integers in tracker-configuration.
                 case "announcement_interval":
                     if (isset($_REQUEST[$parameter])) {
-                        if (intval($_REQUEST[$parameter]) >= 60) {
+                        if (intval($_REQUEST[$parameter]) >= 300) {
                             $_REQUEST[$parameter] = intval($_REQUEST[$parameter]);
                         } else {
                             throw new Exception("Invalid announcement interval! Minimum time is 60 seconds!");

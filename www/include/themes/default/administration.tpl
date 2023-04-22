@@ -175,7 +175,7 @@
                                 <input type="hidden" name="update-global">
                                 <input type="hidden" name="tracker-configuration">
                                 <label for="announcement_interval">Announcement interval (seconds)</label>
-                                <input type="number" id="announcement_interval" name="announcement_interval" placeholder="Seconds" value="{$config['announcement_interval']}" min="60" max="600">
+                                <input type="number" id="announcement_interval" name="announcement_interval" placeholder="Seconds" value="{$config['announcement_interval']}" min="300" max="1800">
 
                                 <smallSeperator></smallSeperator>
 
