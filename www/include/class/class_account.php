@@ -26,12 +26,17 @@ class Account
 
     /**
      * Account class construct.
-     * 
+     *
      * @param Medoo $db The Medoo database object, to be used to communicate with the SQL DB.
-     * @param string $sessionToken The login session token to retrieve the account info for.
-     * @param int $userId The ID of the account to retrieve.
-     * @param string $userIdLong The long ID of the account to retrieve.
-     * @param string $username The username of the account to retrieve.
+     * @param string|null $sessionToken The login session token to retrieve the account info for.
+     * @param int|null $userId The ID of the account to retrieve.
+     * @param string|null $userIdLong The long ID of the account to retrieve.
+     * @param string|null $username The username of the account to retrieve.
+     * @param string|null $peerId
+     * @param bool $guestAccount
+     * @param bool $getUpAndDown
+     * @param int $getUpAndDownLimit
+     * @throws Exception
      */
     function __construct(
         Medoo &$db, 
@@ -40,27 +45,29 @@ class Account
         string $userIdLong = null,
         string $username = null,
         string $peerId = null,
-        bool $guestAccount = false
+        bool $guestAccount = false,
+        bool $getUpAndDown = false,
+        int $getUpAndDownLimit = 10
     ) {
         $this->db = $db;
 
         if ($sessionToken) {
-            $this->getAccount(sessionToken: $sessionToken);
+            $this->getAccount(sessionToken: $sessionToken, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
             return;
         }
 
         if ($userId) {
-            $this->getAccount(userId: $userId);
+            $this->getAccount(userId: $userId, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
             return;
         }
 
         if ($userIdLong) {
-            $this->getAccount(userIdLong: $userIdLong);
+            $this->getAccount(userIdLong: $userIdLong, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
             return;
         }
 
         if ($username) {
-            $this->getAccount(username: $username);
+            $this->getAccount(username: $username, getShareHistory: $getUpAndDown, getShareLimit: $getUpAndDownLimit);
             return;
         }
 
@@ -76,7 +83,7 @@ class Account
 
     }
 
-    function getGuestAccount() {
+    function getGuestAccount(): array {
         if (is_array($this->account)) {
             // We've already retrieved the account info. Return that instead
             // of making another query to the database.
@@ -124,7 +131,9 @@ class Account
         string $sessionToken = null,
         string $username = null,
         string $peerId = null,
-        bool $clearCache = false
+        bool $clearCache = false,
+        bool $getShareHistory = false,
+        int $getShareLimit = 10
     ): array {
         if ($clearCache) {
             $this->account = null;
@@ -133,6 +142,12 @@ class Account
         if (is_array($this->account)) {
             // We've already retrieved the account info. Return that instead
             // of making another query to the database.
+
+            if (!isset($this->account['share_history']) && $getShareHistory) {
+                // We need to fetch the users upload and download history.
+                $this->getShareHistory(limit: $getShareLimit);
+            }
+
             return $this->account;
         }
 
@@ -249,6 +264,11 @@ class Account
             $what, // Data we want to fetch from the DB.
             $where // Where statement.
         )) {
+            if (!isset($this->account['share_history']) && $getShareHistory) {
+                // We need to fetch the users upload and download history.
+                $this->getShareHistory(limit: $getShareLimit);
+            }
+
             return $this->account = $query;
         }
 
@@ -257,15 +277,50 @@ class Account
         return $this->account = array();
     }
 
+    function getShareHistory(int $limit): void {
+        if (!$this->account) {
+            throw new Exception("No account to retrieve share history of!");
+        }
+
+        $this->account['share_history']['downloads'] = $this->db->select("downloads",
+            [
+                "[<]torrents"  =>  "torrent_id"
+            ],
+            [
+                "downloads.download_id",
+                "downloads.torrent_id",
+                "torrents.title"
+            ],
+            [
+                "downloads.uid"    =>  $this->account['uid'],
+                "torrents.uid[!]"  =>  $this->account['uid'],
+                "LIMIT"            =>  $limit,
+                "downloads.download_id" => "DESC"
+            ]
+        );
+
+        $this->account['share_history']['uploads'] = $this->db->select("torrents",
+            [
+                "torrents.title"
+            ],
+            [
+                "torrents.uid" => $this->account['uid'],
+                "LIMIT" => $limit,
+                "torrents.torrent_id" => "DESC"
+            ]
+        );
+    }
+
     /**
      * Generates and assigns a session token to an account.
-     * 
+     *
      * Exception codes:
      *     104 - No account to bind the session token to.
      *     105 - Failed to insert session token into database.
-     * 
+     *
      * @param bool $remember true will result in the session lasting for a month rather than 2 hours.
      * @return array An array of the account details on success, which will contain the session token.
+     * @throws Exception
      */
     function assignSessionKey(
         bool $remember = false,
@@ -348,18 +403,19 @@ class Account
 
     /**
      * Creates a new user account.
-     * 
+     *
      * Exception codes:
      *     100 - Username too short (4 characters minimum)
      *     101 - Password too short (8 characters minimum)
      *     102 - Failed to create account (DB error?)
-     * 
+     *
      * @param string $username The new account username (4 characters minimum).
      * @param string $password The new account password (8 characters minimum).
      * @param int $language The language the account will use. ID's are in the database.
      * @param int $groupID The ID of the group which the account should be put in.
      * @param int $invitedBy The ID of the user who invited the new account.
      * @return bool True if account creation success.
+     * @throws Exception
      */
     function createAccount(
         string $username,
