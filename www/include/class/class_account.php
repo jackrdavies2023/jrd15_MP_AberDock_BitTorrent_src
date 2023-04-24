@@ -12,10 +12,14 @@
 
 namespace Account;
 
+require_once("utility_functions.php");
+require_once("class_torrent.php");
+
 use Exception;
 use Medoo\Medoo;
+use Torrent\Torrent;
 
-require_once("utility_functions.php");
+
 
 class Account
 {
@@ -284,31 +288,43 @@ class Account
             throw new Exception("No account to retrieve share history of!");
         }
 
-        $this->account['share_history']['downloads'] = $this->db->select("downloads",
+        /*$this->account['share_history']['downloads'] = $this->db->select("downloads",
             [
-                "[<]torrents"  =>  "torrent_id"
+                "[<]torrents"  =>  "torrent_id",
+                "[>]peers"     => array("torrents.torrent_id" => "torrent_id")
             ],
             [
                 "downloads.download_id",
                 "downloads.torrent_id",
-                "torrents.title"
+                "torrents.title",
+                "torrents.torrent_id_long(torrent_uuid)"
             ],
             [
                 "downloads.uid"    =>  $this->account['uid'],
                 "torrents.uid[!]"  =>  $this->account['uid'],
                 "LIMIT"            =>  $limit
             ]
-        );
+        );*/
 
-        $this->account['share_history']['uploads'] = $this->db->select("torrents",
+        /*$this->account['share_history']['uploads'] = $this->db->select("torrents",
             [
-                "torrents.title"
+                "torrents.title",
+                "torrents.torrent_id_long(torrent_uuid)"
             ],
             [
                 "torrents.uid" => $this->account['uid'],
                 "LIMIT" => $limit
             ]
-        );
+        );*/
+
+        $torrent = new Torrent(db: $this->db);
+        $this->account['share_history']['uploads'] = $torrent->getTorrentListing(maxResults: $limit,
+                                                                                 getDownloadHistory: true,
+                                                                                 getShareUserId: $this->account['uid']);
+
+        $this->account['share_history']['uploads'] = $torrent->getTorrentListing(maxResults: $limit,
+                                                                                 getUploadHistory: true,
+                                                                                 getShareUserId: $this->account['uid']);
     }
 
     /**

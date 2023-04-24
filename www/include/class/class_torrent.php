@@ -12,6 +12,7 @@ namespace Torrent;
 // Ensure this class is loaded and don't depend on other scripts
 // to include it for us.
 require_once("class_bencode.php");
+require_once("class_config.php");
 
 use Exception;
 use Medoo\Medoo;
@@ -282,9 +283,19 @@ class Torrent extends Config
         int    $maxResults  =  50,
         string $sortBy      =  "torrent_id",
         bool   $orderDesc   =  false,
-        array  $categories  = array()
+        array  $categories  = array(),
+        bool   $getUploadHistory = false,
+        bool   $getDownloadHistory = false,
+        int    $getShareUserId = 0
     ) {
         $order = "ASC";
+        $table = "torrents";
+        $join  = array(
+            "[<]categories" => "category_index",
+            "[<]users"      => "uid",
+            "[>]groups"     => "gid",
+            "[>]peers"      => array("torrents.torrent_id" => "torrent_id")
+        );
 
         if ($orderDesc) {
             $order = "DESC";
@@ -297,6 +308,14 @@ class Torrent extends Config
 
         if ($maxResults <= 0 || $maxResults > 100) {
             throw new Exception("Invalid return limit!");
+        }
+
+        if ($getUploadHistory && $getShareUserId > 0) {
+            $searchQuery = "upload-history$getShareUserId";
+        }
+
+        if ($getDownloadHistory && $getShareUserId > 0) {
+            $searchQuery = "download-history$getShareUserId";
         }
 
         // We have this query already cached. It is unlikely that we will have the
@@ -352,14 +371,28 @@ class Torrent extends Config
             }
         }
 
+        if ($getUploadHistory && $getShareUserId > 0) {
+            // We're retrieving a users upload history.
+            $where['torrents.uid'] = $getShareUserId;
+            unset($where[$searchBy."[~]"]);
+        }
+
+        if ($getDownloadHistory && $getShareUserId > 0) {
+            $table = "downloads";
+            $where['downloads.uid'] = $getShareUserId;
+            $where['torrents.uid[!]'] = $getShareUserId;
+            $join = array(
+                "[<]torrents"    =>  "torrent_id",
+                "[>]peers"       =>  array("torrents.torrent_id" => "torrent_id"),
+                "[<]users"       =>  array("torrents.uid" => "uid"),
+                "[>]groups"      =>  array("users.gid" => "gid"),
+                "[<]categories"  =>  array("torrents.category_index" => "category_index")
+            );
+            unset($where[$searchBy."[~]"]);
+        }
+
         // Save the query response to the cache, regardless of what the response is.
-        $this->torrentCache['torrent_listing'][$searchQuery] = $this->db->select("torrents",
-            [
-                "[<]categories" => "category_index",
-                "[<]users"      => "uid",
-                "[>]groups"     => "gid",
-                "[>]peers"      => array("torrents.torrent_id" => "torrent_id")
-            ],
+        $this->torrentCache['torrent_listing'][$searchQuery] = $this->db->select($table, $join,
             [
                 "uploader" => [
                     "users.username(username)",

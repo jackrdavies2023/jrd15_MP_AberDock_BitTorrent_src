@@ -42,10 +42,10 @@
                         {if isset($viewProfileDetails['share_history']['uploads'])}
                             {foreach $viewProfileDetails['share_history']['uploads'] as $upload}
                                 <card>
-                                    <h3>{$upload['title']}</h3>
+                                    <h3><a href="/?p=viewtorrent&uuid={$upload['torrent_uuid']}">{$upload['title']}</a></h3>
                                     <p>
                                         Posted in ISO -> Linux 2 days ago<br>
-                                        2.3 GiB - 10 seeders, 5 leechers
+                                        {$upload['file_size_calc']} - {$upload['seeders']} seeders, {$upload['leechers']} leechers
                                     </p>
                                     <options>
                                         <i class="download"></i>
@@ -63,19 +63,23 @@
                     <!-- User downloads -->
                     <h2>Recent downloads</h2>
                     <torrentBrowser>
-                        <card>
-                            <h3>Torrent title</h3>
-                            <p>
-                            Posted in ISO -> Linux 2 days ago<br>
-                            2.3 GiB - 10 seeders, 5 leechers
-                            </p>
-                            <options>
-                                <i class="download"></i>
-                                <i class="bookmark"></i>
-                                <i class="like"></i>
-                                <i class="info"></i>
-                            </options>
-                        </card>
+                        {if isset($viewProfileDetails['share_history']['downloads'])}
+                            {foreach $viewProfileDetails['share_history']['downloads'] as $download}
+                                <card>
+                                    <h3><a href="/?p=viewtorrent&uuid={$download['torrent_uuid']}">{$download['title']}</a></h3>
+                                    <p>
+                                        Posted in ISO -> Linux 2 days ago<br>
+                                        {$download['file_size_calc']} - {$download['seeders']} seeders, {$download['leechers']} leechers
+                                    </p>
+                                    <options>
+                                        <i class="download"></i>
+                                        <i class="bookmark"></i>
+                                        <i class="like"></i>
+                                        <i class="info"></i>
+                                    </options>
+                                </card>
+                            {/foreach}
+                        {/if}
                     </torrentBrowser>
                 {/if}
             </main>
