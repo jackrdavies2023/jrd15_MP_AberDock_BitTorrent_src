@@ -264,12 +264,14 @@ class Account
             $what, // Data we want to fetch from the DB.
             $where // Where statement.
         )) {
+            $this->account = $query;
+
             if (!isset($this->account['share_history']) && $getShareHistory) {
                 // We need to fetch the users upload and download history.
                 $this->getShareHistory(limit: $getShareLimit);
             }
 
-            return $this->account = $query;
+            return $this->account;
         }
 
         // Even if there is no account data, we'll cache it
