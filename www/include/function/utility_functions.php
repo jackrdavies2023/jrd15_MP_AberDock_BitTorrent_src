@@ -8,13 +8,13 @@
     function getClientIp(): string {
         // These are the typical headers provided when using a HTTP proxy.
         $proxyHeaders = array(
-            'X-Real-IP',
-            'X-Forwarded-For',
-            'X-Forwarded-Host'
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED_HOST',
+            'HTTP_X_REAL_IP'
         );
 
         foreach ($proxyHeaders as $header) {
-            if ($ip = trim(getenv($header))) {
+            if (isset($_SERVER[$header]) && $ip = trim($_SERVER[$header])) {
                 if (!empty($ip)) {
                     if(filter_var($ip, FILTER_VALIDATE_IP) !== false) {
                         // IP address is valid
