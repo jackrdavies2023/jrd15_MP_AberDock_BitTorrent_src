@@ -13,6 +13,7 @@ namespace Torrent;
 // to include it for us.
 require_once("class_bencode.php");
 require_once("class_config.php");
+require_once("utility_functions.php");
 
 use Exception;
 use Medoo\Medoo;
@@ -70,7 +71,7 @@ class Torrent extends Config
         if (isset($decoded['info']['piece length'])) {
             // We'll typically see this for torrents with only a single file.
             $fileSize     =  $decoded['info']['piece length'];
-            $fileSizeCalc =  $this->bytesFormat($decoded['info']['piece length']);
+            $fileSizeCalc =  bytesFormat($decoded['info']['piece length']);
         } else {
             // Torrent has more than one file. So we'll need to get the size of each file, sum them
             // and then calculate the overall size.
@@ -85,7 +86,7 @@ class Torrent extends Config
                     $fileSize += $file['piece length'];
                 }
 
-                $fileSizeCalc = $this->bytesFormat($fileSize);
+                $fileSizeCalc = bytesFormat($fileSize);
             } else {
                 throw new Exception("Torrent contains no files!");
             }
@@ -247,52 +248,59 @@ class Torrent extends Config
             if (!empty($this->torrentCache[$identifier])) {
                 $this->torrentCache[$identifier]['peers'] = $this->torrentCache[$identifier]['seeders'] +
                                                             $this->torrentCache[$identifier]['leechers'];
+
+                $this->torrentCache[$identifier]['upload_time'] = timeAgo(timestamp: $this->torrentCache[$identifier]['upload_time']);
+
+
+                if ($download) {
+                    // We need to prepare a .torrent for download.
+
+                    if (empty($peerId = trim($peerId))) {
+                        throw new Exception("No peer ID provided for torrent download!");
+                    }
+
+                    if ($userId <= 0) {
+                        throw new Exception("No user ID provided for torrent download!");
+                    }
+
+                    if (empty($this->torrentCache[$identifier])) {
+                        throw new Exception("Torrent cannot be downloaded because it does not exist.");
+                    }
+
+                    // Now we need to decode the torrent blob and add our tracker URLs.
+                    if (!$decoded = Bencode::decode($this->torrentCache[$identifier]['torrent_data'])) {
+                        throw new Exception("Failed to parse torrent file!");
+                    }
+
+                    // Add our tracker announcement URL with the users peer Id appended to it.
+                    $decoded['announce']  =  parent::getAnnouncementUrl(peerId: $peerId);
+
+                    // Insert the user download history into the "downloads" table.
+                    if (empty($this->db->get("downloads",
+                        [
+                            "torrent_id"
+                        ],
+                        [
+                            "uid" => $userId
+                        ]
+                    ))) {
+                        // User hasn't downloaded this torrent before.
+                        $this->db->insert("downloads",
+                            [
+                                "torrent_id" => $this->torrentCache[$identifier]['torrent_id'],
+                                "uid"        => $userId
+                            ]
+                        );
+                    }
+
+                    // Return the customised bencoded torrent.
+                    return Bencode::encode($decoded);
+                }
+            } else {
+                if ($download) {
+                    throw new Exception("Torrent does not exist!");
+                }
             }
-        }
-
-        if ($download) {
-            // We need to prepare a .torrent for download.
-
-            if (empty($peerId = trim($peerId))) {
-                throw new Exception("No peer ID provided for torrent download!");
-            }
-
-            if ($userId <= 0) {
-                throw new Exception("No user ID provided for torrent download!");
-            }
-
-            if (empty($this->torrentCache[$identifier])) {
-                throw new Exception("Torrent cannot be downloaded because it does not exist.");
-            }
-
-            // Now we need to decode the torrent blob and add our tracker URLs.
-            if (!$decoded = Bencode::decode($this->torrentCache[$identifier]['torrent_data'])) {
-                throw new Exception("Failed to parse torrent file!");
-            }
-
-            // Add our tracker announcement URL with the users peer Id appended to it.
-            $decoded['announce']  =  parent::getAnnouncementUrl(peerId: $peerId);
-
-            // Insert the user download history into the "downloads" table.
-            if (empty($this->db->get("downloads",
-                [
-                    "torrent_id"
-                ],
-                [
-                    "uid" => $userId
-                ]
-            ))) {
-                // User hasn't downloaded this torrent before.
-                $this->db->insert("downloads",
-                    [
-                        "torrent_id" => $this->torrentCache[$identifier]['torrent_id'],
-                        "uid"        => $userId
-                    ]
-                );
-            }
-
-            // Return the customised bencoded torrent.
-            return Bencode::encode($decoded);
         }
 
 
@@ -428,6 +436,7 @@ class Torrent extends Config
                 "torrents.title",
                 "torrents.info_hash",
                 "torrents.anonymous",
+                "torrents.upload_time",
                 "torrents.file_size_calc",
                 "categories.category_name",
                 "seeders"  => Medoo::raw("SUM(if (peers.seeding = 1 and peers.last_seen > ".$this->peerExpirationTime.", 1, 0))"),
@@ -436,23 +445,10 @@ class Torrent extends Config
             $where
         );
 
-        return $this->torrentCache['torrent_listing'][$searchQuery];
-    }
-
-    /**
-     * Returns byte input in IEC format.
-     * @param float $size Input bytes to convert.
-     * @param int $precision Level of precision (default is 2DP).
-     * @return String Size in IEC format.
-     */
-    public function bytesFormat(float $size, int $precision = 2): string {
-        if ($size <= 0) {
-            return "0 B";
+        foreach ($this->torrentCache['torrent_listing'][$searchQuery] as &$torrent) {
+            $torrent['upload_time'] = timeAgo(timestamp: $torrent['upload_time']);
         }
 
-        $base = log($size, 1024);
-        $suffixes = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
-
-        return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+        return $this->torrentCache['torrent_listing'][$searchQuery];
     }
 }

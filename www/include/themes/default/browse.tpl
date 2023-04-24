@@ -53,7 +53,7 @@
                         <card>
                             <h3><a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}">{$torrent['title']}</a></h3>
                             <p>
-                                Posted in [{$torrent['category_name']}] 2 days ago
+                                Posted in [{$torrent['category_name']}] {$torrent['upload_time']}
                                 {if $torrent['anonymous'] eq 1}
                                     by Anonymous<br>
                                 {else}

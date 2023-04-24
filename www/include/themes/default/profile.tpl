@@ -22,12 +22,12 @@
                         <card>
                             <img class="profile-img" src="{$assetDir}/img/profile.png">
                             <stats>
-                                Join date: Meow<br>
-                                Total upload: 1000TiB<br>
-                                Total download: 1000TiB<br>
-                                Ratio: 1<br>
-                                Seeding: 100<br>
-                                Leeching: 5<br>
+                                Join date: {$viewProfileDetails['join_date']}<br>
+                                Total upload: {$viewProfileDetails['uploaded_calc']}<br>
+                                Total download: {$viewProfileDetails['downloaded_calc']}<br>
+                                Ratio: {$viewProfileDetails['ratio']}<br>
+                                Seeding: {$viewProfileDetails['seeding']}<br>
+                                Leeching: {$viewProfileDetails['leeching']}<br>
                                 Likes received: 5<br>
                                 Group: {$viewProfileDetails['group_name']}
                             </stats>

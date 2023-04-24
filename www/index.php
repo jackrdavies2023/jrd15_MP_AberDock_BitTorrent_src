@@ -88,7 +88,7 @@
         $smarty->assign('pageName', 'Error');
 
         // Load error.tpl Smarty template file.
-        $smarty->display('error.tpl'); 
+        $smarty->display('error.tpl');
         exit();
     }
 

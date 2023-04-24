@@ -26,7 +26,7 @@
                                 {/if}
                                 Size: {$torrentDetails['file_size_calc']}<br>
                                 Category: {$torrentDetails['category_name']}<br>
-                                Date: 01/01/2023<br>
+                                Uploaded: {$torrentDetails['upload_time']}<br>
                                 Seeders: {$torrentDetails['seeders']}<br>
                                 Leechers: {$torrentDetails['leechers']}<br>
                                 Peers: {$torrentDetails['peers']}<br>

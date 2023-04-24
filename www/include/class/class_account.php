@@ -162,6 +162,9 @@ class Account
             "users.password",
             "users.uid_long",
             "users.pid",
+            "users.join_date",
+            "users.downloaded",
+            "users.uploaded",
             "groups.group_name",
             "groups.group_color",
             "groups.is_admin",
@@ -178,14 +181,17 @@ class Account
             "groups.can_invite",
             "languages.lid(language_id)", // Rename "lid" to "language_id" in the response.
             "languages.language_short",
-            "languages.language_long"
+            "languages.language_long",
+            "seeding"  => Medoo::raw("SUM(if (peers.seeding = 1, 1, 0))"),
+            "leeching" => Medoo::raw("SUM(if (peers.seeding = 0, 1, 0))")
         );
 
         $where = array();
         $table = "users";
         $join  = array(
             "[<]groups"    => "gid",  // We're joining the groups table based on the gid.
-            "[<]languages" => "lid"   // We're joining the languages table based on the lid.
+            "[<]languages" => "lid",   // We're joining the languages table based on the lid.
+            "[>]peers"      => array("users.uid" => "uid")
         );
 
         if ($sessionToken) {
@@ -222,7 +228,8 @@ class Account
             $join = array(
                 "[>]users"     => "uid",
                 "[<]groups"    => "gid",
-                "[<]languages" => "lid"
+                "[<]languages" => "lid",
+                "[>]peers"      => array("users.uid" => "uid")
             );
         } else {
             // These SELECT options don't work when selecting directly from the
@@ -235,25 +242,25 @@ class Account
 
         if ($userId) {
             $where = array(
-                "uid" => $userId
+                "users.uid" => $userId
             );
         }
 
         if ($userIdLong) {
             $where = array(
-                "uid_long" => $userIdLong
+                "users.uid_long" => $userIdLong
             );
         }
 
         if ($username) {
             $where = array(
-                "username" => $username
+                "users.username" => $username
             );
         }
 
         if ($peerId) {
             $where = array(
-                "pid" => $peerId
+                "users.pid" => $peerId
             );
         }
 
@@ -262,6 +269,10 @@ class Account
             // Nothing to search for.
             throw new Exception("No account identifier was specified!", 103);
         }
+
+        // Grouping by UID stops Medoo returning an array with empty key values, when the account
+        // doesn't exist. This tends to happen when joining certain tables, such as peers.
+        $where['GROUP']  =  "uid";
         
         if ($query = $this->db->get($table,
             $join, // Tables to join.
@@ -269,6 +280,25 @@ class Account
             $where // Where statement.
         )) {
             $this->account = $query;
+
+            if (!isset($this->account['downloaded'])) {
+                print_r($this->account); exit();
+            }
+
+            // Convert the "joined date" into something human-readable.
+            $this->account['join_date']  =  date('F d, Y', $this->account['join_date']);
+
+
+
+            // Convert download and upload stats into something human-readable.
+            $this->account['downloaded_calc'] =  bytesFormat(size: $this->account['downloaded']);
+            $this->account['uploaded_calc']   =  bytesFormat(size: $this->account['uploaded']);
+
+            if ($this->account['downloaded'] == 0) {
+                $this->account['ratio']  =  0;
+            } else {
+                $this->account['ratio']  =  $this->account['uploaded'] / $this->account['downloaded'];
+            }
 
             if (!isset($this->account['share_history']) && $getShareHistory) {
                 // We need to fetch the users upload and download history.

@@ -5,6 +5,8 @@
         exit();
     }
 
+
+
     $smarty->assign('pageName', 'Registration');
 
     // Load register.tpl Smarty template file.

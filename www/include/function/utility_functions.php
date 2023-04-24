@@ -78,4 +78,53 @@
         }
     }
 
+
+    /**
+     * Converts a unix timestamp into a human-readable format, in the form of how long ago
+     * the time is.
+     * @param int $timestamp
+     * @return string
+     */
+    function timeAgo(int $timestamp) {
+        $seconds = time() - $timestamp; // calculate the difference in seconds
+        $minutes = round($seconds / 60);
+        $hours = round($seconds / 3600);
+        $days = round($seconds / 86400);
+        $weeks = round($seconds / 604800);
+        $months = round($seconds / 2629440);
+        $years = round($seconds / 31553280);
+
+        if ($seconds <= 60) {
+            return 'just now';
+        } else if ($minutes <= 60) {
+            return $minutes . ' minute' . ($minutes > 1 ? 's' : '') . ' ago';
+        } else if ($hours <= 24) {
+            return $hours . ' hour' . ($hours > 1 ? 's' : '') . ' ago';
+        } else if ($days <= 7) {
+            return $days . ' day' . ($days > 1 ? 's' : '') . ' ago';
+        } else if ($weeks <= 4) {
+            return $weeks . ' week' . ($weeks > 1 ? 's' : '') . ' ago';
+        } else if ($months <= 12) {
+            return $months . ' month' . ($months > 1 ? 's' : '') . ' ago';
+        } else {
+            return $years . ' year' . ($years > 1 ? 's' : '') . ' ago';
+        }
+    }
+
+    /**
+     * Returns byte input in IEC format.
+     * @param float $size Input bytes to convert.
+     * @param int $precision Level of precision (default is 2DP).
+     * @return String Size in IEC format.
+     */
+    function bytesFormat(float $size, int $precision = 2): string {
+        if ($size <= 0) {
+            return "0 B";
+        }
+
+        $base = log($size, 1024);
+        $suffixes = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
+
+        return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+    }
 ?>
