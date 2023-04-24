@@ -7,7 +7,7 @@
     // Once the configuration is loaded from the DB, most of these variables
     // will be ignored.
     $theme  = "default";
-    $requiredDbVersion = "1.6";
+    $requiredDbVersion = "1.7";
     $siteName = "AberDock";
 
     // Append our class and function directory to the include path.
@@ -79,8 +79,10 @@
         if ($login->isLoggedIn()) {
             $smarty->assign('accountInfo', htmlSpecialClean($login->getAccountInfo()));
         } else {
-            // Guests are allowed to browse. Fetch the guest account details.
-            $smarty->assign('accountInfo', htmlSpecialClean($login->logInAsGuest()));
+            if (!$config->getConfigVal("login_required") == 1) {
+                // Guests are allowed to browse. Fetch the guest account details.
+                $smarty->assign('accountInfo', htmlSpecialClean($login->logInAsGuest()));
+            }
         }
     } catch (Exception $e) {
         $smarty->assign('exceptionMessage', $e->getMessage()."\n\nHave you imported the SQL?");
@@ -93,6 +95,9 @@
     }
 
     try {
+        //$createAcc = new Account(db: $db);
+        //$createAcc->createAccount(username: "tester01", password: "test12345678");
+        //exit();
         // Navigation handler.
         if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
             switch(trim($_REQUEST['p'])) {

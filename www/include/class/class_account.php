@@ -253,6 +253,7 @@ class Account
         }
 
         if ($username) {
+            echo("Searching by username...");
             $where = array(
                 "users.username" => $username
             );
@@ -280,10 +281,6 @@ class Account
             $where // Where statement.
         )) {
             $this->account = $query;
-
-            if (!isset($this->account['downloaded'])) {
-                print_r($this->account); exit();
-            }
 
             // Convert the "joined date" into something human-readable.
             $this->account['join_date']  =  date('F d, Y', $this->account['join_date']);
@@ -460,6 +457,7 @@ class Account
                 "invited_by" => $invitedBy,
                 "pid"        => Medoo::raw("UUID()"),
                 "uid_long"   => Medoo::raw("UUID()"),
+                "lid"        => $language,
                 "join_date"  => time()
             ]
         )) {

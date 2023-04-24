@@ -30,6 +30,11 @@
                                 Leeching: {$viewProfileDetails['leeching']}<br>
                                 Likes received: 5<br>
                                 Group: {$viewProfileDetails['group_name']}
+
+                                {if $viewingSelf == true}
+                                    <smallSeperator></smallSeperator>
+                                    <button>Account settings</button>
+                                {/if}
                             </stats>
                         </card>
                     </profileContainer>

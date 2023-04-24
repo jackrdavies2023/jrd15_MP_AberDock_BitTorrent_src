@@ -121,6 +121,8 @@ class Login extends Account
                 );
 
                 return true;
+            } else {
+                throw new Exception("Invalid password!");
             }
         }
 

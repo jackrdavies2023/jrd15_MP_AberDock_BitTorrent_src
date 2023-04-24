@@ -41,7 +41,6 @@
                                 </form>
 
                                 <button form="form-download" type="submit">Download</button>
-
                                 <button>Bookmark</button>
                                 <button>Like</button>
                             </stats>
