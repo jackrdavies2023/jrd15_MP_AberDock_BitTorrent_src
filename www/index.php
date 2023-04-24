@@ -7,7 +7,7 @@
     // Once the configuration is loaded from the DB, most of these variables
     // will be ignored.
     $theme  = "default";
-    $requiredDbVersion = "1.5";
+    $requiredDbVersion = "1.6";
     $siteName = "AberDock";
 
     // Append our class and function directory to the include path.
