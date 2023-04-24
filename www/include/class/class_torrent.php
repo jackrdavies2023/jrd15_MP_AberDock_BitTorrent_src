@@ -168,7 +168,8 @@ class Torrent extends Config
         int    $torrentId = 0,
         string $infoHash = "",
         bool   $download = false,
-        string $peerId = ""
+        string $peerId = "",
+        int    $userId = 0
     ) {
         $where = array();
 
@@ -256,6 +257,10 @@ class Torrent extends Config
                 throw new Exception("No peer ID provided for torrent download!");
             }
 
+            if ($userId <= 0) {
+                throw new Exception("No user ID provided for torrent download!");
+            }
+
             if (empty($this->torrentCache[$identifier])) {
                 throw new Exception("Torrent cannot be downloaded because it does not exist.");
             }
@@ -267,6 +272,24 @@ class Torrent extends Config
 
             // Add our tracker announcement URL with the users peer Id appended to it.
             $decoded['announce']  =  parent::getAnnouncementUrl(peerId: $peerId);
+
+            // Insert the user download history into the "downloads" table.
+            if (empty($this->db->get("downloads",
+                [
+                    "torrent_id"
+                ],
+                [
+                    "uid" => $userId
+                ]
+            ))) {
+                // User hasn't downloaded this torrent before.
+                $this->db->insert("downloads",
+                    [
+                        "torrent_id" => $this->torrentCache[$identifier]['torrent_id'],
+                        "uid"        => $userId
+                    ]
+                );
+            }
 
             // Return the customised bencoded torrent.
             return Bencode::encode($decoded);

@@ -17,6 +17,11 @@
     // Save the search query so that it can be set as a default value in the search box.
     $smarty->assign("query", $query);
 
+    /*print_r($torrent->getTorrentListing(
+        searchQuery: $query,
+        maxResults: 60,
+    )); exit();*/
+
     // Fetch a list of torrents and assign it to the template as a variable.
     $smarty->assign("torrentList", $torrent->getTorrentListing(
         searchQuery: $query,

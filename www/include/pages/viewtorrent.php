@@ -23,7 +23,8 @@
 
         $torrentBlob = $torrent->getTorrent(torrentId: $torrentDetails['torrent_id'],
                              download: true,
-                             peerId: $login->getAccountInfo()['pid']);
+                             peerId: $login->getAccountInfo()['pid'],
+                             userId: $login->getAccountInfo()['uid']);
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/torrent');

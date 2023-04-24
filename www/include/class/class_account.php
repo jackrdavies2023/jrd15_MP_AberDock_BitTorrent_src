@@ -288,37 +288,8 @@ class Account
             throw new Exception("No account to retrieve share history of!");
         }
 
-        /*$this->account['share_history']['downloads'] = $this->db->select("downloads",
-            [
-                "[<]torrents"  =>  "torrent_id",
-                "[>]peers"     => array("torrents.torrent_id" => "torrent_id")
-            ],
-            [
-                "downloads.download_id",
-                "downloads.torrent_id",
-                "torrents.title",
-                "torrents.torrent_id_long(torrent_uuid)"
-            ],
-            [
-                "downloads.uid"    =>  $this->account['uid'],
-                "torrents.uid[!]"  =>  $this->account['uid'],
-                "LIMIT"            =>  $limit
-            ]
-        );*/
-
-        /*$this->account['share_history']['uploads'] = $this->db->select("torrents",
-            [
-                "torrents.title",
-                "torrents.torrent_id_long(torrent_uuid)"
-            ],
-            [
-                "torrents.uid" => $this->account['uid'],
-                "LIMIT" => $limit
-            ]
-        );*/
-
         $torrent = new Torrent(db: $this->db);
-        $this->account['share_history']['uploads'] = $torrent->getTorrentListing(maxResults: $limit,
+        $this->account['share_history']['downloads'] = $torrent->getTorrentListing(maxResults: $limit,
                                                                                  getDownloadHistory: true,
                                                                                  getShareUserId: $this->account['uid']);
 

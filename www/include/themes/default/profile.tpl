@@ -44,7 +44,7 @@
                                 <card>
                                     <h3><a href="/?p=viewtorrent&uuid={$upload['torrent_uuid']}">{$upload['title']}</a></h3>
                                     <p>
-                                        Posted in ISO -> Linux 2 days ago<br>
+                                        Posted in [{$upload['category_name']}] 2 days ago<br>
                                         {$upload['file_size_calc']} - {$upload['seeders']} seeders, {$upload['leechers']} leechers
                                     </p>
                                     <options>
@@ -68,7 +68,7 @@
                                 <card>
                                     <h3><a href="/?p=viewtorrent&uuid={$download['torrent_uuid']}">{$download['title']}</a></h3>
                                     <p>
-                                        Posted in ISO -> Linux 2 days ago<br>
+                                        Posted in [{$download['category_name']}] 2 days ago<br>
                                         {$download['file_size_calc']} - {$download['seeders']} seeders, {$download['leechers']} leechers
                                     </p>
                                     <options>
