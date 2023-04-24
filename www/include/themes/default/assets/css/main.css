@@ -203,6 +203,8 @@ bottomUserOptions userName {
 
 bottomUserOptions userName span {
     margin-left: 3mm;
+    width: 100%;
+    overflow: hidden;
 }
 
 .navbar-profile-img {
