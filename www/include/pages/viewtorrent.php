@@ -9,7 +9,7 @@
             throw new Exception("Torrent does not exist!");
         }
 
-        $smarty->assign("torrentDetails", $torrentDetails);
+        $smarty->assign("torrentDetails", htmlSpecialClean($torrentDetails));
     } else {
         throw new Exception("Torrent UUID not specified!");
     }

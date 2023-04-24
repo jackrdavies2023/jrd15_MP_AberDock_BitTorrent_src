@@ -16,7 +16,7 @@
             // We need to retrieve our own upload and download stats.
             $login->getAccount(getShareHistory: true);
 
-            $smarty->assign('viewProfileDetails', $login->getAccount());
+            $smarty->assign('viewProfileDetails', htmlSpecialClean($login->getAccount()));
         } else {
             $viewingSelf = false;
             $account = new Account(db: $db, userIdLong: $userIdLong, getShareHistory: true);
@@ -27,7 +27,7 @@
                     throw new Exception("Not permitted to view other profiles!");
                 }
 
-                $smarty->assign('viewProfileDetails', $account->getAccount());
+                $smarty->assign('viewProfileDetails', htmlSpecialClean($account->getAccount()));
             }  else {
                 throw new Exception("Account not found!");
             }

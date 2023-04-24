@@ -140,10 +140,10 @@
     }
 
     $smarty->assign('pageName', 'Administration');
-    $smarty->assign("languages", $config->getLanguages());
-    $smarty->assign("config", $config->getConfig());
-    $smarty->assign("categories", $config->getTorrentCategories());
-    $smarty->assign("groups", $config->getUserGroups());
+    $smarty->assign("languages", htmlSpecialClean($config->getLanguages()));
+    $smarty->assign("config", htmlSpecialClean($config->getConfig()));
+    $smarty->assign("categories", htmlSpecialClean($config->getTorrentCategories()));
+    $smarty->assign("groups", htmlSpecialClean($config->getUserGroups()));
 
     // Load administration.tpl Smarty template file.
     $smarty->display('administration.tpl');

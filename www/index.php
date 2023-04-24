@@ -77,10 +77,10 @@
         }
 
         if ($login->isLoggedIn()) {
-            $smarty->assign('accountInfo', $login->getAccountInfo());
+            $smarty->assign('accountInfo', htmlSpecialClean($login->getAccountInfo()));
         } else {
             // Guests are allowed to browse. Fetch the guest account details.
-            $smarty->assign('accountInfo', $login->logInAsGuest());
+            $smarty->assign('accountInfo', htmlSpecialClean($login->logInAsGuest()));
         }
     } catch (Exception $e) {
         $smarty->assign('exceptionMessage', $e->getMessage()."\n\nHave you imported the SQL?");
