@@ -126,7 +126,6 @@ torrentContainer button
 torrentContainer button {
     background-color: var(--main-background-color);
     color: var(--text-color);
-    cursor: pointer;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -427,7 +426,7 @@ input[type="file"] {
     background-color: var(--main-background-color);
 }
 
-input[type="file"]:hover, input[type="submit"]:hover, input[type="checkbox"]:hover, select {
+input[type="file"]:hover, input[type="submit"]:hover, input[type="checkbox"]:hover, select, button {
     cursor: pointer;
 }
 

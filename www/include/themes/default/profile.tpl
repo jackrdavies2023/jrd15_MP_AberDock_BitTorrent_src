@@ -33,7 +33,11 @@
 
                                 {if $viewingSelf == true}
                                     <smallSeperator></smallSeperator>
-                                    <button>Account settings</button>
+                                    <form action="" method="GET">
+                                        <input type="hidden" name="p" value="accountsettings">
+                                        <button type="submit">Account settings</button>
+                                    </form>
+
                                 {/if}
                             </stats>
                         </card>
