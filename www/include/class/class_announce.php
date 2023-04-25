@@ -316,6 +316,34 @@ class Announce extends Config {
         );
 
         if ($update) {
+            // We need to compare the previous stats to the ones being presented.
+            // The difference will be added to the user account.
+            if ($currentStats = $this->getPeerInfo(userId: $userId, torrentId: $torrentId)) {
+                $newDownload  =  0;
+                $newUpload    =  0;
+
+                if ($currentStats['downloaded'] < $peerInfo['downloaded']) {
+                    // We've downloaded since the last announce.
+                    $newDownload = $peerInfo['downloaded'] - $currentStats['downloaded'];
+                }
+
+                if ($currentStats['uploaded'] < $peerInfo['uploaded']) {
+                    // We've uploaded since the last announce.
+                    $newUpload = $peerInfo['uploaded'] - $currentStats['uploaded'];
+                }
+
+                // Update the account.
+                $this->db->update("users",
+                    [
+                        "downloaded[+]"  =>  $newDownload,
+                        "uploaded[+]"    =>  $newUpload
+                    ],
+                    [
+                        "uid"            =>  $userId
+                    ]
+                );
+            }
+
             if ($this->db->update("peers", $peerInfo,
                 [
                     "client_id"   =>  $peerInfo['client_id'],
