@@ -33,6 +33,22 @@ if [[ "${MYSQL_SERVER}" == "" ]]; then
     exit 1
 fi
 
+# Write AberDock database configuration
+echo -e "<?php\n\
+    // We're going to be using the Medoo namespace.\n\
+    use Medoo\Medoo;\n\
+
+    /* SQL credentials */\n\
+    \$db = new Medoo([\n\
+        'database_type' => 'mysql',\n\
+        'database_name' => '${MYSQL_DATABASE}',\n\
+        'server' => '${MYSQL_SERVER}',\n\
+        'port' => ${MYSQL_PORT},\n\
+        'username' => '${MYSQL_USER}',\n\
+        'password' => '${MYSQL_PASSWORD}'\n\
+    ]);\n\
+?>" > "/var/www/html/include/config.php"
+
 
 # Start NGINX
 nginx -g 'daemon off;' &
