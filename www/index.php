@@ -116,6 +116,9 @@
                 case "accountsettings":
                     require(__DIR__."/include/pages/accountsettings.php");
                     break;
+                case "bookmarks":
+                    require(__DIR__."/include/pages/bookmarks.php");
+                    break;
                 case "login":
                     require(__DIR__."/include/pages/login.php");
                     break;

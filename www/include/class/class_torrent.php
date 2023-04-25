@@ -35,6 +35,46 @@ class Torrent extends Config
         $this->peerExpirationTime = time() - (intval(parent::getConfigVal("announcement_interval")) + 30);
     }
 
+    public function addBookmark(
+        string $torrentIdLong = "",
+        int    $torrentId = 0,
+        string $infoHash = "",
+        int    $userID = 0
+    ) {
+        if (!$userID > 0) {
+            throw new Exception("No user ID provided!");
+        }
+
+        if (!empty($torrent = $this->getTorrent(
+            torrentIdLong: $torrentIdLong,
+            torrentId: $torrentId,
+            infoHash: $infoHash
+        ))) {
+            // Torrent exists.
+            if ($torrent['uploader']['uid'] == $userID) {
+                throw new Exception("Uploaders cannot bookmark their own content!");
+            }
+
+            // Has the bookmark been added already?
+            if (!$this->db->get("bookmarks",
+                [
+                    "torrent_id"
+                ],
+                [
+                    "uid" => $userID
+                ]
+            )) {
+                // Bookmark has not been added before.
+                $this->db->insert("bookmarks",
+                    [
+                        "torrent_id"  =>  $torrent['torrent_id'],
+                        "uid"         =>  $userID
+                    ]
+                );
+            }
+        }
+    }
+
     public function torrentFilesToArray($array) {
         $paths = array();
 
@@ -301,6 +341,7 @@ class Torrent extends Config
                     "uploader" => [
                         "users.username(username)",
                         "users.uid_long(uuid)",
+                        "users.uid",
                         "groups.group_name"
                     ],
                     "torrents.torrent_id",
@@ -399,7 +440,8 @@ class Torrent extends Config
         array  $categories  = array(),
         bool   $getUploadHistory = false,
         bool   $getDownloadHistory = false,
-        int    $getShareUserId = 0
+        int    $getShareUserId = 0,
+        int    $getBookmarksUserId = 0
     ) {
         $order = "ASC";
         $table = "torrents";
@@ -429,6 +471,10 @@ class Torrent extends Config
 
         if ($getDownloadHistory && $getShareUserId > 0) {
             $searchQuery = "download-history$getShareUserId";
+        }
+
+        if ($getBookmarksUserId > 0) {
+            $searchQuery = "bookmarks$getBookmarksUserId";
         }
 
         // We have this query already cached. It is unlikely that we will have the
@@ -492,8 +538,22 @@ class Torrent extends Config
 
         if ($getDownloadHistory && $getShareUserId > 0) {
             $table = "downloads";
-            $where['downloads.uid'] = $getShareUserId;
-            $where['torrents.uid[!]'] = $getShareUserId;
+            $where['downloads.uid']    =  $getShareUserId;
+            $where['torrents.uid[!]']  =  $getShareUserId;
+            $join = array(
+                "[<]torrents"    =>  "torrent_id",
+                "[>]peers"       =>  array("torrents.torrent_id" => "torrent_id"),
+                "[<]users"       =>  array("torrents.uid" => "uid"),
+                "[>]groups"      =>  array("users.gid" => "gid"),
+                "[<]categories"  =>  array("torrents.category_index" => "category_index")
+            );
+            unset($where[$searchBy."[~]"]);
+        }
+
+        if ($getBookmarksUserId > 0) {
+            $table = "bookmarks";
+            $where['bookmarks.uid']    =  $getBookmarksUserId;
+            $where['torrents.uid[!]']  =  $getBookmarksUserId;
             $join = array(
                 "[<]torrents"    =>  "torrent_id",
                 "[>]peers"       =>  array("torrents.torrent_id" => "torrent_id"),

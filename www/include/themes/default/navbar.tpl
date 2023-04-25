@@ -18,6 +18,10 @@
                 <a href="/?p=statistics"><i class="statistics"></i> Statistics</a>
             {/if}
 
+            {if $accountInfo['is_guest'] eq 0}
+                <a href="/?p=bookmarks"><i class="bookmark"></i> Bookmarks</a>
+            {/if}
+
             {if $accountInfo['is_admin'] eq 1}
                 <a href="/?p=administration"><i class="administration"></i> Administration</a>
             {/if}

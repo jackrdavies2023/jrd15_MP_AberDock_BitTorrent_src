@@ -32,6 +32,17 @@
         throw new Exception("Torrent UUID not specified!");
     }
 
+    if (isset($_REQUEST['bookmark'])) {
+        if ($login->getAccount()['is_guest'] == 1) {
+            throw new Exception("Guests cannot bookmark!");
+        }
+
+        $torrent->addBookmark(
+            torrentIdLong: $torrentIdLong,
+            userID: $login->getAccount()['uid']
+        );
+    }
+
     if (isset($_REQUEST['download'])) {
         // User is trying to download the .torrent.
 
