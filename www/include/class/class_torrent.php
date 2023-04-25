@@ -39,8 +39,9 @@ class Torrent extends Config
         string $torrentIdLong = "",
         int    $torrentId = 0,
         string $infoHash = "",
-        int    $userID = 0
-    ) {
+        int    $userID = 0,
+        bool   $delete = false
+    ): void {
         if (!$userID > 0) {
             throw new Exception("No user ID provided!");
         }
@@ -53,6 +54,17 @@ class Torrent extends Config
             // Torrent exists.
             if ($torrent['uploader']['uid'] == $userID) {
                 throw new Exception("Uploaders cannot bookmark their own content!");
+            }
+
+            if ($delete) {
+                $this->db->delete("bookmarks",
+                    [
+                        "uid"         =>  $userID,
+                        "torrent_id"  =>  $torrent['torrent_id']
+                    ]
+                );
+
+                return;
             }
 
             // Has the bookmark been added already?

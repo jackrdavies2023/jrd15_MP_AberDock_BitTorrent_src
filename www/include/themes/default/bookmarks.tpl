@@ -27,6 +27,7 @@
                             <options>
                                 <a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}&download"><i class="download"></i></a>
                                 <a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}"> <i class="info"></i></a>
+                                <a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}&bookmarkdelete"> <i class="delete"></i></a>
                             </options>
                         </card>
                     {/foreach}

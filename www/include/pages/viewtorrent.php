@@ -43,6 +43,18 @@
         );
     }
 
+    if (isset($_REQUEST['bookmarkdelete'])) {
+        if ($login->getAccount()['is_guest'] == 1) {
+            throw new Exception("Guests cannot bookmark!");
+        }
+
+        $torrent->addBookmark(
+            torrentIdLong: $torrentIdLong,
+            userID: $login->getAccount()['uid'],
+            delete: true
+        );
+    }
+
     if (isset($_REQUEST['download'])) {
         // User is trying to download the .torrent.
 

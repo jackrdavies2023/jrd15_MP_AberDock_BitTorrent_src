@@ -258,7 +258,7 @@ a.profile-link {
     text-decoration: underline;
 }
 
-i.download, i.bookmark, i.like, i.info {
+i.download, i.bookmark, i.like, i.info, i.delete {
     cursor: pointer;
 }
 
@@ -305,6 +305,11 @@ i.login {
 i.administration {
     -webkit-mask-image: url(../img/admin.svg);
     mask-image: url(../img/admin.svg);
+}
+
+i.delete {
+    -webkit-mask-image: url(../img/delete.svg);
+    mask-image: url(../img/delete.svg);
 }
 
 i.hamburger-menu {
