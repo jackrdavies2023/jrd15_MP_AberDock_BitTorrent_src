@@ -250,11 +250,16 @@ torrentBrowser card options {
     display: block;
     margin-left: auto;
     margin-right: 0;
-    width: 100;
+    width: 100%;
+    text-align: end;
 }
 
 a.profile-link {
     text-decoration: underline;
+}
+
+i.download, i.bookmark, i.like, i.info {
+    cursor: pointer;
 }
 
 i.download {

@@ -62,10 +62,10 @@
                                 {$torrent['file_size_calc']} - {$torrent['seeders']} seeders, {$torrent['leechers']} leechers
                             </p>
                             <options>
-                                <i class="download"></i>
-                                <i class="bookmark"></i>
-                                <i class="like"></i>
-                                <i class="info"></i>
+                                <a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}&download"><i class="download"></i></a>
+                                <a href=""><i class="bookmark"></i></a>
+                                <a href=""><i class="like"></i></a>
+                                <a href="/?p=viewtorrent&uuid={$torrent['torrent_uuid']}"> <i class="info"></i></a>
                             </options>
                         </card>
                     {/foreach}

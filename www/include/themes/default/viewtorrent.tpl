@@ -16,7 +16,12 @@
                 <torrentContainer>
                     <card>
                         <card class="torrent-stats no-background">
-                            <img class="torrent-cover-img" src="{$assetDir}/img/torrent-cover.png">
+                            {if !(empty($torrentDetails['cover']))}
+                                <img class="torrent-cover-img" src="data:image;base64,{$torrentDetails['cover']}">
+                            {else}
+                                <img class="torrent-cover-img" src="{$assetDir}/img/torrent-cover.png">
+                            {/if}
+
                             <stats>
                                 Uploaded by:
                                 {if $torrentDetails['anonymous'] eq 1}

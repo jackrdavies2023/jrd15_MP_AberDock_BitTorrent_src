@@ -21,6 +21,7 @@
     $smarty->assign("torrentList", htmlSpecialClean($torrent->getTorrentListing(
         searchQuery: $query,
         maxResults: 60,
+        orderDesc: true
     )));
 
     // Load browse.tpl Smarty template file.
