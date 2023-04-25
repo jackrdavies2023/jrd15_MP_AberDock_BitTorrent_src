@@ -294,7 +294,7 @@ class Account
             if ($this->account['downloaded'] == 0) {
                 $this->account['ratio']  =  0;
             } else {
-                $this->account['ratio']  =  $this->account['uploaded'] / $this->account['downloaded'];
+                $this->account['ratio']  =  round($this->account['uploaded'] / $this->account['downloaded'], 2);
             }
 
             if (!isset($this->account['share_history']) && $getShareHistory) {
