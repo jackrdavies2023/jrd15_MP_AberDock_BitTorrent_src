@@ -43,7 +43,7 @@
                                     <span>New uploads this week<br></span>
 
                                     <card>
-                                        200
+                                        {$totalWeekUploads}
                                     </card>
                                 </div>
                             </statisticsSummaryBox>
@@ -54,7 +54,7 @@
                                     <span>Total peers<br></span>
 
                                     <card>
-                                        4323
+                                        {$totalPeers}
                                     </card>
                                 </div>
                             </statisticsSummaryBox>
