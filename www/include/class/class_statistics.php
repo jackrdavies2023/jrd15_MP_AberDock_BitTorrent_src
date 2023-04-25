@@ -48,7 +48,7 @@ class Statistics extends Config
             );
         }
 
-        return $this->totalPeers;
+        return $this->totalUploads;
     }
 }
 
