@@ -46,9 +46,9 @@ services:
             aberdock_vlan:
                 ipv4_address: 11.0.0.3
 
-    phpmyadmin:
+    aberdock_phpmyadmin:
         image: phpmyadmin
-        container_name: phpmyadmin
+        container_name: aberdock_phpmyadmin
         environment:
             - UPLOAD_LIMIT=500M
         restart: unless-stopped
