@@ -27,6 +27,10 @@
                         </select>
                         <smallSeperator></smallSeperator>
 
+                        <label for="remember">Remember session</label>
+                        <input type="checkbox" name="remember" id="remember">
+                        <smallSeperator></smallSeperator>
+
                         <input type="submit" value="Register">
                         <smallSeperator></smallSeperator>
                     </form>

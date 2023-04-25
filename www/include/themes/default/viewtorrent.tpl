@@ -61,13 +61,7 @@
                         <smallSeperator></smallSeperator>
                         File list:<br>
                         <tinySeperator></tinySeperator>
-                        <pre class="torrent-files">
-- /
-    - aPicture.jpg
-    - someAudio.mp3
-    - anotherDirectory
-        - someMoreJunk.txt
-</pre>
+                        <pre class="torrent-files">{$torrentDetails['torrent_tree']}</pre>
                     </card>
                 </torrentContainer>
             </main>

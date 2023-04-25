@@ -35,6 +35,51 @@ class Torrent extends Config
         $this->peerExpirationTime = time() - (intval(parent::getConfigVal("announcement_interval")) + 30);
     }
 
+    public function torrentFilesToArray($array) {
+        $paths = array();
+
+        // Create an array containing the full path of each file.
+        foreach($array as $file) {
+            if (isset($file['path'])) {
+                $depth  =  count($file['path']);
+                $path   = "";
+
+                for ($i = 0; $i < $depth; $i++) {
+                    $path .= "/".$file['path'][$i];
+                }
+
+                $paths[] = $path;
+            }
+        }
+
+        // Create a tree based on full paths.
+        // The following code was taken from Stackoverflow. It takes an array of paths and converts them into
+        // an array.
+        // Source: https://stackoverflow.com/a/23890006
+        $result = array();
+
+        foreach ($paths AS $path) {
+            $prev = &$result;
+
+            $s = strtok($path, '/');
+
+            while (($next = strtok('/')) !== false) {
+                if (!isset($prev[$s])) {
+                    $prev[$s] = array();
+                }
+
+                $prev = &$prev[$s];
+                $s = $next;
+            }
+
+            $prev[] = $s;
+
+            unset($prev);
+        }
+
+        return $result;
+    }
+
     public function addTorrent(
         string $title,
         string $description,
@@ -44,6 +89,8 @@ class Torrent extends Config
         int $userId,
         int $isAnonymous = 0
     ): array {
+        $fileTree = "";
+
         if (!file_exists($torrentFilePath)) {
             throw new Exception("Torrent file does not exist! Cannot import!");
         }
@@ -68,22 +115,25 @@ class Torrent extends Config
             }
         }
 
-        if (isset($decoded['info']['piece length'])) {
+        if (!isset($decoded['info']['files'])) {
             // We'll typically see this for torrents with only a single file.
-            $fileSize     =  $decoded['info']['piece length'];
-            $fileSizeCalc =  bytesFormat($decoded['info']['piece length']);
+            $fileSize     =  $decoded['info']['length'];
+            $fileSizeCalc =  bytesFormat($decoded['info']['length']);
+            $fileTree = [ $decoded['info']['name'] ];
         } else {
             // Torrent has more than one file. So we'll need to get the size of each file, sum them
             // and then calculate the overall size.
             if (isset($decoded['info']['files'])) {
+
+                $fileTree = $this->torrentFilesToArray($decoded['info']['files']);
                 $fileSize = 0;
 
                 foreach ($decoded['info']['files'] as $file) {
-                    if (!isset($file['piece length'])) {
-                        throw new Exception("Field 'piece length' is not set for a file!");
+                    if (!isset($file['length'])) {
+                        throw new Exception("Field 'length' is not set for a file!");
                     }
 
-                    $fileSize += $file['piece length'];
+                    $fileSize += $file['length'];
                 }
 
                 $fileSizeCalc = bytesFormat($fileSize);
@@ -146,7 +196,8 @@ class Torrent extends Config
             "description"     =>  "$description",
             "upload_time"     =>  time(),
             "published"       =>  1,
-            "torrent_data"    =>  Bencode::encode($decoded)
+            "torrent_data"    =>  Bencode::encode($decoded),
+            "torrent_tree"    =>  json_encode($fileTree, JSON_PRETTY_PRINT)
         );
 
        if (!empty($coverImagePath = trim($coverImagePath))) {
@@ -263,6 +314,7 @@ class Torrent extends Config
                     "torrents.published",
                     "torrents.staff_recommended",
                     "torrents.torrent_data",
+                    "torrents.torrent_tree",
                     "torrents.category_index",
                     "categories.category_subof",
                     "categories.category_name",
@@ -277,7 +329,6 @@ class Torrent extends Config
                                                             $this->torrentCache[$identifier]['leechers'];
 
                 $this->torrentCache[$identifier]['upload_time'] = timeAgo(timestamp: $this->torrentCache[$identifier]['upload_time']);
-
 
                 if ($download) {
                     // We need to prepare a .torrent for download.
