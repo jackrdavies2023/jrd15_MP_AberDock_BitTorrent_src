@@ -205,6 +205,10 @@ class Torrent extends Config
                throw new Exception("Cover image cannot be found!");
            }
 
+           if(!is_array(getimagesize($coverImagePath))){
+               throw new Exception("Invalid cover image!");
+           }
+
            $toInsert['cover'] = base64_encode(file_get_contents($coverImagePath));
        }
 
