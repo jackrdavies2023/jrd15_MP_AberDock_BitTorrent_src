@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 25, 2023 at 09:13 PM
+-- Generation Time: Apr 25, 2023 at 11:34 PM
 -- Server version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP Version: 8.1.16
 
@@ -71,7 +71,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`config_id`, `config_name`, `config_value`) VALUES
-(1, 'database_version', '1.9'),
+(1, 'database_version', '2.0'),
 (2, 'login_required', '0'),
 (3, 'registration_enabled', '1'),
 (4, 'api_enabled', '0'),
@@ -236,7 +236,7 @@ CREATE TABLE `users` (
   `show_uploads` int(11) NOT NULL,
   `uploaded` bigint(20) NOT NULL,
   `downloaded` bigint(20) NOT NULL,
-  `ratio` int(11) NOT NULL,
+  `ratio` float NOT NULL,
   `picture` text NOT NULL,
   `uid_long` uuid NOT NULL,
   `join_date` bigint(20) NOT NULL,
@@ -367,7 +367,7 @@ ALTER TABLE `peers`
 -- AUTO_INCREMENT for table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `torrents`
