@@ -3,13 +3,31 @@
     use Torrent\Torrent;
 
     if (isset($_REQUEST['uuid']) && !empty($torrentIdLong = trim($_REQUEST['uuid']))) {
-        $torrent = new Torrent(db: $db);
+        $torrent   =  new Torrent(db: $db);
+        $canDelete =  false;
 
         if (empty($torrentDetails = $torrent->getTorrent(torrentIdLong: $torrentIdLong))) {
             throw new Exception("Torrent does not exist!");
         }
 
+        $smarty->assign("canDelete", false);
+
+        if (
+            $torrentDetails['uploader']['uuid'] ==  $login->getAccount()['uid_long'] ||
+            $login->getAccount()['is_admin']    ==  1 ||
+            $login->getAccount()['can_delete']  ==  1
+        ) {
+            $canDelete = true;
+        }
+
+        if ($canDelete && isset($_REQUEST['delete'])) {
+            $torrent->deleteTorrent(torrentIdLong: $torrentIdLong);
+            header('Location: /');
+            exit();
+        }
+
         $smarty->assign("torrentDetails", htmlSpecialClean($torrentDetails));
+        $smarty->assign("canDelete", $canDelete);
     } else {
         throw new Exception("Torrent UUID not specified!");
     }

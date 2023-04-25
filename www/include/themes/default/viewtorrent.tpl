@@ -40,9 +40,17 @@
                                     <input type="hidden" name="uuid" value="{$torrentDetails['torrent_uuid']}"/>
                                 </form>
 
+                                {if $canDelete == true}
+                                    <form id="form-delete" method="GET">
+                                        <input type="hidden" name="p" value="viewtorrent"/>
+                                        <input type="hidden" name="delete"/>
+                                        <input type="hidden" name="uuid" value="{$torrentDetails['torrent_uuid']}"/>
+                                    </form>
+                                {/if}
                                 <button form="form-download" type="submit">Download</button>
                                 <button>Bookmark</button>
                                 <button>Like</button>
+                                {if $canDelete == true}<button form="form-delete">Delete</button>{/if}
                             </stats>
                         </card>
                         <smallSeperator></smallSeperator>

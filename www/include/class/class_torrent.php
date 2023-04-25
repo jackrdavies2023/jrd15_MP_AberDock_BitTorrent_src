@@ -164,6 +164,33 @@ class Torrent extends Config
        return $this->getTorrent(torrentId: $this->db->id());
     }
 
+    /**
+     * @throws Exception
+     */
+    public function deleteTorrent(
+        string $torrentIdLong = "",
+        int    $torrentId = 0,
+        string $infoHash = "",
+    ) {
+        $torrent = $this->getTorrent(
+            torrentIdLong: $torrentIdLong,
+            torrentId: $torrentId,
+            infoHash: $infoHash
+        );
+
+        if (isset($torrent['torrent_id']) && $torrent['torrent_id'] > 0) {
+            $this->db->delete("torrents",
+                [
+                    "torrent_id"  =>  $torrent['torrent_id']
+                ]
+            );
+
+            return true;
+        }
+
+        throw new Exception("Torrent not found!");
+    }
+
     public function getTorrent(
         string $torrentIdLong = "",
         int    $torrentId = 0,
