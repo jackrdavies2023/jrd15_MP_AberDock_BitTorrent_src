@@ -435,7 +435,7 @@ class Account
         string $username,
         string $password,
         int $language = 1,
-        int $groupID = 1,
+        int $groupID = 0,
         int $invitedBy = 0
     ): bool {
         $username = trim($username);
@@ -447,6 +447,46 @@ class Account
 
         if (strlen($password) < 8) {
             throw new Exception("Password too short!", 101);
+        }
+
+        // Does this username already exist?
+        if ($this->db->get("users",
+            [
+                "username"
+            ],
+            [
+                "username" => $username
+            ]
+        )) {
+            throw new Exception("Username already in use!");
+        }
+
+        if ($groupID <=0 ) {
+            // No group specified. Automatically assign one.
+            if (!$groupID = $this->db->get("groups",
+                [
+                    "gid"
+                ],
+                [
+                    "is_new" => 1
+                ]
+            )) {
+                throw new Exception("Cannot find new user group!");
+            }
+
+            $groupID = $groupID['gid'];
+        }
+
+        // Is the language ID valid?
+        if (!$this->db->get("languages",
+            [
+                "lid"
+            ],
+            [
+                "lid" => $language
+            ]
+        )) {
+            throw new Exception("Invalid language ID!");
         }
 
         if ($this->db->insert("users", 

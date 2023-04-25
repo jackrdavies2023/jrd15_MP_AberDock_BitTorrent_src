@@ -95,9 +95,6 @@
     }
 
     try {
-        //$createAcc = new Account(db: $db);
-        //$createAcc->createAccount(username: "tester01", password: "test12345678");
-        //exit();
         // Navigation handler.
         if (isset($_REQUEST['p']) and !empty($_REQUEST['p'])) {
             switch(trim($_REQUEST['p'])) {

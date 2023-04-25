@@ -22,8 +22,8 @@
                         <smallSeperator></smallSeperator>
 
                         <select type="text" id="language" name="language">
-                            <option value="eng">English</option>
-                            <option value="cym">Cymraeg</option>
+                            <option value="1">English</option>
+                            <option value="2">Cymraeg</option>
                         </select>
                         <smallSeperator></smallSeperator>
 
