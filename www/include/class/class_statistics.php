@@ -40,8 +40,8 @@ class Statistics extends Config
     }
 
     public function getTotalUploadsThisWeek() {
-        if ($this->totalPeers == -1) {
-            $this->totalPeers = $this->db->count("torrents",
+        if ($this->totalUploads == -1) {
+            $this->totalUploads = $this->db->count("torrents",
                 [
                     "upload_time[>]" => $this->uploadWeekTime
                 ]
