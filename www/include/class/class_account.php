@@ -165,6 +165,7 @@ class Account
             "users.join_date",
             "users.downloaded",
             "users.uploaded",
+            "users.ratio",
             "groups.group_name",
             "groups.group_color",
             "groups.is_admin",
@@ -506,6 +507,26 @@ class Account
         }
 
         throw new Exception("Failed to create account!", 102);
+    }
+
+    /**
+     * Updates entries for the current user.
+     * @param array $newData
+     * @return void
+     * @throws Exception
+     */
+    public function updateAccount(array $newData, $updateCache = false) {
+        if (!empty($this->getAccount())) {
+            $this->db->update("users", $newData,
+                [
+                    "uid"  =>  $this->getAccount()['uid']
+                ]
+            );
+        }
+
+        if ($updateCache) {
+            $this->getAccount(userId: $this->getAccount()['uid'], clearCache: true);
+        }
     }
 }
 ?>

@@ -4,6 +4,7 @@ namespace Announce;
 use Config\Config;
 use Exception;
 use Medoo\Medoo;
+use Account\Account;
 
 require_once("utility_functions.php");
 
@@ -215,12 +216,12 @@ class Announce extends Config {
 
     /**
      * Queries the database for all info stored about the client from the 'peers' table.
-     * @param int $userId
+     * @param Account $account
      * @param int $torrentId
      * @return int|mixed|null
      */
     public function getPeerInfo(
-        int $userId,
+        Account &$account,
         int $torrentId
     ) {
         if (!$clientID = $this->getClientID()) {
@@ -231,7 +232,7 @@ class Announce extends Config {
             if ($query = $this->db->get("peers", "*",
                 [
                     "client_id"   =>  $clientID,
-                    "uid"         =>  $userId,
+                    "uid"         =>  $account->getAccount()['uid'],
                     "torrent_id"  =>  $torrentId
                 ]
             )) {
@@ -250,19 +251,19 @@ class Announce extends Config {
 
     /**
      * Removes the peer from the database.
-     * @param int $userId The user ID of the account being used.
+     * @param Account $account
      * @param int $torrentId The Id of the torrent being shared.
      * @return mixed
      * @throws Exception
      */
     public function unregisterPeer(
-        int $userId,
+        Account &$account,
         int $torrentId
     ) {
         if (!$this->db->delete("peers", [
             "client_id"   =>  $this->getClientID(),
             "client_key"  =>  $this->getClientKey(),
-            "uid"         =>  $userId,
+            "uid"         =>  $account->getAccount()['uid'],
             "torrent_id"  =>  $torrentId
         ])) {
             throw new Exception("Failed to remove peer from the database!");
@@ -271,31 +272,31 @@ class Announce extends Config {
 
     /**
      * Updates the peer info in the database with newly reported stats from the client.
-     * @param int $userId
+     * @param Account $account
      * @param int $torrentId
      * @return array|void|null
      * @throws Exception
      */
     public function updatePeer(
-        int $userId,
+        Account &$account,
         int $torrentId
     ) {
-        if ($this->getPeerInfo(userId: $userId, torrentId: $torrentId)) {
+        if ($this->getPeerInfo(account: $account, torrentId: $torrentId)) {
             // Peer exists, call registerPeer method with the update argument.
-            return $this->registerPeer(userId: $userId, torrentId: $torrentId, update: true);
+            return $this->registerPeer(account: $account, torrentId: $torrentId, update: true);
         }
     }
 
     /**
      * Inserts a new peer into the database.
-     * @param int $userId
+     * @param Account $account
      * @param int $torrentId
      * @param bool $update
      * @return array|null
      * @throws Exception
      */
     public function registerPeer(
-        int $userId,
+        Account &$account,
         int $torrentId,
         bool $update = false
     ) {
@@ -311,14 +312,14 @@ class Announce extends Config {
             "seeding"    => $this->isClientSeeding(),
             "last_seen"  => time(),
             "agent"      => getClientAgent(),
-            "uid"        => $userId,
+            "uid"        => $account->getAccount()['uid'],
             "torrent_id" => $torrentId
         );
 
         if ($update) {
             // We need to compare the previous stats to the ones being presented.
             // The difference will be added to the user account.
-            if ($currentStats = $this->getPeerInfo(userId: $userId, torrentId: $torrentId)) {
+            if ($currentStats = $this->getPeerInfo(account: $account, torrentId: $torrentId)) {
                 $newDownload  =  0;
                 $newUpload    =  0;
 
@@ -333,13 +334,24 @@ class Announce extends Config {
                 }
 
                 // Update the account.
-                $this->db->update("users",
-                    [
-                        "downloaded[+]"  =>  $newDownload,
-                        "uploaded[+]"    =>  $newUpload
+                $account->updateAccount(
+                    newData: [
+                         "downloaded[+]"  =>  $newDownload,
+                         "uploaded[+]"    =>  $newUpload
                     ],
-                    [
-                        "uid"            =>  $userId
+                    updateCache: true
+                );
+
+                // Recalculate the account ratio.
+                if ($account->getAccount()['downloaded'] == 0) {
+                    $newRatio  =  0;
+                } else {
+                    $newRatio  =  round($account->getAccount()['uploaded'] / $account->getAccount()['downloaded'], 2);
+                }
+
+                $account->updateAccount(
+                    newData: [
+                        "ratio"  =>  $newRatio
                     ]
                 );
             }

@@ -69,12 +69,12 @@
 
         // Torrent exists. Is this peer registered?
         if (!$peerInfo = $announce->getPeerInfo(
-            userId: $account->getAccount()['uid'],
+            account: $account,
             torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
         )) {
             // Peer not registered.
             if (!$peerInfo = $announce->registerPeer(
-                userId: $account->getAccount()['uid'],
+                account: $account,
                 torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
             )) {
                 throw new Exception("Failed to register peer!");
@@ -82,7 +82,7 @@
         } else {
             // Peer already registered. Update its stats.
             $announce->updatePeer(
-                userId: $account->getAccount()['uid'],
+                account: $account,
                 torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
             );
         }
@@ -91,7 +91,7 @@
         if (isset($_REQUEST['event']) && $_REQUEST['event'] == 'stopped') {
             // Client has stopped/is disconnecting. Remove them from the peers table.
             $announce->unregisterPeer(
-                userId: $account->getAccount()['uid'],
+                account: $account,
                 torrentId: $torrent->getTorrent(infoHash: $announce->getClientInfoHash())['torrent_id']
             );
 
