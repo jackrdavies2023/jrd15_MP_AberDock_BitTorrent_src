@@ -1,6 +1,7 @@
 <?php
 
 namespace Statistics;
+
 use Exception;
 use Medoo\Medoo;
 use Config\Config;
@@ -10,7 +11,9 @@ class Statistics extends Config
     protected $totalPeers,
               $totalUploads,
               $peerExpirationTime,
-              $uploadWeekTime;
+              $uploadWeekTime,
+              $topTenSeeders,
+              $topTenWorstSeeders;
 
     function __construct(
         Medoo &$db
@@ -49,6 +52,66 @@ class Statistics extends Config
         }
 
         return $this->totalUploads;
+    }
+
+    public function getTopTenSeeders() {
+        if (!$this->topTenSeeders) {
+            if ($result = $this->db->select("users",
+                [
+                    "username",
+                    "uid_long(uuid)",
+                    "downloaded",
+                    "uploaded",
+                    "ratio"
+                ],
+                [
+                    "LIMIT" => 10,
+                    "ORDER" => [
+                        "ratio" => "DESC",
+                    ],
+                    "ratio[>]" => 0.5
+                ]
+            )) {
+                foreach ($result as &$user) {
+                    $user['uploaded']    =  bytesFormat($user['uploaded']);
+                    $user['downloaded']  =  bytesFormat($user['downloaded']);
+                }
+
+                $this->topTenSeeders = $result;
+            }
+        }
+
+        return $this->topTenSeeders;
+    }
+
+    public function getTopTenWorstSeeders() {
+        if (!$this->topTenWorstSeeders) {
+            if ($result = $this->db->select("users",
+                [
+                    "username",
+                    "uid_long(uuid)",
+                    "downloaded",
+                    "uploaded",
+                    "ratio"
+                ],
+                [
+                    "LIMIT" => 10,
+                    "ORDER" => [
+                        "ratio" => "DESC",
+                    ],
+                    "ratio[<]" => 0.5
+                ]
+            )) {
+                foreach ($result as &$user) {
+                    $user['uploaded']    =  bytesFormat($user['uploaded']);
+                    $user['downloaded']  =  bytesFormat($user['downloaded']);
+                }
+
+                $this->topTenWorstSeeders = $result;
+            }
+        }
+
+        return $this->topTenWorstSeeders;
     }
 }
 

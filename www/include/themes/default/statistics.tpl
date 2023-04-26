@@ -73,22 +73,16 @@
                             <span>Download</span>
                         </statisticsTableHeader>
                     </card>
-                    <card class="no-rounded-corners">
-                        <statisticsTableHeader>
-                            <span class="username">A human</span>
-                            <span>5</span>
-                            <span>600GiB</span>
-                            <span>100GiB</span>
-                        </statisticsTableHeader>
-                    </card>
-                    <card class="no-rounded-corners">
-                        <statisticsTableHeader>
-                            <span class="username">Another human</span>
-                            <span>4</span>
-                            <span>500GiB</span>
-                            <span>200GiB</span>
-                        </statisticsTableHeader>
-                    </card>
+                    {foreach $topTenSeeders as $user}
+                        <card class="no-rounded-corners">
+                            <statisticsTableHeader>
+                                <span class="username">{$user['username']}</span>
+                                <span>{$user['ratio']}</span>
+                                <span>{$user['uploaded']}</span>
+                                <span>{$user['downloaded']}</span>
+                            </statisticsTableHeader>
+                        </card>
+                    {/foreach}
                 </topTenSeeders>
 
                 <smallSeperator></smallSeperator>
@@ -104,22 +98,16 @@
                             <span>Download</span>
                         </statisticsTableHeader>
                     </card>
-                    <card class="no-rounded-corners">
-                        <statisticsTableHeader>
-                            <span class="username">A bad human</span>
-                            <span>0</span>
-                            <span>1GiB</span>
-                            <span>600GiB</span>
-                        </statisticsTableHeader>
-                    </card>
-                    <card class="no-rounded-corners">
-                        <statisticsTableHeader>
-                            <span class="username">Another very bad human</span>
-                            <span>0</span>
-                            <span>1GiB</span>
-                            <span>500GiB</span>
-                        </statisticsTableHeader>
-                    </card>
+                    {foreach $topTenWorstSeeders as $user}
+                        <card class="no-rounded-corners">
+                            <statisticsTableHeader>
+                                <span class="username">{$user['username']}</span>
+                                <span>{$user['ratio']}</span>
+                                <span>{$user['uploaded']}</span>
+                                <span>{$user['downloaded']}</span>
+                            </statisticsTableHeader>
+                        </card>
+                    {/foreach}
                 </topTenWorstSeeders>
             </main>
         </mainContainer>

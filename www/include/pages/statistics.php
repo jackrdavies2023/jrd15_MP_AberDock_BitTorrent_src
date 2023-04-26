@@ -6,6 +6,8 @@
 
     $smarty->assign('totalPeers', $statistics->getTotalPeers());
     $smarty->assign("totalWeekUploads", $statistics->getTotalUploadsThisWeek());
+    $smarty->assign("topTenSeeders", $statistics->getTopTenSeeders());
+    $smarty->assign("topTenWorstSeeders", $statistics->getTopTenWorstSeeders());
 
 
     $smarty->assign('pageName', 'Statistics');
