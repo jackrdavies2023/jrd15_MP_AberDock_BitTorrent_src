@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 25, 2023 at 11:34 PM
+-- Generation Time: Apr 26, 2023 at 01:51 AM
 -- Server version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP Version: 8.1.16
 
@@ -71,7 +71,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`config_id`, `config_name`, `config_value`) VALUES
-(1, 'database_version', '2.0'),
+(1, 'database_version', '2.1'),
 (2, 'login_required', '0'),
 (3, 'registration_enabled', '1'),
 (4, 'api_enabled', '0'),
@@ -193,6 +193,28 @@ CREATE TABLE `sessions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `statistics`
+--
+
+CREATE TABLE `statistics` (
+  `statistic_id` int(11) NOT NULL,
+  `age` bigint(20) NOT NULL,
+  `statistic_name` text NOT NULL,
+  `upload` bigint(20) NOT NULL,
+  `download` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `statistics`
+--
+
+INSERT INTO `statistics` (`statistic_id`, `age`, `statistic_name`, `upload`, `download`) VALUES
+(1, 1682473442, 'traffic_today', 0, 0),
+(2, 1682473442, 'traffic_week', 0, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `torrents`
 --
 
@@ -249,7 +271,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`uid`, `gid`, `pid`, `username`, `password`, `recovery_key`, `last_seen`, `lid`, `private`, `show_downloads`, `show_uploads`, `uploaded`, `downloaded`, `ratio`, `picture`, `uid_long`, `join_date`, `banned_reason`, `invited_by`) VALUES
-(1, 1, '60ac1f0c-df54-11ed-9203-02420b000003', 'testAccount', '$2y$12$OyQ5l6We54nWsKnPCbFll.namniojNKD14EZAF4Pagu1YOyCZaNUO', '', 0, 1, 0, 0, 0, 0, 1, 0, '', '3df902aa-df1a-11ed-9203-02420b000003', 0, '', 0),
+(1, 1, '60ac1f0c-df54-11ed-9203-02420b000003', 'testAccount', '$2y$12$OyQ5l6We54nWsKnPCbFll.namniojNKD14EZAF4Pagu1YOyCZaNUO', '', 0, 1, 0, 0, 0, 10000000000, 1, 100, '', '3df902aa-df1a-11ed-9203-02420b000003', 0, '', 0),
 (2, 4, '00000000-0000-0000-0000-000000000000', 'Guest', '$2y$12$ke0H4iklRKWYzzQxNNwT2Oac5yLPSs1FBw5pEM6B7ePDUl3CVonXS', '', 0, 1, 1, 0, 0, 0, 0, 0, '', '00000000-0000-0000-0000-000000000000', 0, '', 0),
 (5, 3, '3cfaab65-e18e-11ed-a8b2-02420b000003', 'tester01', '$2y$12$IoDyQh56r5Y4rJ8GMjdcVuRBegEASIZ4dmXrcl3uMoj4ImFLlryBi', '', 0, 1, 0, 0, 0, 0, 0, 0, '', '3cfaab6c-e18e-11ed-a8b2-02420b000003', 1682373606, '', 0);
 
@@ -304,6 +326,12 @@ ALTER TABLE `peers`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `statistics`
+--
+ALTER TABLE `statistics`
+  ADD PRIMARY KEY (`statistic_id`);
 
 --
 -- Indexes for table `torrents`
@@ -367,7 +395,13 @@ ALTER TABLE `peers`
 -- AUTO_INCREMENT for table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `statistics`
+--
+ALTER TABLE `statistics`
+  MODIFY `statistic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `torrents`
