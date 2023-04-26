@@ -76,7 +76,7 @@
                     {foreach $topTenSeeders as $user}
                         <card class="no-rounded-corners">
                             <statisticsTableHeader>
-                                <span class="username">{$user['username']}</span>
+                                <span class="username"><a href="/?p=profile&uuid={$user['uuid']}">{$user['username']}</a></span>
                                 <span>{$user['ratio']}</span>
                                 <span>{$user['uploaded']}</span>
                                 <span>{$user['downloaded']}</span>
@@ -101,7 +101,7 @@
                     {foreach $topTenWorstSeeders as $user}
                         <card class="no-rounded-corners">
                             <statisticsTableHeader>
-                                <span class="username">{$user['username']}</span>
+                                <span class="username"><a href="/?p=profile&uuid={$user['uuid']}">{$user['username']}</a></span>
                                 <span>{$user['ratio']}</span>
                                 <span>{$user['uploaded']}</span>
                                 <span>{$user['downloaded']}</span>
