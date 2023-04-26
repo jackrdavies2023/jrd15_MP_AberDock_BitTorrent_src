@@ -21,7 +21,7 @@
                                     <span>Total P2P traffic today<br></span>
 
                                     <card>
-                                        3000TiB
+                                        {$trafficToday}
                                     </card>
                                 </div>
                             </statisticsSummaryBox>
@@ -32,7 +32,7 @@
                                     <span>Total P2P traffic this week<br></span>
 
                                     <card>
-                                        6000TiB
+                                        {$trafficWeek}
                                     </card>
                                 </div>
                             </statisticsSummaryBox>

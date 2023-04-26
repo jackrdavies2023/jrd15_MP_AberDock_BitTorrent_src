@@ -5,6 +5,7 @@ use Config\Config;
 use Exception;
 use Medoo\Medoo;
 use Account\Account;
+use Statistics\Statistics;
 
 require_once("utility_functions.php");
 
@@ -354,6 +355,11 @@ class Announce extends Config {
                         "ratio"  =>  $newRatio
                     ]
                 );
+
+                // Update global statistics.
+                $statistics = new Statistics(db: $this->db);
+                $statistics->updateWeeklyTraffic(newUpload: $newUpload, newDownload: $newDownload);
+                $statistics->updateDailyTraffic(newUpload: $newUpload, newDownload: $newDownload);
             }
 
             if ($this->db->update("peers", $peerInfo,

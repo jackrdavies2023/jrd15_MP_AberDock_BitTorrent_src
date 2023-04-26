@@ -20,6 +20,9 @@
     require_once("class_bencode.php");
     use Bencode\Bencode;
 
+    require_once("class_statistics.php");
+    use Statistics\Statistics;
+
     require_once("class_announce.php");
     use Announce\Announce;
 
