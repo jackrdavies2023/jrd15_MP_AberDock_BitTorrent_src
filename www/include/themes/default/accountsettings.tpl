@@ -97,7 +97,7 @@
                                 <td>
                                     Just now
                                 </td>
-                                <td>
+                                <td class="right-align">
                                     Delete
                                 </td>
                             </tr>
@@ -128,7 +128,7 @@
                                 <td>
                                     Some random torrent file
                                 </td>
-                                <td>
+                                <td class="right-align">
                                     Delete
                                 </td>
                             </tr>
