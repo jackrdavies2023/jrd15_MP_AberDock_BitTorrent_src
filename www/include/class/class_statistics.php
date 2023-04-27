@@ -111,7 +111,7 @@ class Statistics extends Config
                     $user['downloaded']  =  bytesFormat($user['downloaded']);
                 }
 
-                $this->topTenWorstSeeders = array_reverse($result);
+                $this->topTenWorstSeeders = $result;
             }
         }
 
