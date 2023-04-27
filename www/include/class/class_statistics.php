@@ -102,6 +102,7 @@ class Statistics extends Config
                     "LIMIT" => 10,
                     "ORDER" => [
                         "ratio" => "DESC",
+                        "downloaded" => "ASC"
                     ],
                     "ratio[<]" => 0.5
                 ]
