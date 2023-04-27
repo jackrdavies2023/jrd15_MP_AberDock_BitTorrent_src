@@ -5,6 +5,10 @@
         exit();
     }
 
+    if ($config->getConfigVal("registration_enabled") == 0) {
+        throw new Exception("Registration disabled!");
+    }
+
     require_once("class_account.php");
     use Account\Account;
 
