@@ -6,10 +6,10 @@
 
     $smarty->assign('totalPeers', $statistics->getTotalPeers());
     $smarty->assign("totalWeekUploads", $statistics->getTotalUploadsThisWeek());
-    $smarty->assign("topTenSeeders", $statistics->getTopTenSeeders());
-    $smarty->assign("topTenWorstSeeders", $statistics->getTopTenWorstSeeders());
     $smarty->assign("trafficToday", $statistics->getDailyTraffic()['total']);
     $smarty->assign("trafficWeek", $statistics->getWeeklyTraffic()['total']);
+    $smarty->assign("topTenSeeders", htmlSpecialClean($statistics->getTopTenSeeders()));
+    $smarty->assign("topTenWorstSeeders", htmlSpecialClean($statistics->getTopTenWorstSeeders()));
 
 
     $smarty->assign('pageName', 'Statistics');
