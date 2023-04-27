@@ -448,6 +448,28 @@ input[type="file"]::file-selector-button {
     padding: 0;
 }
 
+accountSettingsSecurityContainer label,
+accountsettingsprivacycontainer label
+{
+    width: 70mm;
+    display: inline-block;
+}
+
+accountSettingsSecurityContainer input[type=text],
+accountSettingsSecurityContainer input[type=password],
+accountSettingsPrivacyContainer select
+{
+    width: 80mm;
+}
+
+smallLabel {
+    font-size: 10pt;
+}
+
+.red {
+    color: red;
+}
+
 card.login-card {
     width: 400px;
     height: 370px;
@@ -541,11 +563,19 @@ errorContainer pre {
     word-wrap: break-word;
 }
 
-adminGroupsContainer table, adminTorrentCategoryContainer table {
+adminGroupsContainer table,
+adminTorrentCategoryContainer table,
+accountSettingsSessionsContainer table,
+accountSettingsTorrentClientsContainer table
+{
     width: 100%;
 }
 
-adminGroupsContainer table td, adminTorrentCategoryContainer table td {
+adminGroupsContainer table td,
+adminTorrentCategoryContainer table td,
+accountSettingsSessionsContainer table td,
+accountSettingsTorrentClientsContainer table td
+{
     text-align: center;
 }
 
