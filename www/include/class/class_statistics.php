@@ -101,8 +101,7 @@ class Statistics extends Config
                 [
                     "LIMIT" => 10,
                     "ORDER" => [
-                        "ratio" => "DESC",
-                        "downloaded" => "ASC"
+                        "ratio" => "DESC"
                     ],
                     "ratio[<]" => 0.5
                 ]
@@ -112,7 +111,7 @@ class Statistics extends Config
                     $user['downloaded']  =  bytesFormat($user['downloaded']);
                 }
 
-                $this->topTenWorstSeeders = $result;
+                $this->topTenWorstSeeders = array_reverse($result);
             }
         }
 
