@@ -19,7 +19,7 @@
 
                 <smallSeperator></smallSeperator>
 
-                <h2 id="privacy">Privacy</h2>
+                <h2 id="privacy">Privacy & language</h2>
                 <tinySeperator></tinySeperator>
                 <accountSettingsPrivacyContainer>
                     <card>
@@ -36,6 +36,13 @@
 
                         <label for="show-uploads">Show uploads</label>
                         <input type="checkbox" name="show-downloads">
+                        <tinySeperator></tinySeperator>
+
+                        <label for="language">Language</label>
+                        <select type="text" name="language">
+                            <option value="1">English</option>
+                            <option value="2">Cymraeg</option>
+                        </select>
                         <tinySeperator></tinySeperator>
 
                         <input type="submit" value="Save"
