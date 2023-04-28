@@ -93,3 +93,64 @@ Assuming the defaults have not been changed in the `docker-compose.yml` file, Ab
 Once logged in, head over to the Administration page. From here, you can configure user group permissions and system defaults.
 
 It is important that the `Announcement URL` is changed to reflect your configuration. Without this, users will not be able to share content as they will not have a tracker to connect to! `/announce.php` MUST also be appended to the URL, unless rewrite rules are being used.
+
+## Running behind a proxy
+It is common for Docker services to be accessed via a proxy such as NGINX. This allows for hosting multiple web services on the same port.
+
+Below is an example NGINX configuration file that can be used with AberDock, with SSL/HTTPS:
+
+```
+server {
+        listen       80;
+        server_name  aberdock.example.com;
+        root         /www/default;
+
+        location ~ (.well-known) {
+          break;
+        }
+
+        if ($http_user_agent ~* (masscan|Go-http-client|CensysInspect)) {
+            return 403;
+        }
+
+        location / {
+          return 301 https://$host$request_uri;
+        }
+}
+
+server {
+    listen       443 ssl;
+    server_name  aberdock.example.com;
+    root         /www/default;
+
+    # Max upload of 50M
+    client_max_body_size 50M;
+    proxy_request_buffering off;
+    add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
+
+    ssl_certificate            /certs/aberdock.example.com_ecc/fullchain.cer;
+    ssl_certificate_key        /certs/aberdock.example.com_ecc/aberdock.example.com.key;
+    ssl_session_cache          shared:SSL:100m;
+    ssl_session_timeout        1d;
+    ssl_ciphers                HIGH:!aNULL:!MD5:!kEDH;
+    ssl_prefer_server_ciphers  on;
+
+    fastcgi_max_temp_file_size 0;
+    fastcgi_buffers 64 4K;
+
+    location / {
+        proxy_set_header  Host aberdock.example.com;
+        proxy_set_header  X-Real-IP $remote_addr;
+        proxy_set_header  X-Forwarded-For $remote_addr;
+        proxy_set_header  X-Forwarded-Host $remote_addr;
+        proxy_buffering   off;
+
+        proxy_pass http://11.0.0.2:80;
+    }
+
+    location ~ /\.ht {
+        deny  all;
+    }
+}
+
+```
