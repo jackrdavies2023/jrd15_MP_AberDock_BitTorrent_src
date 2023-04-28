@@ -408,7 +408,10 @@ class Torrent extends Config
                     }
 
                     // Add our tracker announcement URL with the users peer Id appended to it.
-                    $decoded['announce']  =  parent::getAnnouncementUrl(peerId: $peerId);
+                    $decoded['announce']      =  parent::getAnnouncementUrl(peerId: $peerId);
+
+                    // Add our backup tracker URL, if any.
+                    $decoded['announce-list'] =  array(parent::getBackupAnnouncementUrl(peerId: $peerId));
 
                     // Insert the user download history into the "downloads" table.
                     if (empty($this->db->get("downloads",

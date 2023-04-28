@@ -67,12 +67,42 @@ class Config
         return $this->config[$parameter];
     }
 
+    /**
+     * Returns the main announcement URL, with a user's PID appended.
+     * @param string $peerId The user PID.
+     * @return string The main announcement URL with the PID appended.
+     * @throws Exception Configuration not found or PID not provided.
+     */
     public function getAnnouncementUrl(string $peerId) {
         if (empty($peerId = trim($peerId))) {
             throw new Exception("Peer ID not provided!");
         }
 
         return $this::getConfigVal("announcement_url")."?pid=$peerId";
+    }
+
+    /**
+     * Returns an array of announcement URL, with a user's PId appended.
+     * @param string $peerId The user PID
+     * @return array Array of URL.
+     * @throws Exception Configuration not found or PID not provided.
+     */
+    public function getBackupAnnouncementUrl(string $peerId) {
+        if (empty($announcementBackupUrl = json_decode($this::getConfigVal("announcement_backup_url")))) {
+            $announcementBackupUrl = array();
+        }
+
+        $backupURL = array();
+
+        // Add our main tracker URL to the list of backup trackers.
+        // Deluge ignores the "announce" field if an "announce-list" is provided.
+        $backupURL[] = $this::getAnnouncementUrl($peerId);
+
+        foreach ($announcementBackupUrl as $url) {
+            $backupURL[] = $url."?pid=$peerId";
+        }
+
+        return $backupURL;
     }
 
     /**
