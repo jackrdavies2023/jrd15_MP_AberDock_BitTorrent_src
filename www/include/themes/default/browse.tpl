@@ -32,11 +32,19 @@
                                 -->
                                 {foreach $categories as $category}
                                 <searchCategoryParent>
-                                    <input type="checkbox" name="{$category['category_index']}" value="1"> {$category['category_name']}
+                                    <input type="checkbox" name="{$category['category_index']}" value="1"
+                                            {if isset($smarty.get.{$category['category_index']})} checked{/if}> {$category['category_name']}
 
                                     <searchCategoryChild>
                                         {foreach $category['category_sub'] as $subcategory}
-                                        <input type="checkbox" name="{$subcategory['category_index']}" value="1"> {$subcategory['category_name']}<br>
+                                        <input type="checkbox" name="{$subcategory['category_index']}" value="1"
+                                               {if isset($smarty.get.{$subcategory['category_index']})}
+                                                    checked
+                                                {else}
+                                                    {if isset($smarty.get.{$category['category_index']})}
+                                                        checked
+                                                    {/if}
+                                                {/if}> {$subcategory['category_name']}<br>
                                         {/foreach}
                                     </searchCategoryChild>
                                 </searchCategoryParent>

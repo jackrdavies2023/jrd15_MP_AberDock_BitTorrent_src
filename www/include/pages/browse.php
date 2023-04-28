@@ -10,6 +10,31 @@
         $query = trim($_REQUEST['query']);
     }
 
+    // Check if we are searching by category.
+    $categoryId = array();
+    foreach ($config->getTorrentCategories() as $parentCategory) {
+
+        $parentId = $parentCategory['category_index'];
+
+        if (isset($_GET[$parentId])) {
+            $categoryId[] = $parentId;
+        }
+
+        foreach ($parentCategory['category_sub'] as $childCategory) {
+            $childId = $childCategory['category_index'];
+
+            if (isset($_GET[$childId])) {
+                $categoryId[] = $childId;
+            } else {
+                // Parent category has been selected, meaning we are searching this child
+                // category too.
+                if (isset($_GET[$parentId])) {
+                    $categoryId[] = $childId;
+                }
+            }
+        }
+    }
+
     // Fetch the list of parent and child categories from the database and assign it
     // as a variable to the template.
     $smarty->assign("categories", htmlSpecialClean($config->getTorrentCategories()));
@@ -21,7 +46,8 @@
     $smarty->assign("torrentList", htmlSpecialClean($torrent->getTorrentListing(
         searchQuery: $query,
         maxResults: 60,
-        orderDesc: true
+        orderDesc: true,
+        categories: $categoryId
     )));
 
     // Load browse.tpl Smarty template file.
