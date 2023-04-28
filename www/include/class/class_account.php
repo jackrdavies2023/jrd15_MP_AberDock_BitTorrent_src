@@ -5,7 +5,7 @@
  * This class is used for storing and fetching information about
  * a user account.
  *
- * Depends on: Medoo
+ * Depends on: Medoo, Torrent
  * 
  * Written by Jack Ryan Davies (jrd15)
  **/

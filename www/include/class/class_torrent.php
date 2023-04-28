@@ -4,6 +4,8 @@
  *
  * This class is for uploading, editing and retrieving new torrents.
  *
+ * Depends on: Medoo, Bencode, Config
+ *
  * Written by Jack Ryan Davies (jrd15)
  */
 
@@ -35,6 +37,16 @@ class Torrent extends Config
         $this->peerExpirationTime = time() - (intval(parent::getConfigVal("announcement_interval")) + 30);
     }
 
+    /**
+     * Saves a torrent to a users bookmarks.
+     * @param string $torrentIdLong The long ID of the torrent to add.
+     * @param int $torrentId The short (int) ID of the torrent to add.
+     * @param string $infoHash The info_hash of the torrent to add.
+     * @param int $userID The ID of the account to add the torrent to.
+     * @param bool $delete True = Add, False = Delete
+     * @return void
+     * @throws Exception
+     */
     public function addBookmark(
         string $torrentIdLong = "",
         int    $torrentId = 0,
@@ -87,6 +99,11 @@ class Torrent extends Config
         }
     }
 
+    /**
+     * Takes the raw files array from a decoded torrent and converts it into a tree of files and directories.
+     * @param $array The array of the decoded torrent file "files" key.
+     * @return array|mixed
+     */
     public function torrentFilesToArray($array) {
         $paths = array();
 
@@ -132,6 +149,18 @@ class Torrent extends Config
         return $result;
     }
 
+    /**
+     * Adds a new torrent to the database.
+     * @param string $title The title of the file.
+     * @param string $description The description of the file.
+     * @param int $categoryIndex The category ID in which to store the file.
+     * @param string|null $coverImagePath The cover image for the file (optional)
+     * @param string $torrentFilePath Full path to the .torrent file.
+     * @param int $userId The ID (short) of the account to associate the new torrent to.
+     * @param int $isAnonymous 1 = Mark the torrent as anonymous.
+     * @return array An array of the newly added torrent information.
+     * @throws Exception Exception if a mandatory field is missing or invalid file provided.
+     */
     public function addTorrent(
         string $title,
         string $description,
@@ -272,7 +301,12 @@ class Torrent extends Config
     }
 
     /**
-     * @throws Exception
+     * Removes a torrent from the database.
+     * @param string $torrentIdLong The long ID of the torrent.
+     * @param int $torrentId The short (int) ID of the torrent.
+     * @param string $infoHash The info hash of the torrent.
+     * @return true True on successful deletion.
+     * @throws Exception Exception when the torrent does not exist or internal database error.
      */
     public function deleteTorrent(
         string $torrentIdLong = "",
@@ -298,6 +332,17 @@ class Torrent extends Config
         throw new Exception("Torrent not found!");
     }
 
+    /**
+     * Retrieves information relating to a torrent.
+     * @param string $torrentIdLong The long ID of a torrent.
+     * @param int $torrentId The short (int) ID of a torrent.
+     * @param string $infoHash The info hash of a torrent.
+     * @param bool $download True = Return bencoded torrent data for download.
+     * @param string $peerId The PID of the account trying to initiate a download.
+     * @param int $userId The short (int) ID of a user account.
+     * @return false|mixed|string|null
+     * @throws Exception Exception when a torrent or user account does not exist, or internal database error.
+     */
     public function getTorrent(
         string $torrentIdLong = "",
         int    $torrentId = 0,
@@ -446,6 +491,21 @@ class Torrent extends Config
         return $this->torrentCache[$identifier];
     }
 
+    /**
+     * Retrieves a list of torrents based on the search parameters.
+     * @param string $searchQuery Strings to search for in the query.
+     * @param string $searchBy Search by data, size, id or title.
+     * @param int $maxResults Maximum number of results to return.
+     * @param string $sortBy Sort by time, size, title or ID.
+     * @param bool $orderDesc True = Order descending.
+     * @param array $categories Array of category ID's to filter by.
+     * @param bool $getUploadHistory True = Get upload history of a user (requires getShareUserId)
+     * @param bool $getDownloadHistory True = Get download history of a user (requires getShareUserId)
+     * @param int $getShareUserId The ID of the account to retrieve download/upload history for.
+     * @param int $getBookmarksUserId The ID of the account to retrieve bookmarks for.
+     * @return mixed
+     * @throws Exception
+     */
     public function getTorrentListing(
         string $searchQuery =  "",
         string $searchBy    =  "title",

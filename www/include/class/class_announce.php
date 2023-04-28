@@ -1,4 +1,17 @@
 <?php
+/**
+ * Class Announce
+ *
+ * This class is used by the announcement system. It is used to retrieve various sets of
+ * information about a torrent client, such as IP, port, client ID, info hash, account PID, and
+ * register or remove peers from the database. It also takes stats reported by a client and updates
+ * the sites global statistic system.
+ *
+ * Depends on: Medoo, Account, Statistics, Config.
+ *
+ * Written by Jack Ryan Davies (jrd15)
+ **/
+
 namespace Announce;
 
 use Config\Config;
@@ -385,6 +398,14 @@ class Announce extends Config {
         return null;
     }
 
+    /**
+     * Returns a list of peer IP addresses, port and other peer information that is used
+     * by torrent clients in order to connect to other machines.
+     * @param int $torrentId The ID of the torrent.
+     * @param bool $extraInfo Return additional peer information (do not use when returning peers to clients!)
+     * @return array An array of peers sharing the same torrent.
+     * @throws Exception Exception when a database error has occured.
+     */
     public function getPeers(
         int $torrentId,
         bool $extraInfo = false

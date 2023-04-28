@@ -129,15 +129,30 @@ class Login extends Account
         throw new Exception("Invalid login credentials!", 202);
     }
 
+    /**
+     * Logs the client in as the guest account.
+     * @return array Array of guest account information.
+     * @throws Exception Exception when guest account cannot be found or internal database error.
+     */
     public function logInAsGuest() {
         return parent::getGuestAccount();
     }
 
+    /**
+     * Destroys the current session token.
+     * @return bool
+     */
     function logOut(): bool {
         parent::destroySessionKey();
         return true;
     }
 
+    /**
+     * Returns an array of the current account information.
+     * @return array An array of the account information.
+     * @throws Exception Exception when an account hasn't been registered in the construct, or internal
+     *                   database error.
+     */
     function getAccountInfo(): array {
         return parent::getAccount();
     }

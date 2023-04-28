@@ -1,4 +1,14 @@
 <?php
+/**
+ * Class Statistics
+ *
+ * This class is used for storing and retrieving various statistics,
+ * such as daily and weekly uploads; and daily and weekly peer-to-peer traffic.
+ *
+ * Depends on: Medoo, Config
+ *
+ * Written by Jack Ryan Davies (jrd15)
+ **/
 
 namespace Statistics;
 
@@ -34,6 +44,10 @@ class Statistics extends Config
         $this->uploadDayTime  =  time() - (60 * 60 * 24);
     }
 
+    /**
+     * Retrieves the current number of peers on the network.
+     * @return int
+     */
     public function getTotalPeers(): int {
         if ($this->totalPeers == -1) {
             $this->totalPeers = $this->db->count("peers",
@@ -46,6 +60,10 @@ class Statistics extends Config
         return $this->totalPeers;
     }
 
+    /**
+     * Returns the current number of uploads this week.
+     * @return int|null
+     */
     public function getTotalUploadsThisWeek() {
         if ($this->totalUploads == -1) {
             $this->totalUploads = $this->db->count("torrents",
@@ -58,6 +76,10 @@ class Statistics extends Config
         return $this->totalUploads;
     }
 
+    /**
+     * Returns the all-time top ten seeders.
+     * @return array Array of user accounts and upload/download/ratio stats.
+     */
     public function getTopTenSeeders() {
         if (!$this->topTenSeeders) {
             if ($result = $this->db->select("users",
@@ -88,6 +110,10 @@ class Statistics extends Config
         return $this->topTenSeeders;
     }
 
+    /**
+     * Returns the all-time top ten worst seeders.
+     * @return array Array of user accounts and upload/download/ratio stats.
+     */
     public function getTopTenWorstSeeders() {
         if (!$this->topTenWorstSeeders) {
             if ($result = $this->db->select("users",
@@ -118,7 +144,12 @@ class Statistics extends Config
         return $this->topTenWorstSeeders;
     }
 
-    public function getWeeklyTraffic() {
+    /**
+     * Returns an array of weekly traffic statistics, such as download, upload and combined (total).
+     * @return array Array of weekly statistics.
+     * @throws Exception
+     */
+    public function getWeeklyTraffic(): array {
         if (empty($this->weeklyTraffic)) {
             if ($request = $this->db->get("statistics",
                 [
@@ -158,6 +189,13 @@ class Statistics extends Config
         return $this->weeklyTraffic;
     }
 
+    /**
+     * Appends new upload/download to the weekly traffic statistics.
+     * @param int $newUpload New upload in bytes.
+     * @param int $newDownload New download in bytes.
+     * @return void
+     * @throws Exception
+     */
     public function updateWeeklyTraffic(int $newUpload, int $newDownload): void {
         // Make a request to make sure the stat isn't already expired before adding.
         $this->getWeeklyTraffic();
@@ -174,7 +212,12 @@ class Statistics extends Config
         );
     }
 
-    public function getDailyTraffic() {
+    /**
+     * Returns an array of daily traffic statistics, such as download, upload and combined (total).
+     * @return array Array of daily statistics.
+     * @throws Exception
+     */
+    public function getDailyTraffic(): array {
         if (empty($this->dailyTraffic)) {
             if ($request = $this->db->get("statistics",
                 [
@@ -214,6 +257,13 @@ class Statistics extends Config
         return $this->dailyTraffic;
     }
 
+    /**
+     * Appends new upload/download to the daily traffic statistics.
+     * @param int $newUpload New upload in bytes.
+     * @param int $newDownload New download in bytes.
+     * @return void
+     * @throws Exception
+     */
     public function updateDailyTraffic(int $newUpload, int $newDownload): void {
         // Make a request to make sure the stat isn't already expired before adding.
         $this->getDailyTraffic();

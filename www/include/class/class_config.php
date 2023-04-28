@@ -214,6 +214,12 @@ class Config
         throw new Exception("Failed to add new group!");
     }
 
+    /**
+     * Deletes a user group.
+     * @param int $groupID The ID of the group to be removed.
+     * @return true True on deletion success.
+     * @throws Exception Exception when a database error has occurred or group does not exist.
+     */
     public function deleteUserGroup(int $groupID) {
         if ($this->doesUserGroupExist(groupID: $groupID)) {
             if (!$this->db->delete("groups",
@@ -233,6 +239,16 @@ class Config
         throw new Exception("User group does not exist!");
     }
 
+    /**
+     * Updates a user group with new parameters.
+     * @param int $groupID The ID of the group to be updated.
+     * @param array $newParameters Array of new parameters, e.g. group_name, group_color, is_admin, is_guest,
+     *                             is_new, is_disabled, can_download, can_upload, can_delete, can_modify, can_viewprofile
+     *                             can_viewstats, can_comment, can_invite, can_useapi.
+     * @return true True when update success.
+     * @throws Exception Exception when group does not exist, group name or colour is empty, invalid parameter given
+     *                   or database error.
+     */
     public function updateUserGroup(
         int $groupID,
         array $newParameters
@@ -311,7 +327,14 @@ class Config
         return true;
     }
 
-    public function doesUserGroupExist(int $groupID) {
+    /**
+     * Checks if a user group exists.
+     * @param int $groupID The ID of the group to check.
+     * @return bool True if the group exists.
+     * @throws Exception Exception thrown when a database error occurs.
+     */
+
+    public function doesUserGroupExist(int $groupID): bool {
         if (isset($this->getUserGroups()[$groupID])) {
             return true;
         }
@@ -319,7 +342,12 @@ class Config
         return false;
     }
 
-    public function clearUserGroupCache() {
+    /**
+     * Clears the internal group cache. This is used to make sure an updated cache is generated
+     * after updating group parameters.
+     * @return true
+     */
+    public function clearUserGroupCache(): bool {
         $this->groups = null;
 
         return true;
@@ -565,7 +593,11 @@ class Config
         return false;
     }
 
-    public function clearTorrentCategoryCache() {
+    /**
+     * Clears the internal torrent category cache. This is used to reflect new changes to categories.
+     * @return true
+     */
+    public function clearTorrentCategoryCache(): bool {
         $this->categories = null;
 
         return true;
