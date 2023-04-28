@@ -342,10 +342,17 @@ class Account
         bool $updateSession = false
     ): array {
         if (count($this->getAccount()) > 0) {
-            if (!$remember || isset($this->getAccount()['remember']) && $this->getAccount()['remember'] == 0) {
+            if (!$remember) {
                 $expiration = time() + $this->defaultExpirationTime;
                 $remember = 0;
-            } else {
+            }
+
+            if (isset($this->getAccount()['remember']) && $this->getAccount()['remember'] == 0) {
+                $expiration = time() + $this->defaultExpirationTime;
+                $remember = 0;
+            }
+
+            if ($remember || isset($this->getAccount()['remember']) && $this->getAccount()['remember'] == 1) {
                 // "Remember me" extends the lifespan of a session token.
                 $expiration = time() + $this->defaultMaxExpirationTime;
                 $remember = 1;
