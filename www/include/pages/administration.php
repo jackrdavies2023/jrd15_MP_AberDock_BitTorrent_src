@@ -131,6 +131,40 @@
             }
         }
 
+        // Admin is trying to add a new backup announcement URL.
+        if (isset($_REQUEST['new-announcement-backup-url'])) {
+            if (!empty($_REQUEST['new-announcement-backup-url'] = trim($_REQUEST['new-announcement-backup-url']))) {
+                if (empty($currentBackupURL = json_decode($config->getConfigVal("announcement_backup_url")))) {
+                    $currentBackupURL = array();
+                }
+
+                // Append the new URL to the array.
+                $currentBackupURL[] = $_REQUEST['new-announcement-backup-url'];
+
+                // Convert back to JSON, to be inserted into the database.
+                $toUpdate['announcement_backup_url'] = json_encode($currentBackupURL, true);
+            }
+        }
+
+        // Admin is trying to delete a backup announcement URL.
+        if (isset($_REQUEST['delete-announcement-backup-url'])) {
+            if (!empty($_REQUEST['delete-announcement-backup-url'] = trim($_REQUEST['delete-announcement-backup-url']))) {
+                if (empty($currentBackupURL = json_decode($config->getConfigVal("announcement_backup_url"), JSON_OBJECT_AS_ARRAY))) {
+                    throw new Exception("There are no announcement URL to delete!");
+                }
+
+                $newURL = array();
+
+                foreach ($currentBackupURL as $url) {
+                    if ($url !== $_REQUEST['delete-announcement-backup-url']) {
+                       $newURL[] = $url;
+                    }
+                }
+
+                $toUpdate['announcement_backup_url'] = json_encode($newURL, true);
+            }
+        }
+
         if (count($toUpdate) > 0) {
             // We have settings that need updating.
             foreach ($toUpdate as $parameter => $value) {
@@ -139,9 +173,19 @@
         }
     }
 
+    $globalConfig = $config->getConfig();
+
+    // On the off-chance that the backup announcement URL is stored as null in the DB,
+    // we need to make sure it is always presented as an array to the templates.
+    if (empty($announcementBackupUrl = json_decode($globalConfig['announcement_backup_url']))) {
+        $announcementBackupUrl = array();
+    }
+
+    $globalConfig['announcement_backup_url'] = $announcementBackupUrl;
+
     $smarty->assign('pageName', 'Administration');
     $smarty->assign("languages", htmlSpecialClean($config->getLanguages()));
-    $smarty->assign("config", htmlSpecialClean($config->getConfig()));
+    $smarty->assign("config", htmlSpecialClean($globalConfig));
     $smarty->assign("categories", htmlSpecialClean($config->getTorrentCategories()));
     $smarty->assign("groups", htmlSpecialClean($config->getUserGroups()));
 

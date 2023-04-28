@@ -566,7 +566,8 @@ errorContainer pre {
 adminGroupsContainer table,
 adminTorrentCategoryContainer table,
 accountSettingsSessionsContainer table,
-accountSettingsTorrentClientsContainer table
+accountSettingsTorrentClientsContainer table,
+adminTrackerContainer table
 {
     width: 100%;
 }

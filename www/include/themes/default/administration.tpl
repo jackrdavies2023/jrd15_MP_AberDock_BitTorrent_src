@@ -185,7 +185,40 @@
                                 <smallSeperator></smallSeperator>
 
                                 <label for="announcement_url">Announcement URL</label>
-                                <input type="text" id="announcement_url" name="announcement_url" placeholder="URL" value="{$config['announcement_url']}">
+                                <input type="text" id="announcement_url" name="announcement_url" placeholder="URL"
+                                       value="{$config['announcement_url']}">
+
+                                <smallSeperator></smallSeperator>
+
+                                <form method="POST" action="#tracker-announcement">
+                                    <input type="hidden" name="update-global">
+                                    <label for="new-announcement-backup-url">Backup announcement URL</label>
+                                    <input type="text" class="no-invert-input-background-mobile" id="new-announcement-backup-url"
+                                           name="new-announcement-backup-url" placeholder="URL">
+                                    <input type="submit" class="no-invert-input-background-mobile" value="Add">
+                                </form>
+
+                                <smallSeperator></smallSeperator>
+                                <table>
+                                    <tr>
+                                        <th class="left-align">Backup URL</th>
+                                        <th></th>
+                                    </tr>
+                                    {foreach $config['announcement_backup_url'] as $announcementBackupURL}
+                                        <tr>
+                                            <td class="left-align">
+                                                {$announcementBackupURL}
+                                            </td>
+                                            <td class="right-align">
+                                                <form method="POST" action="#tracker-announcement">
+                                                    <input type="hidden" name="update-global">
+                                                    <input type="hidden" name="delete-announcement-backup-url" value="{$announcementBackupURL}">
+                                                    <input type="submit" value="Delete">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                </table>
 
                                 <smallSeperator></smallSeperator>
 
@@ -244,7 +277,7 @@
                             <input form="form-torrent-categories" type="hidden" name="update-categories">
                             <table>
                                 <tr class="table-header">
-                                    <th class="left-align">Name</th>
+                                    <th>Name</th>
                                     <th>Parent</th>
                                     <th>Child</th>
                                     <th>Child of</th>
