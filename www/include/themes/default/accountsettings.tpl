@@ -78,6 +78,12 @@
                         <input type="submit" value="Regenerate">
                         <tinySeperator></tinySeperator>
                         <smallLabel class="red">Make sure to note this down!</smallLabel>
+
+                        <smallSeperator></smallSeperator>
+
+                        <label for="tracker-peer-id">Tracker peer ID</label>
+                        <input type="text" name="tracker-peer-id" value="SomeRandomValue" readonly>
+                        <input type="submit" value="Regenerate">
                     </card>
                 </accountSettingsSecurityContainer>
 
