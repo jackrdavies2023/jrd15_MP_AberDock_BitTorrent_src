@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: May 04, 2023 at 10:40 PM
+-- Generation Time: May 04, 2023 at 11:27 PM
 -- Server version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP Version: 8.1.16
 
@@ -84,7 +84,7 @@ CREATE TABLE `config` (
 INSERT INTO `config` (`config_id`, `config_name`, `config_value`) VALUES
 (1, 'database_version', '2.2'),
 (2, 'login_required', '1'),
-(3, 'registration_enabled', '0'),
+(3, 'registration_enabled', '1'),
 (4, 'api_enabled', '0'),
 (5, 'default_language', 'eng'),
 (6, 'default_theme', 'default'),
@@ -409,13 +409,13 @@ ALTER TABLE `languages`
 -- AUTO_INCREMENT for table `peers`
 --
 ALTER TABLE `peers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `statistics`
