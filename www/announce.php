@@ -91,7 +91,7 @@
         }
 
         // Our peer should be registered and the torrent exists. Does the client want to unregister?
-        if (isset($_REQUEST['event']) && $_REQUEST['event'] == 'stopped') {
+        if ($announce->getClientEvent() == 'stopped') {
             // Client has stopped/is disconnecting. Remove them from the peers table.
             $announce->unregisterPeer(
                 account: $account,
