@@ -154,3 +154,50 @@ server {
 }
 
 ```
+
+## FAQ
+Below are some common issues that users may encounter and possible solutions to address them.
+
+### My torrents aren't seeding to other users. Why is this?
+
+It's possible that you haven't opened up the necessary ports for your client to be accessible from the internet. Usually this is done automatically via UPnP (Universal Plug and Play), however there are some circumstances where UPnP is disabled by default in your router configuration or UPnP isn't working properly.
+
+If you are using Deluge as your client, you can check if these ports are being forwarded correctly by navigating to `Edit -> Preferences -> Network` and selecting `Test Active Port`
+
+If you have an exclamation mark like below, that means that the ports have not been forwarded through your routers firewall.
+
+![Deluge network settings](img/deluge_networking.png)
+
+In order to fix this, uncheck the `Random` checkbox and set a port number of your choosing. Port `6881` should suffice. Then navigate to your routers control panel and manually add a port forwarding policy for the corresponding port number, for both UDP and TCP.
+
+Each router is different, so consult your router manufacturers manual for more info on how to configure port forwarding.
+
+Once forwarded, return back to Deluge and try the `Test Active Port` option again.
+
+## How do I create a torrent that I can submit to AberDock?
+
+Torrents can typically be created from within your torrent client. For example, in Deluge, navigate to `File -> Create Torrent`
+
+From there, select `File` or `Folder` and select the content you wish to share on AberDock.
+
+Then select `Trackers -> Add`. The tracker URL you need to add is the one presented on the AberDock upload page, such as the one shown below.
+
+![AberDock Upload Page with Announcement URL](img/aberdock_tracker_url.png)
+
+Add this URL to the list of trackers. It should look similar to this:
+
+![Adding a tracker URL to Deluge](img/deluge_tracker_url.png)
+
+After adding the URL, click `OK` and then navigate to `Options` and tick the options `Set Private Flag` and `Add this torrent to the session`. It should look like this:
+
+![Additional torrent options in Deluge](img/deluge_additional_torrent_options.png)
+
+Then click `Save` and choose where to save the .torrent file. Once the file has been generated, navigate to the AberDock upload page and select the .torrent file you just generated.
+
+Once the file has been successfully submitted, the torrent should be authorised for use on the tracker. To ensure that the tracker has announced correctly, right click the torrent you just created in your client and select the option `Update Tracker`.
+
+To confirm the announcement was a success, ensure the torrent you just created is selected in your client, then click the `Trackers` tab at the bottom of the interface. You should have a message saying `Announce OK` like so:
+
+![Deluge Trackers Page](img/deluge_announce_ok.png)
+
+Congratulations! You just submitted your torrent!
